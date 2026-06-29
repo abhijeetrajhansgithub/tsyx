@@ -8,7 +8,7 @@ import (
 	"strconv"
 )
 
-func Collect() CPUInfo {
+func LinuxCollect() CPUInfo {
 
 	// initialize CPUInfo
 	cpuInfo := CPUInfo{}
