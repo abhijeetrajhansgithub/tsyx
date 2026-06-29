@@ -20,7 +20,10 @@ var cpuCmd = &cobra.Command{
 		if _os != "linux" {
 			return fmt.Errorf("unsupported OS: %s", _os)
 		}
-		cpuInfo := cpu.LinuxCollect()
+		cpuInfo, err := cpu.LinuxCollect()
+		if err != nil {
+			return err
+		}
 		fmt.Println(cpu.Format(cpuInfo))
 
 		return nil

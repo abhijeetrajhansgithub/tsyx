@@ -3,12 +3,11 @@ package cpu
 
 import (
 	"os"
-	"log"
 	"strings"
 	"strconv"
 )
 
-func LinuxCollect() CPUInfo {
+func LinuxCollect() (CPUInfo, error) {
 
 	// initialize CPUInfo
 	cpuInfo := CPUInfo{}
@@ -16,7 +15,7 @@ func LinuxCollect() CPUInfo {
 	// read file and parse it
 	content, err := os.ReadFile("/proc/cpuinfo")
 	if err != nil {
-		log.Fatal(err)
+		return cpuInfo, err
 	}
 
 	lines := strings.Split(string(content), "\n")
@@ -50,6 +49,6 @@ func LinuxCollect() CPUInfo {
 		}
 	}
 
-	return cpuInfo
+	return cpuInfo, nil
 }
 
