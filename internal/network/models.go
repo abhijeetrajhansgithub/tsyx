@@ -11,8 +11,43 @@ type NetARP struct { // file: /proc/net/ARP
 	device     string
 }
 
+
 // -------------------------------------------------------------------------
-// Conenctor
+// dev
+// -------------------------------------------------------------------------
+
+type NetDev struct { // file: /proc/net/dev
+	received  NetDevDataR
+	transmitted NetDevDataT
+}
+
+type NetDevDataR struct {
+	interface_ [2]string
+	bytes [2]string 
+	packets [2]string 
+	err [2]string 
+	drop [2]string 
+	fifo [2]string 
+	frame [2]string 
+	compressed [2]string 
+	multicast [2]string 
+}
+
+type NetDevDataT struct {
+	interface_ [2]string
+	bytes [2]string 
+	packets [2]string 
+	err [2]string 
+	drop [2]string 
+	fifo [2]string 
+	colls [2]string
+	carrier [2]string
+	compressed [2]string 
+}
+
+
+// -------------------------------------------------------------------------
+// connector
 // -------------------------------------------------------------------------
 
 type NetConnector struct { // file: /proc/net/connector
