@@ -4,30 +4,40 @@ import (
 	"fmt"
 	"strings"
 )
-
 func convertUnit(value uint64, unit string) string {
 	unit = strings.ToLower(unit)
 
 	valuef := float64(value)
 
 	switch unit {
+	case "b":
+		return fmt.Sprintf("%.2f B", valuef*1024)
+
 	case "kb", "k":
 		return fmt.Sprintf("%.2f KB", valuef)
 
 	case "mb", "m":
-		valuef /= 1024
-		return fmt.Sprintf("%.2f MB", valuef)
+		return fmt.Sprintf("%.2f MB", valuef/1024)
 
 	case "gb", "g":
-		valuef /= 1024 * 1024
-		return fmt.Sprintf("%.2f GB", valuef)
+		return fmt.Sprintf("%.2f GB", valuef/(1024*1024))
 
 	case "tb", "t":
-		valuef /= 1024 * 1024 * 1024
-		return fmt.Sprintf("%.2f TB", valuef)
+		return fmt.Sprintf("%.2f TB", valuef/(1024*1024*1024))
 
+	case "auto":
+		fallthrough
 	default:
-		return fmt.Sprintf("%.2f KB", valuef)
+		switch {
+		case value >= 1024*1024*1024:
+			return fmt.Sprintf("%.2f TB", valuef/(1024*1024*1024))
+		case value >= 1024*1024:
+			return fmt.Sprintf("%.2f GB", valuef/(1024*1024))
+		case value >= 1024:
+			return fmt.Sprintf("%.2f MB", valuef/1024)
+		default:
+			return fmt.Sprintf("%.2f KB", valuef)
+		}
 	}
 }
 

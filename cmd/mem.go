@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"runtime"
 
-	"github.com/spf13/cobra"
 	"github.com/abhijeetrajhansgithub/tsyx/internal/memory"
+	"github.com/spf13/cobra"
 )
 
 var (
-	view string
-	unit string
+	viewMem string
+	unitMem string
 )
 
 var memCmd = &cobra.Command{
@@ -18,9 +18,7 @@ var memCmd = &cobra.Command{
 	Short: "Display memory information",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		// Currently, only Linux is supported.
-		_os := runtime.GOOS
-
-		if _os != "linux" {
+		if runtime.GOOS != "linux" {
 			return fmt.Errorf("memory is not yet supported on %s", runtime.GOOS)
 		}
 
@@ -29,29 +27,49 @@ var memCmd = &cobra.Command{
 			return err
 		}
 
-		// validate view
-		switch view {
-			case "summary":
-			case "detailed":
-			case "kernel":
-			default:
-				return fmt.Errorf("invalid view: %s", view)
+		// Normalize view
+		switch viewMem {
+		case "s", "summary":
+			viewMem = "summary"
+		case "d", "detailed":
+			viewMem = "detailed"
+		case "k", "kernel":
+			viewMem = "kernel"
 		}
 
-		// validate unit
-		switch unit {
-			case "kb", "k", "mb", "m", "gb", "g", "tb", "t":
-			default:
-				return fmt.Errorf("invalid unit: %s", unit)
+		// Validate view
+		switch viewMem {
+		case "summary", "detailed", "kernel":
+		default:
+			return fmt.Errorf("invalid view: %s", viewMem)
 		}
 
-		switch view {
-			case "summary":
-				fmt.Println(memory.FormatSummary(memInfo, unit))
-			case "detailed":
-				fmt.Println(memory.FormatDetailed(memInfo, unit))
-			case "kernel":
-				fmt.Println(memory.FormatKernel(memInfo, unit))
+		// Normalize unit
+		switch unitMem {
+		case "k", "kb":
+			unitMem = "kb"
+		case "m", "mb":
+			unitMem = "mb"
+		case "g", "gb":
+			unitMem = "gb"
+		case "t", "tb":
+			unitMem = "tb"
+		}
+
+		// Validate unit
+		switch unitMem {
+		case "auto", "b", "kb", "mb", "gb", "tb":
+		default:
+			return fmt.Errorf("invalid unit: %s", unitMem)
+		}
+
+		switch viewMem {
+		case "summary":
+			fmt.Println(memory.FormatSummary(memInfo, unitMem))
+		case "detailed":
+			fmt.Println(memory.FormatDetailed(memInfo, unitMem))
+		case "kernel":
+			fmt.Println(memory.FormatKernel(memInfo, unitMem))
 		}
 
 		return nil
@@ -62,18 +80,18 @@ func init() {
 	rootCmd.AddCommand(memCmd)
 
 	memCmd.Flags().StringVarP(
-		&view,
+		&viewMem,
 		"view",
 		"v",
 		"summary",
-		"View: summary, detailed, kernel",
+		"View: summary (s), detailed (d), kernel (k)",
 	)
 
 	memCmd.Flags().StringVarP(
-		&unit,
+		&unitMem,
 		"unit",
 		"u",
-		"kb",
-		"Memory unit: kb, mb, gb, tb",
+		"auto",
+		"Memory unit: auto, b, kb, mb, gb, tb",
 	)
 }
