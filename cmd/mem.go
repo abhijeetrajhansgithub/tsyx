@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"runtime"
+	"strings"
 
 	"github.com/abhijeetrajhansgithub/tsyx/internal/memory"
 	"github.com/spf13/cobra"
@@ -43,6 +44,10 @@ var memCmd = &cobra.Command{
 		default:
 			return fmt.Errorf("invalid view: %s", viewMem)
 		}
+
+		// to lower case
+		unitMem = strings.ToLower(unitMem)
+		viewMem = strings.ToLower((viewMem))
 
 		// Normalize unit
 		switch unitMem {

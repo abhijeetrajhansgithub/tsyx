@@ -10,8 +10,8 @@ import (
 func parseKB (value string) (uint64, error) {
 	fields := strings.Fields(value)
 
-	if len(fields) != 2 {
-		return 0, fmt.Errorf("invalid value: %s", value)
+	if len(fields) == 0 {
+		return 0, fmt.Errorf("empty value")
 	}
 
 	return strconv.ParseUint(fields[0], 10, 64)
