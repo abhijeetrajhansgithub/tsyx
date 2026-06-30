@@ -1,8 +1,16 @@
 package disk
 
-import "golang.org/x/sys/unix"
+import (
+	"golang.org/x/sys/unix"
+	"runtime"
+	"fmt"
+)
 
 func LinuxCollect() (DiskInfo, error) {
+	if runtime.GOOS != "linux" {
+		return DiskInfo{}, fmt.Errorf("disk is not yet supported on %s", runtime.GOOS)
+	}
+	
 	var stat unix.Statfs_t
 
 	// Get filesystem statistics for the root filesystem
