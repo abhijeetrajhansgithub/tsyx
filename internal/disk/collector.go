@@ -1,12 +1,12 @@
 package disk
 
-import "syscall"
+import "golang.org/x/sys/unix"
 
 func LinuxCollect() (DiskInfo, error) {
-	var stat syscall.Statfs_t
+	var stat unix.Statfs_t
 
 	// Get filesystem statistics for the root filesystem
-	if err := syscall.Statfs("/", &stat); err != nil {
+	if err := unix.Statfs("/", &stat); err != nil {
 		return DiskInfo{}, err
 	}
 
