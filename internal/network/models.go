@@ -1,21 +1,21 @@
-package net 
+package net
 
 // -------------------------------------------------------------------------
 // ARP
 // -------------------------------------------------------------------------
 
-type NetARP struct {  // file: /proc/net/ARP
-	ip_address string 
-	hw_type string 
-	hw_address string 
-	device string
+type NetARP struct { // file: /proc/net/ARP
+	ip_address string
+	hw_type    string
+	hw_address string
+	device     string
 }
 
 // -------------------------------------------------------------------------
 // Conenctor
 // -------------------------------------------------------------------------
 
-type NetConnector struct {  // file: /proc/net/connector
+type NetConnector struct { // file: /proc/net/connector
 	cn_proc string
 }
 
@@ -23,212 +23,211 @@ type NetConnector struct {  // file: /proc/net/connector
 // if_inet6
 // -------------------------------------------------------------------------
 
-type NetIfINet6 struct {  // file: /proc/net/if_inet6
-	ipv6_address string 
-	interface_index string 
-	pref_len string 
-	scope string 
-	flags string 
-	interface_name string
+type NetIfINet6 struct { // file: /proc/net/if_inet6
+	ipv6_address    string
+	interface_index string
+	pref_len        string
+	scope           string
+	flags           string
+	interface_name  string
 }
 
 // -------------------------------------------------------------------------
 // IGMP
 // -------------------------------------------------------------------------
 
-
-type NetIGMP struct {  // file: /proc/net/igmp
-	idx string 
-	device string 
-	count string 
-	querier string 
-	group string 
-	users string 
-	timer string
-	reporter string 
+type NetIGMP struct { // file: /proc/net/igmp
+	idx      string
+	device   string
+	count    string
+	querier  string
+	group    string
+	users    string
+	timer    string
+	reporter string
 }
 
 // -------------------------------------------------------------------------
 // IGMP6
 // -------------------------------------------------------------------------
 
-type NetIGMP6 struct {  // file: /proc/net/igmp6
-	interface_index  string 
-	interface_name string 
+type NetIGMP6 struct { // file: /proc/net/igmp6
+	interface_index   string
+	interface_name    string
 	multicast_address string
-	users string 
-	flags string 
-	timer string
+	users             string
+	flags             string
+	timer             string
 }
 
 // -------------------------------------------------------------------------
 // Netstat
 // -------------------------------------------------------------------------
 
-type NetNetStat struct {  // file: /proc/net/netstat
+type NetNetStat struct { // file: /proc/net/netstat
 	// TcpExt
-	SyncookiesSent              string
-	SyncookiesRecv              string
-	SyncookiesFailed            string
-	EmbryonicRsts               string
-	PruneCalled                 string
-	RcvPruned                   string
-	OfoPruned                   string
-	OutOfWindowIcmps            string
-	LockDroppedIcmps            string
-	ArpFilter                   string
-	TW                          string
-	TWRecycled                  string
-	TWKilled                    string
-	PAWSActive                  string
-	PAWSEstab                   string
-	BeyondWindow                string
-	TSEcrRejected               string
-	PAWSOldAck                  string
-	PAWSTimewait                string
-	DelayedACKs                 string
-	DelayedACKLocked            string
-	DelayedACKLost              string
-	ListenOverflows             string
-	ListenDrops                 string
-	TCPHPHits                   string
-	TCPPureAcks                 string
-	TCPHPAcks                   string
-	TCPRenoRecovery             string
-	TCPSackRecovery             string
-	TCPSACKReneging             string
-	TCPSACKReorder              string
-	TCPRenoReorder              string
-	TCPTSReorder                string
-	TCPFullUndo                 string
-	TCPPartialUndo              string
-	TCPDSACKUndo                string
-	TCPLossUndo                 string
-	TCPLostRetransmit           string
-	TCPRenoFailures             string
-	TCPSackFailures             string
-	TCPLossFailures             string
-	TCPFastRetrans              string
-	TCPSlowStartRetrans         string
-	TCPTimeouts                 string
-	TCPLossProbes               string
-	TCPLossProbeRecovery        string
-	TCPRenoRecoveryFail         string
-	TCPSackRecoveryFail         string
-	TCPRcvCollapsed             string
-	TCPBacklogCoalesce          string
-	TCPDSACKOldSent             string
-	TCPDSACKOfoSent             string
-	TCPDSACKRecv                string
-	TCPDSACKOfoRecv             string
-	TCPAbortOnData              string
-	TCPAbortOnClose             string
-	TCPAbortOnMemory            string
-	TCPAbortOnTimeout           string
-	TCPAbortOnLinger            string
-	TCPAbortFailed              string
-	TCPMemoryPressures          string
-	TCPMemoryPressuresChrono    string
-	TCPSACKDiscard              string
-	TCPDSACKIgnoredOld          string
-	TCPDSACKIgnoredNoUndo       string
-	TCPSpuriousRTOs             string
-	TCPMD5NotFound              string
-	TCPMD5Unexpected            string
-	TCPMD5Failure               string
-	TCPSackShifted              string
-	TCPSackMerged               string
-	TCPSackShiftFallback        string
-	TCPBacklogDrop              string
-	PFMemallocDrop              string
-	TCPMinTTLDrop               string
-	TCPDeferAcceptDrop          string
-	IPReversePathFilter         string
-	TCPTimeWaitOverflow         string
-	TCPReqQFullDoCookies        string
-	TCPReqQFullDrop             string
-	TCPRetransFail              string
-	TCPRcvCoalesce              string
-	TCPOFOQueue                 string
-	TCPOFODrop                  string
-	TCPOFOMerge                 string
-	TCPChallengeACK             string
-	TCPSYNChallenge             string
-	TCPFastOpenActive           string
-	TCPFastOpenActiveFail       string
-	TCPFastOpenPassive          string
-	TCPFastOpenPassiveFail      string
-	TCPFastOpenListenOverflow   string
-	TCPFastOpenCookieReqd       string
-	TCPFastOpenBlackhole        string
-	TCPSpuriousRtxHostQueues    string
-	BusyPollRxPackets           string
-	TCPAutoCorking              string
-	TCPFromZeroWindowAdv        string
-	TCPToZeroWindowAdv          string
-	TCPWantZeroWindowAdv        string
-	TCPSynRetrans               string
-	TCPOrigDataSent             string
-	TCPHystartTrainDetect       string
-	TCPHystartTrainCwnd         string
-	TCPHystartDelayDetect       string
-	TCPHystartDelayCwnd         string
-	TCPACKSkippedSynRecv        string
-	TCPACKSkippedPAWS           string
-	TCPACKSkippedSeq            string
-	TCPACKSkippedFinWait2       string
-	TCPACKSkippedTimeWait       string
-	TCPACKSkippedChallenge      string
-	TCPWinProbe                 string
-	TCPKeepAlive                string
-	TCPMTUPFail                 string
-	TCPMTUPSuccess              string
-	TCPDelivered                string
-	TCPDeliveredCE              string
-	TCPAckCompressed            string
-	TCPZeroWindowDrop           string
-	TCPRcvQDrop                 string
-	TCPWqueueTooBig             string
-	TCPFastOpenPassiveAltKey    string
-	TcpTimeoutRehash            string
-	TcpDuplicateDataRehash      string
-	TCPDSACKRecvSegs            string
-	TCPDSACKIgnoredDubious      string
-	TCPMigrateReqSuccess        string
-	TCPMigrateReqFailure        string
-	TCPPLBRehash                string
-	TCPAORequired               string
-	TCPAOBad                    string
-	TCPAOKeyNotFound            string
-	TCPAOGood                   string
-	TCPAODroppedIcmps           string
+	SyncookiesSent            string
+	SyncookiesRecv            string
+	SyncookiesFailed          string
+	EmbryonicRsts             string
+	PruneCalled               string
+	RcvPruned                 string
+	OfoPruned                 string
+	OutOfWindowIcmps          string
+	LockDroppedIcmps          string
+	ArpFilter                 string
+	TW                        string
+	TWRecycled                string
+	TWKilled                  string
+	PAWSActive                string
+	PAWSEstab                 string
+	BeyondWindow              string
+	TSEcrRejected             string
+	PAWSOldAck                string
+	PAWSTimewait              string
+	DelayedACKs               string
+	DelayedACKLocked          string
+	DelayedACKLost            string
+	ListenOverflows           string
+	ListenDrops               string
+	TCPHPHits                 string
+	TCPPureAcks               string
+	TCPHPAcks                 string
+	TCPRenoRecovery           string
+	TCPSackRecovery           string
+	TCPSACKReneging           string
+	TCPSACKReorder            string
+	TCPRenoReorder            string
+	TCPTSReorder              string
+	TCPFullUndo               string
+	TCPPartialUndo            string
+	TCPDSACKUndo              string
+	TCPLossUndo               string
+	TCPLostRetransmit         string
+	TCPRenoFailures           string
+	TCPSackFailures           string
+	TCPLossFailures           string
+	TCPFastRetrans            string
+	TCPSlowStartRetrans       string
+	TCPTimeouts               string
+	TCPLossProbes             string
+	TCPLossProbeRecovery      string
+	TCPRenoRecoveryFail       string
+	TCPSackRecoveryFail       string
+	TCPRcvCollapsed           string
+	TCPBacklogCoalesce        string
+	TCPDSACKOldSent           string
+	TCPDSACKOfoSent           string
+	TCPDSACKRecv              string
+	TCPDSACKOfoRecv           string
+	TCPAbortOnData            string
+	TCPAbortOnClose           string
+	TCPAbortOnMemory          string
+	TCPAbortOnTimeout         string
+	TCPAbortOnLinger          string
+	TCPAbortFailed            string
+	TCPMemoryPressures        string
+	TCPMemoryPressuresChrono  string
+	TCPSACKDiscard            string
+	TCPDSACKIgnoredOld        string
+	TCPDSACKIgnoredNoUndo     string
+	TCPSpuriousRTOs           string
+	TCPMD5NotFound            string
+	TCPMD5Unexpected          string
+	TCPMD5Failure             string
+	TCPSackShifted            string
+	TCPSackMerged             string
+	TCPSackShiftFallback      string
+	TCPBacklogDrop            string
+	PFMemallocDrop            string
+	TCPMinTTLDrop             string
+	TCPDeferAcceptDrop        string
+	IPReversePathFilter       string
+	TCPTimeWaitOverflow       string
+	TCPReqQFullDoCookies      string
+	TCPReqQFullDrop           string
+	TCPRetransFail            string
+	TCPRcvCoalesce            string
+	TCPOFOQueue               string
+	TCPOFODrop                string
+	TCPOFOMerge               string
+	TCPChallengeACK           string
+	TCPSYNChallenge           string
+	TCPFastOpenActive         string
+	TCPFastOpenActiveFail     string
+	TCPFastOpenPassive        string
+	TCPFastOpenPassiveFail    string
+	TCPFastOpenListenOverflow string
+	TCPFastOpenCookieReqd     string
+	TCPFastOpenBlackhole      string
+	TCPSpuriousRtxHostQueues  string
+	BusyPollRxPackets         string
+	TCPAutoCorking            string
+	TCPFromZeroWindowAdv      string
+	TCPToZeroWindowAdv        string
+	TCPWantZeroWindowAdv      string
+	TCPSynRetrans             string
+	TCPOrigDataSent           string
+	TCPHystartTrainDetect     string
+	TCPHystartTrainCwnd       string
+	TCPHystartDelayDetect     string
+	TCPHystartDelayCwnd       string
+	TCPACKSkippedSynRecv      string
+	TCPACKSkippedPAWS         string
+	TCPACKSkippedSeq          string
+	TCPACKSkippedFinWait2     string
+	TCPACKSkippedTimeWait     string
+	TCPACKSkippedChallenge    string
+	TCPWinProbe               string
+	TCPKeepAlive              string
+	TCPMTUPFail               string
+	TCPMTUPSuccess            string
+	TCPDelivered              string
+	TCPDeliveredCE            string
+	TCPAckCompressed          string
+	TCPZeroWindowDrop         string
+	TCPRcvQDrop               string
+	TCPWqueueTooBig           string
+	TCPFastOpenPassiveAltKey  string
+	TcpTimeoutRehash          string
+	TcpDuplicateDataRehash    string
+	TCPDSACKRecvSegs          string
+	TCPDSACKIgnoredDubious    string
+	TCPMigrateReqSuccess      string
+	TCPMigrateReqFailure      string
+	TCPPLBRehash              string
+	TCPAORequired             string
+	TCPAOBad                  string
+	TCPAOKeyNotFound          string
+	TCPAOGood                 string
+	TCPAODroppedIcmps         string
 
 	// IpExt
-	InNoRoutes       string
-	InTruncatedPkts  string
-	InMcastPkts      string
-	OutMcastPkts     string
-	InBcastPkts      string
-	OutBcastPkts     string
-	InOctets         string
-	OutOctets        string
-	InMcastOctets    string
-	OutMcastOctets   string
-	InBcastOctets    string
-	OutBcastOctets   string
-	InCsumErrors     string
-	InNoECTPkts      string
-	InECT1Pkts       string
-	InECT0Pkts       string
-	InCEPkts         string
-	ReasmOverlaps    string
+	InNoRoutes      string
+	InTruncatedPkts string
+	InMcastPkts     string
+	OutMcastPkts    string
+	InBcastPkts     string
+	OutBcastPkts    string
+	InOctets        string
+	OutOctets       string
+	InMcastOctets   string
+	OutMcastOctets  string
+	InBcastOctets   string
+	OutBcastOctets  string
+	InCsumErrors    string
+	InNoECTPkts     string
+	InECT1Pkts      string
+	InECT0Pkts      string
+	InCEPkts        string
+	ReasmOverlaps   string
 }
 
 // -------------------------------------------------------------------------
 // FIB-Trie Stat
 // -------------------------------------------------------------------------
 
-type NetFibTrieStat struct {  // file: /proc/net/fib_triestat
+type NetFibTrieStat struct { // file: /proc/net/fib_triestat
 	LeafSizeBytes  string
 	TNodeSizeBytes string
 
@@ -237,72 +236,70 @@ type NetFibTrieStat struct {  // file: /proc/net/fib_triestat
 }
 
 type FibTrieSection struct {
-	AverageDepth string
-	MaxDepth     string
-	Leaves       string
-	Prefixes     string
+	AverageDepth  string
+	MaxDepth      string
+	Leaves        string
+	Prefixes      string
 	InternalNodes string
 
 	Depth1 string
 	Depth2 string
 	Depth3 string
 
-	Pointers string
-	NullPtrs string
+	Pointers    string
+	NullPtrs    string
 	TotalSizeKB string
 
 	Counters FibTrieCounters
 }
 
 type FibTrieCounters struct {
-	Gets                 string
-	Backtracks           string
-	SemanticMatchPassed  string
-	SemanticMatchMiss    string
-	NullNodeHit          string
-	SkippedNodeResize    string
+	Gets                string
+	Backtracks          string
+	SemanticMatchPassed string
+	SemanticMatchMiss   string
+	NullNodeHit         string
+	SkippedNodeResize   string
 }
-
 
 // -------------------------------------------------------------------------
 // Netlink
 // -------------------------------------------------------------------------
 
-type NetNetlink struct {  // file: /proc/net/netlink
-	sk string 
-	eth string 
-	pid string 
-	groups string 
-	rmem string 
-	wmem string 
-	dump string 
-	locks string 
-	drops string 
-	inode string
+type NetNetlink struct { // file: /proc/net/netlink
+	sk     string
+	eth    string
+	pid    string
+	groups string
+	rmem   string
+	wmem   string
+	dump   string
+	locks  string
+	drops  string
+	inode  string
 }
-
 
 // -------------------------------------------------------------------------
 // Packet
 // -------------------------------------------------------------------------
 
-type NetPacket struct {  // file: /proc/net/packet
-	sk string 
-	refcnt string 
-	type_ string 
-	proto string 
-	iface string
-	r string 
-	rmem string
-	user string 
-	inode string
+type NetPacket struct { // file: /proc/net/packet
+	sk     string
+	refcnt string
+	type_  string
+	proto  string
+	iface  string
+	r      string
+	rmem   string
+	user   string
+	inode  string
 }
 
 // -------------------------------------------------------------------------
 // Protocols
 // -------------------------------------------------------------------------
 
-type NetProtocols struct {
+type NetProtocols struct { // file: /proc/net/protocols
 	Protocols []NetProtocol
 }
 
@@ -324,64 +321,63 @@ type NetProtocol struct {
 // ptype
 // -------------------------------------------------------------------------
 
-type NetPtype struct {
-	type_ string 
-	device string
-	function string 
+type NetPtype struct { // file: /proc/net/ptype
+	type_    string
+	device   string
+	function string
 }
 
 // -------------------------------------------------------------------------
 // Route
 // -------------------------------------------------------------------------
 
-type NetRoute struct {
-	iface string 
-	destination string 
-	gateway string 
-	flags string
-	refcnt string 
-	use string 
-	metric string 
-	mask string 
-	mtu string
-	window string 
-	irit string
+type NetRoute struct { // file: /proc/net/route
+	iface       string
+	destination string
+	gateway     string
+	flags       string
+	refcnt      string
+	use         string
+	metric      string
+	mask        string
+	mtu         string
+	window      string
+	irit        string
 }
-
 
 // -------------------------------------------------------------------------
 // rt_cache
 // -------------------------------------------------------------------------
 
-type NetRtCache struct {
-	iface string 
-	destination string 
-	gateway string 
-	flags string
-	refcnt string 
-	use string 
-	metric string 
-	source string 
-	mtu string
-	window string 
-	irit string
-	tos string 
-	hhref string 
-	hhuptod string 
-	specdest string
+type NetRtCache struct { // file: /proc/net/rt_cache
+	iface       string
+	destination string
+	gateway     string
+	flags       string
+	refcnt      string
+	use         string
+	metric      string
+	source      string
+	mtu         string
+	window      string
+	irit        string
+	tos         string
+	hhref       string
+	hhuptod     string
+	specdest    string
 }
 
 // -------------------------------------------------------------------------
 // SNMP
 // -------------------------------------------------------------------------
 
-type NetSNMP struct {
-	IP       NetSNMPIP
-	ICMP     NetSNMPICMP
-	ICMPMsg  NetSNMPICMPMsg
-	TCP      NetSNMPTCP
-	UDP      NetSNMPUDP
-	UDPLite  NetSNMPUDPLite
+type NetSNMP struct { // file: /proc/net/snmp
+	IP      NetSNMPIP
+	ICMP    NetSNMPICMP
+	ICMPMsg NetSNMPICMPMsg
+	TCP     NetSNMPTCP
+	UDP     NetSNMPUDP
+	UDPLite NetSNMPUDPLite
 }
 
 type NetSNMPIP struct {
@@ -462,34 +458,34 @@ type NetSNMPTCP struct {
 }
 
 type NetSNMPUDP struct {
-	InDatagrams   string
-	NoPorts       string
-	InErrors      string
-	OutDatagrams  string
-	RcvbufErrors  string
-	SndbufErrors  string
-	InCsumErrors  string
-	IgnoredMulti  string
-	MemErrors     string
+	InDatagrams  string
+	NoPorts      string
+	InErrors     string
+	OutDatagrams string
+	RcvbufErrors string
+	SndbufErrors string
+	InCsumErrors string
+	IgnoredMulti string
+	MemErrors    string
 }
 
 type NetSNMPUDPLite struct {
-	InDatagrams   string
-	NoPorts       string
-	InErrors      string
-	OutDatagrams  string
-	RcvbufErrors  string
-	SndbufErrors  string
-	InCsumErrors  string
-	IgnoredMulti  string
-	MemErrors     string
+	InDatagrams  string
+	NoPorts      string
+	InErrors     string
+	OutDatagrams string
+	RcvbufErrors string
+	SndbufErrors string
+	InCsumErrors string
+	IgnoredMulti string
+	MemErrors    string
 }
 
 // -------------------------------------------------------------------------
 // SNMP
 // -------------------------------------------------------------------------
 
-type NetSNMP6 struct {
+type NetSNMP6 struct { // file: /proc/net/snmp6
 	Metrics map[string]string
 }
 
@@ -497,11 +493,140 @@ type NetSNMP6 struct {
 // Sockstat
 // -------------------------------------------------------------------------
 
-type NetSockstat struct {
-	sockets string 
-	tcp string 
-	udp string 
-	udp_lite string 
-	raw string 
-	frag string
+type NetSockstat struct { // file: /proc/net/sockstat
+	sockets  string
+	tcp      string
+	udp      string
+	udp_lite string
+	raw      string
+	frag     string
+}
+
+type NetSockstat6 struct { // file: /proc/net/sockstat6
+	tcp6      string
+	udp6      string
+	udp_lite6 string
+	raw6      string
+	frag6     string
+}
+
+// -------------------------------------------------------------------------
+// TCP
+// -------------------------------------------------------------------------
+
+type NetTcp struct { // file: /proc/net/tcp
+	sl            []string
+	local_address []string
+	rem_Address   []string
+	st            []string
+	tx_queue      []string
+	rx_queue      []string
+	tr            []string
+	tm_when       []string
+	retrnsmt      []string
+	uid           []string
+	timeout       []string
+	inode         []string
+}
+
+// -------------------------------------------------------------------------
+// TLS Stat
+// -------------------------------------------------------------------------
+
+type NetTLSStat struct { // file: /proc/net/tls_stat
+	TlsCurrTxSw         string
+	TlsCurrRxSw         string
+	TlsCurrTxDevice     string
+	TlsCurrRxDevice     string
+	TlsTxSw             string
+	TlsRxSw             string
+	TlsTxDevice         string
+	TlsRxDevice         string
+	TlsDecryptError     string
+	TlsRxDeviceResync   string
+	TlsDecryptRetry     string
+	TlsRxNoPadViolation string
+	TlsRxRekeyOk        string
+	TlsRxRekeyError     string
+	TlsTxRekeyOk        string
+	TlsTxRekeyError     string
+	TlsRxRekeyReceived  string
+}
+
+// -------------------------------------------------------------------------
+// UDP
+// -------------------------------------------------------------------------
+
+type NetUdp struct { // file: /proc/net/udp
+	sl            []string
+	local_address []string
+	rem_Address   []string
+	st            []string
+	tx_queue      []string
+	rx_queue      []string
+	tr            []string
+	tm_when       []string
+	retrnsmt      []string
+	uid           []string
+	timeout       []string
+	inode         []string
+	ref           []string
+	pointer       []string
+	drops         []string
+}
+
+// -------------------------------------------------------------------------
+// Unix
+// -------------------------------------------------------------------------
+
+type NetUnix struct { // file: /proc/net/unix
+	num       []string
+	ref_count []string
+	protocol  []string
+	flags     []string
+	type_     []string
+	st        []string
+	inode     []string
+	path      []string
+}
+
+// -------------------------------------------------------------------------
+// xfrm_stat
+// -------------------------------------------------------------------------
+
+type NetXFRMStat struct { // file: /proc/net/xfrm_stat
+	XfrmInError           string
+	XfrmInBufferError     string
+	XfrmInHdrError        string
+	XfrmInNoStates        string
+	XfrmInStateProtoError string
+	XfrmInStateModeError  string
+	XfrmInStateSeqError   string
+	XfrmInStateExpired    string
+	XfrmInStateMismatch   string
+	XfrmInStateInvalid    string
+	XfrmInTmplMismatch    string
+	XfrmInNoPols          string
+	XfrmInPolBlock        string
+	XfrmInPolError        string
+
+	XfrmOutError            string
+	XfrmOutBundleGenError   string
+	XfrmOutBundleCheckError string
+	XfrmOutNoStates         string
+	XfrmOutStateProtoError  string
+	XfrmOutStateModeError   string
+	XfrmOutStateSeqError    string
+	XfrmOutStateExpired     string
+	XfrmOutPolBlock         string
+	XfrmOutPolDead          string
+	XfrmOutPolError         string
+
+	XfrmFwdHdrError      string
+	XfrmOutStateInvalid  string
+	XfrmAcquireError     string
+	XfrmOutStateDirError string
+	XfrmInStateDirError  string
+	XfrmInIptfsError     string
+	XfrmOutNoQueueSpace  string
 }
