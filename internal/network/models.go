@@ -1,107 +1,433 @@
-// models.go for linux
+// Package net provides structured models for Linux networking data sourced
+// from /proc, /sys, and /etc. Models are purely descriptive: no parsing,
+// calculation, or presentation logic lives here.
 package net
 
-// -------------------------------------------------------------------------
-// ARP
-// -------------------------------------------------------------------------
+// =====================================================================================
+// Interfaces
+// =====================================================================================
 
-type NetARP struct { // file: /proc/net/ARP
-	ip_address string
-	hw_type    string
-	hw_address string
-	device     string
+// ARPEntry represents a single row of the kernel ARP cache.
+type ARPEntry struct {
+	IPAddress     string
+	HardwareType  string
+	HardwareAddr  string
+	Flags         string
+	Mask          string
+	Device        string
 }
 
-
-// -------------------------------------------------------------------------
-// dev
-// -------------------------------------------------------------------------
-
-type NetDev struct { // file: /proc/net/dev
-	received  NetDevDataR
-	transmitted NetDevDataT
+// ARPTable holds all entries read from /proc/net/arp.
+type ARPTable struct { // file: /proc/net/arp
+	Entries []ARPEntry
 }
 
-type NetDevDataR struct {
-	interface_ [2]string
-	bytes [2]string 
-	packets [2]string 
-	err [2]string 
-	drop [2]string 
-	fifo [2]string 
-	frame [2]string 
-	compressed [2]string 
-	multicast [2]string 
+// TrafficCounters holds counters common to both received and transmitted
+// interface traffic.
+type TrafficCounters struct {
+	Bytes      string
+	Packets    string
+	Errors     string
+	Drop       string
+	Fifo       string
+	Compressed string
 }
 
-type NetDevDataT struct {
-	interface_ [2]string
-	bytes [2]string 
-	packets [2]string 
-	err [2]string 
-	drop [2]string 
-	fifo [2]string 
-	colls [2]string
-	carrier [2]string
-	compressed [2]string 
+// ReceivedTraffic holds inbound traffic counters for an interface.
+type ReceivedTraffic struct {
+	TrafficCounters
+	Frame     string
+	Multicast string
 }
 
-
-// -------------------------------------------------------------------------
-// connector
-// -------------------------------------------------------------------------
-
-type NetConnector struct { // file: /proc/net/connector
-	cn_proc string
+// TransmittedTraffic holds outbound traffic counters for an interface.
+type TransmittedTraffic struct {
+	TrafficCounters
+	Collisions string
+	Carrier    string
 }
 
-// -------------------------------------------------------------------------
-// if_inet6
-// -------------------------------------------------------------------------
-
-type NetIfINet6 struct { // file: /proc/net/if_inet6
-	ipv6_address    string
-	interface_index string
-	pref_len        string
-	scope           string
-	flags           string
-	interface_name  string
+// InterfaceTraffic represents a single interface row of RX/TX counters.
+type InterfaceTraffic struct {
+	Interface   string
+	Received    ReceivedTraffic
+	Transmitted TransmittedTraffic
 }
 
-// -------------------------------------------------------------------------
-// IGMP
-// -------------------------------------------------------------------------
-
-type NetIGMP struct { // file: /proc/net/igmp
-	idx      string
-	device   string
-	count    string
-	querier  string
-	group    string
-	users    string
-	timer    string
-	reporter string
+// NetworkDeviceStats holds per-interface traffic statistics.
+type NetworkDeviceStats struct { // file: /proc/net/dev
+	Interfaces []InterfaceTraffic
 }
 
-// -------------------------------------------------------------------------
-// IGMP6
-// -------------------------------------------------------------------------
-
-type NetIGMP6 struct { // file: /proc/net/igmp6
-	interface_index   string
-	interface_name    string
-	multicast_address string
-	users             string
-	flags             string
-	timer             string
+// IPv6Address represents a single IPv6 address assigned to an interface.
+type IPv6Address struct {
+	Address        string
+	InterfaceIndex string
+	PrefixLength   string
+	Scope          string
+	Flags          string
+	InterfaceName  string
 }
 
-// -------------------------------------------------------------------------
-// Netstat
-// -------------------------------------------------------------------------
+// IPv6AddressTable holds all entries read from /proc/net/if_inet6.
+type IPv6AddressTable struct { // file: /proc/net/if_inet6
+	Addresses []IPv6Address
+}
 
-type NetNetStat struct { // file: /proc/net/netstat
-	// TcpExt
+// PacketTypeHandler represents a single registered packet handler.
+type PacketTypeHandler struct {
+	Type     string
+	Device   string
+	Function string
+}
+
+// PacketTypeHandlerTable holds all entries read from /proc/net/ptype.
+type PacketTypeHandlerTable struct { // file: /proc/net/ptype
+	Handlers []PacketTypeHandler
+}
+
+// MulticastGroup represents a single IPv4 multicast group membership.
+type MulticastGroup struct {
+	Index    string
+	Device   string
+	Count    string
+	Querier  string
+	Group    string
+	Users    string
+	Timer    string
+	Reporter string
+}
+
+// MulticastGroupTable holds all entries read from /proc/net/igmp.
+type MulticastGroupTable struct { // file: /proc/net/igmp
+	Groups []MulticastGroup
+}
+
+// MulticastGroup6 represents a single IPv6 multicast group membership.
+type MulticastGroup6 struct {
+	InterfaceIndex string
+	InterfaceName  string
+	Address        string
+	Users          string
+	Flags          string
+	Timer          string
+}
+
+// MulticastGroupTable6 holds all entries read from /proc/net/igmp6.
+type MulticastGroupTable6 struct { // file: /proc/net/igmp6
+	Groups []MulticastGroup6
+}
+
+// CarrierInfo describes the link-carrier state of a network interface.
+type CarrierInfo struct {
+	Status     string
+	Changes    string
+	DownCount  string
+	UpCount    string
+}
+
+// DevicePowerInfo describes runtime power-management state of a device.
+type DevicePowerInfo struct {
+	Control               string
+	RuntimeActiveTime     string
+	RuntimeStatus         string
+	RuntimeSuspendedTime  string
+}
+
+// DeviceSubsystemInfo describes subsystem-level driver behavior for a device.
+type DeviceSubsystemInfo struct {
+	DriversAutoprobe string
+	Hibernation      string
+}
+
+// DeviceUeventInfo describes the uevent metadata reported for a device.
+type DeviceUeventInfo struct {
+	Driver   string
+	Modalias string
+}
+
+// DeviceMonitorInfo describes paravirtual client/server monitor channel state.
+type DeviceMonitorInfo struct {
+	ClientConnectionID string
+	ClientLatency      string
+	ClientPending       string
+	ServerConnectionID string
+	ServerLatency       string
+	ServerPending       string
+}
+
+// DeviceRingBuffer describes shared-memory ring buffer state for a device.
+type DeviceRingBuffer struct {
+	InInterruptMask     string
+	InReadBytesAvail    string
+	InReadIndex         string
+	InWriteBytesAvail   string
+	InWriteIndex        string
+	OutInterruptMask    string
+	OutReadBytesAvail   string
+	OutReadIndex        string
+	OutWriteBytesAvail  string
+	OutWriteIndex       string
+}
+
+// InterfaceChannel describes a single hardware/software channel exposed by
+// an interface's underlying device (e.g. a VMBus or NIC queue channel).
+type InterfaceChannel struct {
+	CPU           string
+	Events        string
+	InMask        string
+	Interrupts    string
+	IntrInFull    string
+	IntrOutEmpty  string
+	Latency       string
+	MonitorID     string
+	OutFullFirst  string
+	OutFullTotal  string
+	OutMask       string
+	Pending       string
+	ReadAvail     string
+	SubchannelID  string
+	WriteAvail    string
+}
+
+// InterfaceDevice describes the underlying device backing a network
+// interface, as exposed under /sys/class/net/<iface>/device.
+type InterfaceDevice struct {
+	ID                string
+	DeviceID          string
+	ClassID           string
+	DriverOverride    string
+	Modalias          string
+	NUMANode          string
+	State             string
+	Vendor            string
+	VendorPortMapping []string
+	Power             DevicePowerInfo
+	Subsystem         DeviceSubsystemInfo
+	Uevent            DeviceUeventInfo
+	Monitor           DeviceMonitorInfo
+	RingBuffer        DeviceRingBuffer
+	Channels          map[string]InterfaceChannel
+}
+
+// NetworkInterface is a generic model for any interface exposed under
+// /sys/class/net/<iface>, replacing per-interface-name structs (e.g. an
+// "eth0"-specific struct) with a single reusable shape.
+type NetworkInterface struct { // dir: /sys/class/net/<interface>
+	Name             string
+	AddressAssignType string
+	AddressLength     string
+	Address           string
+	Broadcast         string
+	Carrier           CarrierInfo
+	DevID             string
+	DevPort           string
+	Device            InterfaceDevice
+}
+
+// NetworkInterfaces holds all interfaces discovered under /sys/class/net.
+type NetworkInterfaces struct {
+	Interfaces []NetworkInterface
+}
+
+// =====================================================================================
+// Routing
+// =====================================================================================
+
+// RouteEntry represents a single row of the IPv4 routing table.
+type RouteEntry struct {
+	Interface   string
+	Destination string
+	Gateway     string
+	Flags       string
+	RefCount    string
+	Use         string
+	Metric      string
+	Mask        string
+	MTU         string
+	Window      string
+	IRTT        string
+}
+
+// RouteTable holds all entries read from /proc/net/route.
+type RouteTable struct { // file: /proc/net/route
+	Routes []RouteEntry
+}
+
+// RouteCacheEntry represents a single row of the (legacy) route cache.
+type RouteCacheEntry struct {
+	Interface        string
+	Destination      string
+	Gateway          string
+	Flags            string
+	RefCount         string
+	Use              string
+	Metric           string
+	Source           string
+	MTU              string
+	Window           string
+	IRTT             string
+	TOS              string
+	HardwareHeaderRef string
+	HardwareHeaderUpToDate string
+	SpecificDestination   string
+}
+
+// RouteCacheTable holds all entries read from /proc/net/rt_cache.
+type RouteCacheTable struct { // file: /proc/net/rt_cache
+	Routes []RouteCacheEntry
+}
+
+// FIBTrieCounters holds hit/miss counters for a FIB trie lookup structure.
+type FIBTrieCounters struct {
+	Gets                string
+	Backtracks          string
+	SemanticMatchPassed string
+	SemanticMatchMiss   string
+	NullNodeHit         string
+	SkippedNodeResize   string
+}
+
+// FIBTrieSection describes a single FIB trie (e.g. Main or Local).
+type FIBTrieSection struct {
+	AverageDepth  string
+	MaxDepth      string
+	Leaves        string
+	Prefixes      string
+	InternalNodes string
+	Depth1        string
+	Depth2        string
+	Depth3        string
+	Pointers      string
+	NullPtrs      string
+	TotalSizeKB   string
+	Counters      FIBTrieCounters
+}
+
+// FIBTrieStatistics holds statistics for the kernel's FIB trie routing
+// tables.
+type FIBTrieStatistics struct { // file: /proc/net/fib_triestat
+	LeafSizeBytes  string
+	TNodeSizeBytes string
+	Main           FIBTrieSection
+	Local          FIBTrieSection
+}
+
+// =====================================================================================
+// Connections
+// =====================================================================================
+
+// TimerInfo describes the retransmission/expiry timer state of a socket.
+type TimerInfo struct {
+	Type        string
+	Expires     string
+	Retransmits string
+}
+
+// ConnectionEntry represents a single row shared by the TCP and UDP socket
+// tables (v4 and v6), since /proc/net/{tcp,tcp6,udp,udp6} share this base
+// layout.
+type ConnectionEntry struct {
+	Slot          string
+	LocalAddress  string
+	RemoteAddress string
+	State         string
+	TxQueue       string
+	RxQueue       string
+	Timer         TimerInfo
+	UID           string
+	Timeout       string
+	Inode         string
+}
+
+// TCPConnectionTable holds all entries read from /proc/net/tcp or
+// /proc/net/tcp6.
+type TCPConnectionTable struct { // files: /proc/net/tcp, /proc/net/tcp6
+	Connections []ConnectionEntry
+}
+
+// UDPConnectionEntry extends ConnectionEntry with fields specific to UDP
+// sockets.
+type UDPConnectionEntry struct {
+	ConnectionEntry
+	RefCount      string
+	MemoryPointer string
+	Drops         string
+}
+
+// UDPConnectionTable holds all entries read from /proc/net/udp or
+// /proc/net/udp6.
+type UDPConnectionTable struct { // files: /proc/net/udp, /proc/net/udp6
+	Connections []UDPConnectionEntry
+}
+
+// UnixSocketEntry represents a single row of the Unix domain socket table.
+type UnixSocketEntry struct {
+	Num       string
+	RefCount  string
+	Protocol  string
+	Flags     string
+	Type      string
+	State     string
+	Inode     string
+	Path      string
+}
+
+// UnixSocketTable holds all entries read from /proc/net/unix.
+type UnixSocketTable struct { // file: /proc/net/unix
+	Sockets []UnixSocketEntry
+}
+
+// PacketSocketEntry represents a single row of the raw packet socket table.
+type PacketSocketEntry struct {
+	Socket     string
+	RefCount   string
+	Type       string
+	Protocol   string
+	Interface  string
+	RecvQueue  string
+	RecvMem    string
+	User       string
+	Inode      string
+}
+
+// PacketSocketTable holds all entries read from /proc/net/packet.
+type PacketSocketTable struct { // file: /proc/net/packet
+	Sockets []PacketSocketEntry
+}
+
+// NetlinkSocket represents a single row of the netlink socket table.
+type NetlinkSocket struct {
+	Socket    string
+	Protocol  string
+	PID       string
+	Groups    string
+	RecvMem   string
+	SendMem   string
+	Dump      string
+	Locks     string
+	Drops     string
+	Inode     string
+}
+
+// NetlinkTable holds all entries read from /proc/net/netlink.
+type NetlinkTable struct { // file: /proc/net/netlink
+	Sockets []NetlinkSocket
+}
+
+// ProcessConnector holds data read from the kernel's process event
+// connector interface.
+type ProcessConnector struct { // file: /proc/net/connector
+	CNProc string
+}
+
+// =====================================================================================
+// Statistics
+// =====================================================================================
+
+// TCPExtendedStatistics holds Linux-specific extended TCP counters, as
+// reported under the "TcpExt" section of /proc/net/netstat.
+type TCPExtendedStatistics struct {
 	SyncookiesSent            string
 	SyncookiesRecv            string
 	SyncookiesFailed          string
@@ -109,12 +435,12 @@ type NetNetStat struct { // file: /proc/net/netstat
 	PruneCalled               string
 	RcvPruned                 string
 	OfoPruned                 string
-	OutOfWindowIcmps          string
-	LockDroppedIcmps          string
+	OutOfWindowICMPs          string
+	LockDroppedICMPs          string
 	ArpFilter                 string
-	TW                        string
-	TWRecycled                string
-	TWKilled                  string
+	TimeWait                  string
+	TimeWaitRecycled          string
+	TimeWaitKilled            string
 	PAWSActive                string
 	PAWSEstab                 string
 	BeyondWindow              string
@@ -126,119 +452,122 @@ type NetNetStat struct { // file: /proc/net/netstat
 	DelayedACKLost            string
 	ListenOverflows           string
 	ListenDrops               string
-	TCPHPHits                 string
-	TCPPureAcks               string
-	TCPHPAcks                 string
-	TCPRenoRecovery           string
-	TCPSackRecovery           string
-	TCPSACKReneging           string
-	TCPSACKReorder            string
-	TCPRenoReorder            string
-	TCPTSReorder              string
-	TCPFullUndo               string
-	TCPPartialUndo            string
-	TCPDSACKUndo              string
-	TCPLossUndo               string
-	TCPLostRetransmit         string
-	TCPRenoFailures           string
-	TCPSackFailures           string
-	TCPLossFailures           string
-	TCPFastRetrans            string
-	TCPSlowStartRetrans       string
-	TCPTimeouts               string
-	TCPLossProbes             string
-	TCPLossProbeRecovery      string
-	TCPRenoRecoveryFail       string
-	TCPSackRecoveryFail       string
-	TCPRcvCollapsed           string
-	TCPBacklogCoalesce        string
-	TCPDSACKOldSent           string
-	TCPDSACKOfoSent           string
-	TCPDSACKRecv              string
-	TCPDSACKOfoRecv           string
-	TCPAbortOnData            string
-	TCPAbortOnClose           string
-	TCPAbortOnMemory          string
-	TCPAbortOnTimeout         string
-	TCPAbortOnLinger          string
-	TCPAbortFailed            string
-	TCPMemoryPressures        string
-	TCPMemoryPressuresChrono  string
-	TCPSACKDiscard            string
-	TCPDSACKIgnoredOld        string
-	TCPDSACKIgnoredNoUndo     string
-	TCPSpuriousRTOs           string
-	TCPMD5NotFound            string
-	TCPMD5Unexpected          string
-	TCPMD5Failure             string
-	TCPSackShifted            string
-	TCPSackMerged             string
-	TCPSackShiftFallback      string
-	TCPBacklogDrop            string
+	HPHits                    string
+	PureAcks                  string
+	HPAcks                    string
+	RenoRecovery              string
+	SackRecovery              string
+	SACKReneging              string
+	SACKReorder               string
+	RenoReorder               string
+	TSReorder                 string
+	FullUndo                  string
+	PartialUndo                string
+	DSACKUndo                 string
+	LossUndo                  string
+	LostRetransmit            string
+	RenoFailures              string
+	SackFailures              string
+	LossFailures              string
+	FastRetrans               string
+	SlowStartRetrans          string
+	Timeouts                  string
+	LossProbes                string
+	LossProbeRecovery         string
+	RenoRecoveryFail          string
+	SackRecoveryFail          string
+	RcvCollapsed              string
+	BacklogCoalesce           string
+	DSACKOldSent              string
+	DSACKOfoSent              string
+	DSACKRecv                 string
+	DSACKOfoRecv              string
+	AbortOnData               string
+	AbortOnClose              string
+	AbortOnMemory             string
+	AbortOnTimeout            string
+	AbortOnLinger             string
+	AbortFailed               string
+	MemoryPressures           string
+	MemoryPressuresChrono     string
+	SACKDiscard               string
+	DSACKIgnoredOld           string
+	DSACKIgnoredNoUndo        string
+	SpuriousRTOs              string
+	MD5NotFound               string
+	MD5Unexpected             string
+	MD5Failure                string
+	SackShifted               string
+	SackMerged                string
+	SackShiftFallback         string
+	BacklogDrop               string
 	PFMemallocDrop            string
-	TCPMinTTLDrop             string
-	TCPDeferAcceptDrop        string
+	MinTTLDrop                string
+	DeferAcceptDrop           string
 	IPReversePathFilter       string
-	TCPTimeWaitOverflow       string
-	TCPReqQFullDoCookies      string
-	TCPReqQFullDrop           string
-	TCPRetransFail            string
-	TCPRcvCoalesce            string
-	TCPOFOQueue               string
-	TCPOFODrop                string
-	TCPOFOMerge               string
-	TCPChallengeACK           string
-	TCPSYNChallenge           string
-	TCPFastOpenActive         string
-	TCPFastOpenActiveFail     string
-	TCPFastOpenPassive        string
-	TCPFastOpenPassiveFail    string
-	TCPFastOpenListenOverflow string
-	TCPFastOpenCookieReqd     string
-	TCPFastOpenBlackhole      string
-	TCPSpuriousRtxHostQueues  string
+	TimeWaitOverflow          string
+	ReqQFullDoCookies         string
+	ReqQFullDrop              string
+	RetransFail               string
+	RcvCoalesce               string
+	OFOQueue                  string
+	OFODrop                   string
+	OFOMerge                  string
+	ChallengeACK              string
+	SYNChallenge              string
+	FastOpenActive            string
+	FastOpenActiveFail        string
+	FastOpenPassive           string
+	FastOpenPassiveFail       string
+	FastOpenListenOverflow    string
+	FastOpenCookieReqd        string
+	FastOpenBlackhole         string
+	FastOpenPassiveAltKey     string
+	SpuriousRtxHostQueues     string
 	BusyPollRxPackets         string
-	TCPAutoCorking            string
-	TCPFromZeroWindowAdv      string
-	TCPToZeroWindowAdv        string
-	TCPWantZeroWindowAdv      string
-	TCPSynRetrans             string
-	TCPOrigDataSent           string
-	TCPHystartTrainDetect     string
-	TCPHystartTrainCwnd       string
-	TCPHystartDelayDetect     string
-	TCPHystartDelayCwnd       string
-	TCPACKSkippedSynRecv      string
-	TCPACKSkippedPAWS         string
-	TCPACKSkippedSeq          string
-	TCPACKSkippedFinWait2     string
-	TCPACKSkippedTimeWait     string
-	TCPACKSkippedChallenge    string
-	TCPWinProbe               string
-	TCPKeepAlive              string
-	TCPMTUPFail               string
-	TCPMTUPSuccess            string
-	TCPDelivered              string
-	TCPDeliveredCE            string
-	TCPAckCompressed          string
-	TCPZeroWindowDrop         string
-	TCPRcvQDrop               string
-	TCPWqueueTooBig           string
-	TCPFastOpenPassiveAltKey  string
-	TcpTimeoutRehash          string
-	TcpDuplicateDataRehash    string
-	TCPDSACKRecvSegs          string
-	TCPDSACKIgnoredDubious    string
-	TCPMigrateReqSuccess      string
-	TCPMigrateReqFailure      string
-	TCPPLBRehash              string
-	TCPAORequired             string
-	TCPAOBad                  string
-	TCPAOKeyNotFound          string
-	TCPAOGood                 string
-	TCPAODroppedIcmps         string
+	AutoCorking               string
+	FromZeroWindowAdv         string
+	ToZeroWindowAdv           string
+	WantZeroWindowAdv         string
+	SynRetrans                string
+	OrigDataSent              string
+	HystartTrainDetect        string
+	HystartTrainCwnd          string
+	HystartDelayDetect        string
+	HystartDelayCwnd          string
+	ACKSkippedSynRecv         string
+	ACKSkippedPAWS            string
+	ACKSkippedSeq             string
+	ACKSkippedFinWait2        string
+	ACKSkippedTimeWait        string
+	ACKSkippedChallenge       string
+	WinProbe                  string
+	KeepAlive                 string
+	MTUPFail                  string
+	MTUPSuccess               string
+	Delivered                 string
+	DeliveredCE               string
+	AckCompressed             string
+	ZeroWindowDrop            string
+	RcvQDrop                  string
+	WqueueTooBig              string
+	TimeoutRehash             string
+	DuplicateDataRehash       string
+	DSACKRecvSegs             string
+	DSACKIgnoredDubious       string
+	MigrateReqSuccess         string
+	MigrateReqFailure         string
+	PLBRehash                 string
+	AORequired                string
+	AOBad                     string
+	AOKeyNotFound             string
+	AOGood                    string
+	AODroppedICMPs            string
+}
 
-	// IpExt
+// IPExtendedStatistics holds extended IP counters, as reported under the
+// "IpExt" section of /proc/net/netstat.
+type IPExtendedStatistics struct {
 	InNoRoutes      string
 	InTruncatedPkts string
 	InMcastPkts     string
@@ -259,164 +588,15 @@ type NetNetStat struct { // file: /proc/net/netstat
 	ReasmOverlaps   string
 }
 
-// -------------------------------------------------------------------------
-// FIB-Trie Stat
-// -------------------------------------------------------------------------
-
-type NetFibTrieStat struct { // file: /proc/net/fib_triestat
-	LeafSizeBytes  string
-	TNodeSizeBytes string
-
-	Main  FibTrieSection
-	Local FibTrieSection
+// NetworkExtendedStatistics holds extended TCP/IP statistics read from
+// /proc/net/netstat.
+type NetworkExtendedStatistics struct { // file: /proc/net/netstat
+	TCP TCPExtendedStatistics
+	IP  IPExtendedStatistics
 }
 
-type FibTrieSection struct {
-	AverageDepth  string
-	MaxDepth      string
-	Leaves        string
-	Prefixes      string
-	InternalNodes string
-
-	Depth1 string
-	Depth2 string
-	Depth3 string
-
-	Pointers    string
-	NullPtrs    string
-	TotalSizeKB string
-
-	Counters FibTrieCounters
-}
-
-type FibTrieCounters struct {
-	Gets                string
-	Backtracks          string
-	SemanticMatchPassed string
-	SemanticMatchMiss   string
-	NullNodeHit         string
-	SkippedNodeResize   string
-}
-
-// -------------------------------------------------------------------------
-// Netlink
-// -------------------------------------------------------------------------
-
-type NetNetlink struct { // file: /proc/net/netlink
-	sk     string
-	eth    string
-	pid    string
-	groups string
-	rmem   string
-	wmem   string
-	dump   string
-	locks  string
-	drops  string
-	inode  string
-}
-
-// -------------------------------------------------------------------------
-// Packet
-// -------------------------------------------------------------------------
-
-type NetPacket struct { // file: /proc/net/packet
-	sk     string
-	refcnt string
-	type_  string
-	proto  string
-	iface  string
-	r      string
-	rmem   string
-	user   string
-	inode  string
-}
-
-// -------------------------------------------------------------------------
-// Protocols
-// -------------------------------------------------------------------------
-
-type NetProtocols struct { // file: /proc/net/protocols
-	Protocols []NetProtocol
-}
-
-type NetProtocol struct {
-	Protocol string
-
-	Size    string
-	Sockets string
-	Memory  string
-	Press   string
-	MaxHdr  string
-	Slab    string
-	Module  string
-
-	Capabilities map[string]string
-}
-
-// -------------------------------------------------------------------------
-// ptype
-// -------------------------------------------------------------------------
-
-type NetPtype struct { // file: /proc/net/ptype
-	type_    string
-	device   string
-	function string
-}
-
-// -------------------------------------------------------------------------
-// Route
-// -------------------------------------------------------------------------
-
-type NetRoute struct { // file: /proc/net/route
-	iface       string
-	destination string
-	gateway     string
-	flags       string
-	refcnt      string
-	use         string
-	metric      string
-	mask        string
-	mtu         string
-	window      string
-	irit        string
-}
-
-// -------------------------------------------------------------------------
-// rt_cache
-// -------------------------------------------------------------------------
-
-type NetRtCache struct { // file: /proc/net/rt_cache
-	iface       string
-	destination string
-	gateway     string
-	flags       string
-	refcnt      string
-	use         string
-	metric      string
-	source      string
-	mtu         string
-	window      string
-	irit        string
-	tos         string
-	hhref       string
-	hhuptod     string
-	specdest    string
-}
-
-// -------------------------------------------------------------------------
-// SNMP
-// -------------------------------------------------------------------------
-
-type NetSNMP struct { // file: /proc/net/snmp
-	IP      NetSNMPIP
-	ICMP    NetSNMPICMP
-	ICMPMsg NetSNMPICMPMsg
-	TCP     NetSNMPTCP
-	UDP     NetSNMPUDP
-	UDPLite NetSNMPUDPLite
-}
-
-type NetSNMPIP struct {
+// SNMPIPStatistics holds IP-layer counters from /proc/net/snmp.
+type SNMPIPStatistics struct {
 	Forwarding      string
 	DefaultTTL      string
 	InReceives      string
@@ -439,7 +619,8 @@ type NetSNMPIP struct {
 	OutTransmits    string
 }
 
-type NetSNMPICMP struct {
+// SNMPICMPStatistics holds ICMP counters from /proc/net/snmp.
+type SNMPICMPStatistics struct {
 	InMsgs             string
 	InErrors           string
 	InCsumErrors       string
@@ -471,11 +652,14 @@ type NetSNMPICMP struct {
 	OutAddrMaskReps    string
 }
 
-type NetSNMPICMPMsg struct {
+// SNMPICMPMessageStatistics holds per-message-type ICMP counters, which are
+// dynamic and thus modeled as a map rather than a fixed schema.
+type SNMPICMPMessageStatistics struct {
 	Types map[string]string
 }
 
-type NetSNMPTCP struct {
+// SNMPTCPStatistics holds TCP-layer counters from /proc/net/snmp.
+type SNMPTCPStatistics struct {
 	RtoAlgorithm string
 	RtoMin       string
 	RtoMax       string
@@ -493,7 +677,9 @@ type NetSNMPTCP struct {
 	InCsumErrors string
 }
 
-type NetSNMPUDP struct {
+// UDPStatistics holds counters shared by the UDP and UDP-Lite sections of
+// /proc/net/snmp, since both protocols report an identical set of fields.
+type UDPStatistics struct {
 	InDatagrams  string
 	NoPorts      string
 	InErrors     string
@@ -505,282 +691,254 @@ type NetSNMPUDP struct {
 	MemErrors    string
 }
 
-type NetSNMPUDPLite struct {
-	InDatagrams  string
-	NoPorts      string
-	InErrors     string
-	OutDatagrams string
-	RcvbufErrors string
-	SndbufErrors string
-	InCsumErrors string
-	IgnoredMulti string
-	MemErrors    string
+// SNMPStatistics holds protocol statistics read from /proc/net/snmp.
+type SNMPStatistics struct { // file: /proc/net/snmp
+	IP      SNMPIPStatistics
+	ICMP    SNMPICMPStatistics
+	ICMPMsg SNMPICMPMessageStatistics
+	TCP     SNMPTCPStatistics
+	UDP     UDPStatistics
+	UDPLite UDPStatistics
 }
 
-// -------------------------------------------------------------------------
-// SNMP
-// -------------------------------------------------------------------------
-
-type NetSNMP6 struct { // file: /proc/net/snmp6
+// SNMP6Statistics holds IPv6 protocol statistics read from
+// /proc/net/snmp6. The kernel reports a variable, version-dependent set of
+// metrics, so they are modeled as a map rather than a fixed schema.
+type SNMP6Statistics struct { // file: /proc/net/snmp6
 	Metrics map[string]string
 }
 
-// -------------------------------------------------------------------------
-// Sockstat
-// -------------------------------------------------------------------------
-
-type NetSockstat struct { // file: /proc/net/sockstat
-	sockets  string
-	tcp      string
-	udp      string
-	udp_lite string
-	raw      string
-	frag     string
+// SocketTypeCounters holds per-protocol socket usage counters shared by the
+// IPv4 and IPv6 socket summary files.
+type SocketTypeCounters struct {
+	TCP     string
+	UDP     string
+	UDPLite string
+	RAW     string
+	Frag    string
 }
 
-type NetSockstat6 struct { // file: /proc/net/sockstat6
-	tcp6      string
-	udp6      string
-	udp_lite6 string
-	raw6      string
-	frag6     string
+// SocketStatistics holds IPv4 socket usage summary data.
+type SocketStatistics struct { // file: /proc/net/sockstat
+	Sockets  string
+	Counters SocketTypeCounters
 }
 
-// -------------------------------------------------------------------------
-// TCP
-// -------------------------------------------------------------------------
-
-type NetTcp struct { // file: /proc/net/tcp
-	sl            []string
-	local_address []string
-	rem_Address   []string
-	st            []string
-	tx_queue      []string
-	rx_queue      []string
-	tr            []string
-	tm_when       []string
-	retrnsmt      []string
-	uid           []string
-	timeout       []string
-	inode         []string
+// SocketStatistics6 holds IPv6 socket usage summary data.
+type SocketStatistics6 struct { // file: /proc/net/sockstat6
+	Counters SocketTypeCounters
 }
 
-// -------------------------------------------------------------------------
-// TLS Stat
-// -------------------------------------------------------------------------
-
-type NetTLSStat struct { // file: /proc/net/tls_stat
-	TlsCurrTxSw         string
-	TlsCurrRxSw         string
-	TlsCurrTxDevice     string
-	TlsCurrRxDevice     string
-	TlsTxSw             string
-	TlsRxSw             string
-	TlsTxDevice         string
-	TlsRxDevice         string
-	TlsDecryptError     string
-	TlsRxDeviceResync   string
-	TlsDecryptRetry     string
-	TlsRxNoPadViolation string
-	TlsRxRekeyOk        string
-	TlsRxRekeyError     string
-	TlsTxRekeyOk        string
-	TlsTxRekeyError     string
-	TlsRxRekeyReceived  string
+// ProtocolStatistics represents a single protocol row read from
+// /proc/net/protocols. Capabilities are modeled as a map since the
+// available capability flags vary by kernel build.
+type ProtocolStatistics struct {
+	Protocol     string
+	Size         string
+	Sockets      string
+	Memory       string
+	Press        string
+	MaxHeader    string
+	Slab         string
+	Module       string
+	Capabilities map[string]string
 }
 
-// -------------------------------------------------------------------------
-// UDP
-// -------------------------------------------------------------------------
-
-type NetUdp struct { // file: /proc/net/udp
-	sl            []string
-	local_address []string
-	rem_Address   []string
-	st            []string
-	tx_queue      []string
-	rx_queue      []string
-	tr            []string
-	tm_when       []string
-	retrnsmt      []string
-	uid           []string
-	timeout       []string
-	inode         []string
-	ref           []string
-	pointer       []string
-	drops         []string
+// ProtocolStatisticsTable holds all entries read from /proc/net/protocols.
+type ProtocolStatisticsTable struct { // file: /proc/net/protocols
+	Protocols []ProtocolStatistics
 }
 
-// -------------------------------------------------------------------------
-// Unix
-// -------------------------------------------------------------------------
-
-type NetUnix struct { // file: /proc/net/unix
-	num       []string
-	ref_count []string
-	protocol  []string
-	flags     []string
-	type_     []string
-	st        []string
-	inode     []string
-	path      []string
+// TLSSessionCounts holds a count of TLS sessions broken down by direction
+// and offload mode. Reused for both current (in-progress) and cumulative
+// totals.
+type TLSSessionCounts struct {
+	TxSoftware string
+	RxSoftware string
+	TxDevice   string
+	RxDevice   string
 }
 
-// -------------------------------------------------------------------------
-// xfrm_stat
-// -------------------------------------------------------------------------
+// TLSErrorCounts holds TLS decryption/validation error counters.
+type TLSErrorCounts struct {
+	DecryptError     string
+	RxDeviceResync   string
+	DecryptRetry     string
+	RxNoPadViolation string
+}
 
-type NetXFRMStat struct { // file: /proc/net/xfrm_stat
-	XfrmInError           string
-	XfrmInBufferError     string
-	XfrmInHdrError        string
-	XfrmInNoStates        string
-	XfrmInStateProtoError string
-	XfrmInStateModeError  string
-	XfrmInStateSeqError   string
-	XfrmInStateExpired    string
-	XfrmInStateMismatch   string
-	XfrmInStateInvalid    string
-	XfrmInTmplMismatch    string
-	XfrmInNoPols          string
-	XfrmInPolBlock        string
-	XfrmInPolError        string
+// TLSRekeyCounts holds TLS session rekey counters.
+type TLSRekeyCounts struct {
+	RxOK       string
+	RxError    string
+	TxOK       string
+	TxError    string
+	RxReceived string
+}
 
-	XfrmOutError            string
-	XfrmOutBundleGenError   string
-	XfrmOutBundleCheckError string
-	XfrmOutNoStates         string
-	XfrmOutStateProtoError  string
-	XfrmOutStateModeError   string
-	XfrmOutStateSeqError    string
-	XfrmOutStateExpired     string
-	XfrmOutPolBlock         string
-	XfrmOutPolDead          string
-	XfrmOutPolError         string
-
-	XfrmFwdHdrError      string
-	XfrmOutStateInvalid  string
-	XfrmAcquireError     string
-	XfrmOutStateDirError string
-	XfrmInStateDirError  string
-	XfrmInIptfsError     string
-	XfrmOutNoQueueSpace  string
+// TLSStatistics holds kernel TLS offload statistics read from
+// /proc/net/tls_stat.
+type TLSStatistics struct { // file: /proc/net/tls_stat
+	Current TLSSessionCounts
+	Total   TLSSessionCounts
+	Errors  TLSErrorCounts
+	Rekey   TLSRekeyCounts
 }
 
 // =====================================================================================
-// =====================================================================================
-// Search: /sys
-// =====================================================================================
+// Security
 // =====================================================================================
 
-type NetEth0 struct {
-	addr_assign_type string
-	addr_len string 
-	address string
-	broadcast string
-	carrier string 
-	carrier_changes string 
-	carrier_down_count string 
-	carrier_up_count string
-	dev_id string 
-	dev_port string 
-	device NetEth0Device
-
+// XFRMInboundStatistics holds inbound IPsec/XFRM error and drop counters.
+type XFRMInboundStatistics struct {
+	Error             string
+	BufferError       string
+	HeaderError       string
+	NoStates          string
+	StateProtoError   string
+	StateModeError    string
+	StateSeqError     string
+	StateExpired      string
+	StateMismatch     string
+	StateInvalid      string
+	StateDirError     string
+	TemplateMismatch  string
+	NoPolicies        string
+	PolicyBlock       string
+	PolicyError       string
+	IptfsError        string
 }
 
-type NetEth0_ struct {
-	addr_assign_type string
-	addr_len string 
-	address string
-	broadcast string
-	carrier string 
-	carrier_changes string 
-	carrier_down_count string 
-	carrier_up_count string
-	dev_id string 
-	dev_port string 
-
+// XFRMOutboundStatistics holds outbound IPsec/XFRM error and drop counters.
+type XFRMOutboundStatistics struct {
+	Error             string
+	BundleGenError    string
+	BundleCheckError  string
+	NoStates          string
+	StateProtoError   string
+	StateModeError    string
+	StateSeqError     string
+	StateExpired      string
+	StateInvalid      string
+	StateDirError     string
+	PolicyBlock       string
+	PolicyDead        string
+	PolicyError       string
+	NoQueueSpace      string
 }
 
-type NetEth0Device struct {
-	channel_vp_mapping []string 
-	channel NetEth0DeviceChannel
-	class_id string
-	client_monitor_conn_id string 
-	client_monitor_latency string 
-	client_monitor_pending string
-	device string 
-	device_id string 
-	driver_override string 
-	id string 
-	in_intr_mask string
-	in_read_bytes_avail string 
-	in_read_index string
-	in_write_bytes_avail string 
-	in_write_index string 
-	modalias string 
-	monitor_id string
-	
-	net NetEth0_
-	numa_node string 
-	out_intr_mask string 
-	out_read_bytes_avail string 
-	out_read_index string 
-	out_write_bytes_avail string 
-
-	out_write_index string 
-	power NetEth0DevicePower
-	server_monitor_conn_id string 
-	server_monitor_latency string
-
-	server_monitor_pending string
-	state string 
-	subsystem NetEth0DeviceSubsystem
-	
-	uevent NetEth0DeviceUevent
-	vendor string
-
+// XFRMStatistics holds IPsec/XFRM subsystem statistics read from
+// /proc/net/xfrm_stat.
+type XFRMStatistics struct { // file: /proc/net/xfrm_stat
+	Inbound            XFRMInboundStatistics
+	Outbound           XFRMOutboundStatistics
+	ForwardHeaderError string
+	AcquireError       string
 }
 
-type NetEth0DeviceNet struct {
+// =====================================================================================
+// Configuration
+// =====================================================================================
 
+// OSRelease holds parsed key/value data from /etc/os-release.
+type OSRelease struct { // file: /etc/os-release
+	PrettyName        string
+	Name              string
+	VersionID         string
+	Version           string
+	VersionCodename   string
+	ID                string
+	IDLike            string
+	HomeURL           string
+	SupportURL        string
+	BugReportURL      string
+	PrivacyPolicyURL  string
+	UbuntuCodename    string
+	Logo              string
 }
 
-type NetEth0DeviceSubsystem struct {
-	drivers_autoprobe string
-	hibernation string
+// Hostname holds the system hostname from /etc/hostname.
+type Hostname struct { // file: /etc/hostname
+	Name string
 }
 
-type NetEth0DevicePower struct {
-	control string
-	runtime_active_time string 
-	runtime_status string
-	runtime_suspended_time string
+// HostsEntry represents a single host-to-address mapping.
+type HostsEntry struct {
+	IPAddress string
+	Hostnames []string
 }
 
-type NetEth0DeviceChannel struct {
-	channel map[string]NetEth0DeviceChannelSingle  // channels: 15  16  17  18  19  20  21  22  23  24  25  26  // note: my pc
+// HostsFile holds all entries parsed from /etc/hosts.
+type HostsFile struct { // file: /etc/hosts
+	Entries []HostsEntry
 }
 
-type NetEth0DeviceUevent struct {
-	driver string 
-	modalias string
+// ResolvConf holds parsed DNS resolver configuration from
+// /etc/resolv.conf.
+type ResolvConf struct { // file: /etc/resolv.conf
+	Nameservers []string
+	Search      []string
+	Domain      string
+	Options     []string
 }
 
-type NetEth0DeviceChannelSingle struct {
-	cpu string 
-	events string 
-	in_mask string 
-	interrupts string 
-	intr_in_full string 
-	intr_out_empty string 
-	latency string 
-	monitor_id string 
-	out_full_first string 
-	out_full_total string 
-	out_mask string 
-	pending string
-	read_avail string 
-	subchannel_id string 
-	write_avail string
+// NsswitchEntry represents a single database-to-source mapping from
+// /etc/nsswitch.conf.
+type NsswitchEntry struct {
+	Database string
+	Sources  []string
+}
+
+// NsswitchConfiguration holds all entries parsed from /etc/nsswitch.conf.
+type NsswitchConfiguration struct { // file: /etc/nsswitch.conf
+	Entries []NsswitchEntry
+}
+
+// PasswdEntry represents a single user account row from /etc/passwd.
+type PasswdEntry struct {
+	Username      string
+	Password      string
+	UID           string
+	GID           string
+	Comment       string
+	HomeDirectory string
+	Shell         string
+}
+
+// PasswdFile holds all entries parsed from /etc/passwd.
+type PasswdFile struct { // file: /etc/passwd
+	Entries []PasswdEntry
+}
+
+// ShellsFile holds the list of valid login shells from /etc/shells.
+type ShellsFile struct { // file: /etc/shells
+	Paths []string
+}
+
+// ProtocolDefinition represents a single protocol entry from
+// /etc/protocols, distinct from the runtime ProtocolStatistics reported by
+// /proc/net/protocols.
+type ProtocolDefinition struct {
+	Name    string
+	Number  string
+	Aliases []string
+}
+
+// ProtocolRegistry holds all entries parsed from /etc/protocols.
+type ProtocolRegistry struct { // file: /etc/protocols
+	Protocols []ProtocolDefinition
+}
+
+// ServiceEntry represents a single service-to-port mapping from
+// /etc/services.
+type ServiceEntry struct {
+	Name     string
+	Port     string
+	Protocol string
+	Aliases  []string
+}
+
+// ServicesFile holds all entries parsed from /etc/services.
+type ServicesFile struct { // file: /etc/services
+	Entries []ServiceEntry
 }
