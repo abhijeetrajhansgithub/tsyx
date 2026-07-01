@@ -666,3 +666,121 @@ type NetXFRMStat struct { // file: /proc/net/xfrm_stat
 	XfrmInIptfsError     string
 	XfrmOutNoQueueSpace  string
 }
+
+// =====================================================================================
+// =====================================================================================
+// Search: /sys
+// =====================================================================================
+// =====================================================================================
+
+type NetEth0 struct {
+	addr_assign_type string
+	addr_len string 
+	address string
+	broadcast string
+	carrier string 
+	carrier_changes string 
+	carrier_down_count string 
+	carrier_up_count string
+	dev_id string 
+	dev_port string 
+	device NetEth0Device
+
+}
+
+type NetEth0_ struct {
+	addr_assign_type string
+	addr_len string 
+	address string
+	broadcast string
+	carrier string 
+	carrier_changes string 
+	carrier_down_count string 
+	carrier_up_count string
+	dev_id string 
+	dev_port string 
+
+}
+
+type NetEth0Device struct {
+	channel_vp_mapping []string 
+	channel NetEth0DeviceChannel
+	class_id string
+	client_monitor_conn_id string 
+	client_monitor_latency string 
+	client_monitor_pending string
+	device string 
+	device_id string 
+	driver_override string 
+	id string 
+	in_intr_mask string
+	in_read_bytes_avail string 
+	in_read_index string
+	in_write_bytes_avail string 
+	in_write_index string 
+	modalias string 
+	monitor_id string
+	
+	net NetEth0_
+	numa_node string 
+	out_intr_mask string 
+	out_read_bytes_avail string 
+	out_read_index string 
+	out_write_bytes_avail string 
+
+	out_write_index string 
+	power NetEth0DevicePower
+	server_monitor_conn_id string 
+	server_monitor_latency string
+
+	server_monitor_pending string
+	state string 
+	subsystem NetEth0DeviceSubsystem
+	
+	uevent NetEth0DeviceUevent
+	vendor string
+
+}
+
+type NetEth0DeviceNet struct {
+
+}
+
+type NetEth0DeviceSubsystem struct {
+	drivers_autoprobe string
+	hibernation string
+}
+
+type NetEth0DevicePower struct {
+	control string
+	runtime_active_time string 
+	runtime_status string
+	runtime_suspended_time string
+}
+
+type NetEth0DeviceChannel struct {
+	channel map[string]NetEth0DeviceChannelSingle  // channels: 15  16  17  18  19  20  21  22  23  24  25  26  // note: my pc
+}
+
+type NetEth0DeviceUevent struct {
+	driver string 
+	modalias string
+}
+
+type NetEth0DeviceChannelSingle struct {
+	cpu string 
+	events string 
+	in_mask string 
+	interrupts string 
+	intr_in_full string 
+	intr_out_empty string 
+	latency string 
+	monitor_id string 
+	out_full_first string 
+	out_full_total string 
+	out_mask string 
+	pending string
+	read_avail string 
+	subchannel_id string 
+	write_avail string
+}
