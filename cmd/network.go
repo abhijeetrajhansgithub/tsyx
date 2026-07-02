@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"runtime"
+	"strings"
 
 	"github.com/spf13/cobra"
 	"github.com/abhijeetrajhansgithub/tsyx/internal/network"
@@ -75,9 +76,31 @@ var netCmd = &cobra.Command{
 			}
 		}
 
-				return nil
-			},
+		fmt.Printf("Branch: %s, File: %s\n", branchNet, fileNet)
+
+		var b strings.Builder
+
+		b.WriteString(branchNet)
+		b.WriteString("_")
+		b.WriteString(fileNet)
+
+		key := b.String()
+		fmt.Printf("key: %s\n", key)
+
+		if key=="proc_arp" {
+			arpTableInfo, err := net.LinuxCollectArp(key)
+			if err != nil {
+				return err
+			}
+
+			net.FormatARP(arpTableInfo)
 		}
+
+		return nil
+	},
+}
+
+		
 
 func init() {
 	rootCmd.AddCommand(netCmd)
@@ -86,7 +109,7 @@ func init() {
 		&branchNet,
 		"branch",
 		"b",
-		"none",
+		"proc",
 		`Branch:
   proc (p)
   sys  (s)
@@ -97,7 +120,7 @@ func init() {
 		&fileNet,
 		"file",
 		"f",
-		"none",
+		"arp",
 		`File:
 
 proc:

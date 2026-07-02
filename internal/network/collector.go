@@ -1,5 +1,10 @@
 package net
 
+import (
+	"os"
+	"strings"
+)
+
 var DirMap map[string]string = map[string]string{
 	// =========================
 	// /proc/net
@@ -49,6 +54,38 @@ var DirMap map[string]string = map[string]string{
 	"etc_services":   "/etc/services",
 }
 
-func LinuxCollect() {
-	
+func LinuxCollectArp(key string) (ARPTable, error) {
+	arpTable := ARPTable{}
+
+	content, err := os.ReadFile(DirMap[key])
+	if err != nil {
+		return arpTable, err
+	}
+
+	lines := strings.Split(string(content), "\n")
+
+	for i, line := range lines {
+		if i == 0 || strings.TrimSpace(line) == "" {
+			continue
+		}
+		
+		fields := strings.Fields(line)
+
+		if len(fields) < 6 {
+			continue
+		}
+
+		entry := ARPEntry{
+			IPAddress:    fields[0],
+			HardwareType: fields[1],
+			Flags:        fields[2],
+			HardwareAddr: fields[3],
+			Mask:         fields[4],
+			Device:       fields[5],
+		}
+
+		arpTable.Entries = append(arpTable.Entries, entry)
+	}
+
+	return arpTable, nil
 }
