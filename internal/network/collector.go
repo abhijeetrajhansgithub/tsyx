@@ -1,6 +1,7 @@
 package net
 
 import (
+	// "fmt"
 	"os"
 	"strings"
 )
@@ -52,6 +53,69 @@ var DirMap map[string]string = map[string]string{
 	"etc_shells":     "/etc/shells",
 	"etc_protocols":  "/etc/protocols",
 	"etc_services":   "/etc/services",
+}
+
+func LinuxCollectDev(key string) (NetworkDeviceStats, error) {
+	networkDeviceStats := NetworkDeviceStats{}
+
+	content, err := os.ReadFile(DirMap[key])
+	if err != nil {
+		return networkDeviceStats, err
+	}
+
+	// raw print
+	// fmt.Println(string(content))
+
+	lines := strings.Split(string(content), "\n")
+
+	for i, line := range lines {
+
+		// Skip the two header lines and blank lines
+		if i < 2 || strings.TrimSpace(line) == "" {
+			continue
+		}
+
+		fields := strings.Fields(line)
+
+		if len(fields) < 17 {
+			continue
+		}
+
+		entry := InterfaceTraffic{
+			Interface: strings.TrimSuffix(fields[0], ":"),
+
+			Received: ReceivedTraffic{
+				TrafficCounters: TrafficCounters{
+					Bytes:      fields[1],
+					Packets:    fields[2],
+					Errors:     fields[3],
+					Drop:       fields[4],
+					Fifo:       fields[5],
+					Compressed: fields[7],
+				},
+				Frame:     fields[6],
+				Multicast: fields[8],
+			},
+
+			Transmitted: TransmittedTraffic{
+				TrafficCounters: TrafficCounters{
+					Bytes:      fields[9],
+					Packets:    fields[10],
+					Errors:     fields[11],
+					Drop:       fields[12],
+					Fifo:       fields[13],
+					Compressed: fields[16],
+				},
+				Collisions: fields[14],
+				Carrier:    fields[15],
+			},
+		}
+
+		networkDeviceStats.Interfaces = append(networkDeviceStats.Interfaces, entry)
+	}
+
+	return networkDeviceStats, nil
+
 }
 
 func LinuxCollectArp(key string) (ARPTable, error) {

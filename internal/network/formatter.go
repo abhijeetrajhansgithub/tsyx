@@ -4,6 +4,60 @@ import (
 	"fmt"
 	"strings"
 )
+func FormatDev(stats NetworkDeviceStats) {
+	if len(stats.Interfaces) == 0 {
+		fmt.Println("No network interface statistics found.")
+		return
+	}
+
+	fmt.Printf(
+		"%-10s %-12s %-10s %-6s %-6s %-6s %-6s %-12s %-12s %-12s %-10s %-6s %-6s %-6s %-6s %-10s %-10s\n",
+		"INTERFACE",
+		"RX_BYTES",
+		"RX_PKTS",
+		"ERRS",
+		"DROP",
+		"FIFO",
+		"FRAME",
+		"RX_COMP",
+		"RX_MULTI",
+		"TX_BYTES",
+		"TX_PKTS",
+		"ERRS",
+		"DROP",
+		"FIFO",
+		"COLLS",
+		"CARRIER",
+		"TX_COMP",
+	)
+
+	fmt.Println(strings.Repeat("-", 170))
+
+	for _, iface := range stats.Interfaces {
+		fmt.Printf(
+			"%-10s %-12s %-10s %-6s %-6s %-6s %-6s %-12s %-12s %-12s %-10s %-6s %-6s %-6s %-6s %-10s %-10s\n",
+			iface.Interface,
+
+			iface.Received.Bytes,
+			iface.Received.Packets,
+			iface.Received.Errors,
+			iface.Received.Drop,
+			iface.Received.Fifo,
+			iface.Received.Frame,
+			iface.Received.Compressed,
+			iface.Received.Multicast,
+
+			iface.Transmitted.Bytes,
+			iface.Transmitted.Packets,
+			iface.Transmitted.Errors,
+			iface.Transmitted.Drop,
+			iface.Transmitted.Fifo,
+			iface.Transmitted.Collisions,
+			iface.Transmitted.Carrier,
+			iface.Transmitted.Compressed,
+		)
+	}
+}
 
 func FormatARP(table ARPTable) {
 	if len(table.Entries) == 0 {

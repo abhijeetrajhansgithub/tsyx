@@ -85,15 +85,23 @@ var netCmd = &cobra.Command{
 		b.WriteString(fileNet)
 
 		key := b.String()
-		fmt.Printf("key: %s\n", key)
+		fmt.Printf("key: %s\n", key)	
 
-		if key=="proc_arp" {
+		switch key {
+		case "proc_arp":
 			arpTableInfo, err := net.LinuxCollectArp(key)
 			if err != nil {
 				return err
 			}
 
 			net.FormatARP(arpTableInfo)
+		case "proc_dev":
+			devStructInfo, err := net.LinuxCollectDev(key)
+			if err != nil {
+				return err
+			}
+
+			net.FormatDev(devStructInfo)
 		}
 
 		return nil
