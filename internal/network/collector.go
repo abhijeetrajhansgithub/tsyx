@@ -58,6 +58,35 @@ var DirMap map[string]string = map[string]string{
 func LinuxCollectIfInet6(key string) (IPv6AddressTable, error) {
 	ipv6AddrTab := IPv6AddressTable{}
 
+	content, err := os.ReadFile(DirMap[key])
+	if err != nil {
+		return ipv6AddrTab, err
+	}
+
+	// raw print
+	// fmt.Println(string(content))
+
+	lines := strings.Split(string(content), "\n")
+
+	for _, line := range lines {
+		fields := strings.Fields(line)
+
+		if len(fields) != 6 {
+			continue
+		}
+
+		entry := IPv6Address{
+			Address: fields[0],
+			InterfaceIndex: fields[1],
+			PrefixLength: fields[2],
+			Scope: fields[3],
+			Flags: fields[4],
+			InterfaceName: fields[5],
+		}
+
+		ipv6AddrTab.Addresses = append(ipv6AddrTab.Addresses, entry)
+	}
+
 	return ipv6AddrTab, nil
 }
 
