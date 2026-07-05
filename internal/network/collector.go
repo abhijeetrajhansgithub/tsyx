@@ -55,6 +55,7 @@ var DirMap map[string]string = map[string]string{
 	"etc_services":   "/etc/services",
 }
 
+
 func LinuxCollectIfInet6(key string) (IPv6AddressTable, error) {
 	ipv6AddrTab := IPv6AddressTable{}
 
@@ -88,7 +89,7 @@ func LinuxCollectIfInet6(key string) (IPv6AddressTable, error) {
 	}
 
 	return ipv6AddrTab, nil
-}
+	}
 
 func LinuxCollectDev(key string) (NetworkDeviceStats, error) {
 	networkDeviceStats := NetworkDeviceStats{}
