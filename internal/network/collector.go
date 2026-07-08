@@ -56,7 +56,18 @@ var DirMap map[string]string = map[string]string{
 }
 
 func LinuxCollectPtype(key string) (PacketTypeHandlerTable, error) {
-	
+	ptypeTab := PacketTypeHandlerTable{}
+
+	content, err := os.ReadFile(DirMap[key])
+	if err != nil {
+		return ptypeTab, err
+	}
+
+	lines := strings.Split(string(content), "\n")
+
+	for _, line := range lines {
+		// TODO
+	}
 }
 
 
