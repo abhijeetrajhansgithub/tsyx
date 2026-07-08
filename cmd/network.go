@@ -102,7 +102,15 @@ var netCmd = &cobra.Command{
 			}
 
 			net.FormatDev(devStructInfo)
-		}
+		case "proc_if_inet6":
+			ifnetInfo, err := net.LinuxCollectIfInet6(key)
+			if err != nil {
+				return err
+			}
+
+			net.FormatIfNet6(ifnetInfo)
+		} 
+
 
 		return nil
 	},

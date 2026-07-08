@@ -90,6 +90,7 @@ func LinuxCollectIfInet6(key string) (IPv6AddressTable, error) {
 
 	return ipv6AddrTab, nil
 	}
+	
 
 func LinuxCollectDev(key string) (NetworkDeviceStats, error) {
 	networkDeviceStats := NetworkDeviceStats{}
