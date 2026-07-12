@@ -55,6 +55,22 @@ var DirMap map[string]string = map[string]string{
 	"etc_services":   "/etc/services",
 }
 
+func LinuxCollectIGMP(key string) (MulticastGroupTable, error) {
+	igmpTab := MulticastGroupTable{}
+
+	content, err := os.ReadFile(DirMap[key])
+	if err != nil {
+		return igmpTab, err
+	}
+
+	lines := strings.Split(string(content), "\n")
+
+	for _, line := range lines {
+		// TODO
+	}
+
+}
+
 func LinuxCollectPtype(key string) (PacketTypeHandlerTable, error) {
 	ptypeTab := PacketTypeHandlerTable{}
 
