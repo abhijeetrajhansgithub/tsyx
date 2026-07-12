@@ -4,6 +4,46 @@ import (
 	"fmt"
 	"strings"
 )
+
+func FormatIGMP (table MulticastGroupTable) {
+	if len(table.Groups) == 0 {
+		fmt.Println("No IGMP entries found.")
+		return
+	}
+
+	fmt.Printf(
+		"%-35s %-20s %-15s %-20s %-20s %-10s %-15s %-15s\n",
+		"Index",    
+		"Device",   
+		"Count",    
+		"Querier",  
+		"Group",    
+		"Users",    
+		"Timer",    
+		"Reporter",
+	)
+
+	for _, irow := range table.Groups {
+		
+		fmt.Printf(
+			"%-35s %-20s %-15s %-20s %-20s %-10s %-15s %-15s\n",
+			irow.Index ,   
+			irow.Device ,  
+			irow.Count,
+			irow.Querier,
+			irow.Group,    
+			irow.Users,    
+			irow.Timer,    
+			irow.Reporter,
+		)
+		
+	}
+
+
+
+
+}
+
 func FormatDev(stats NetworkDeviceStats) {
 	if len(stats.Interfaces) == 0 {
 		fmt.Println("No network interface statistics found.")

@@ -109,6 +109,14 @@ var netCmd = &cobra.Command{
 			}
 
 			net.FormatIfNet6(ifnetInfo)
+		case "proc_igmp":
+			igmpInfo, err := net.LinuxCollectIGMP(key)
+			if err != nil {
+				return err
+			}
+
+			net.FormatIGMP(igmpInfo)
+
 		} 
 
 

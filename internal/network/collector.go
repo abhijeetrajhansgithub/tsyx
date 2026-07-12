@@ -67,24 +67,58 @@ func LinuxCollectIGMP(key string) (MulticastGroupTable, error) {
 
 	for _, line := range lines {
 		// TODO
+
+		fields := strings.Fields(line)
+
+		length := len(fields)
+
+		entry := MulticastGroup{}
+
+		switch length {
+		case 5:	
+			entry.Index = fields[0]
+			entry.Device = fields[1]
+			entry.Count = fields[3]
+			entry.Querier = fields[4]
+
+			entry.Group = ""
+			entry.Users = ""
+			entry.Timer = ""
+			entry.Reporter = ""
+		case 4:
+			entry.Index = ""
+			entry.Device = ""
+			entry.Count = ""
+			entry.Querier = ""
+
+			entry.Group = fields[0]
+			entry.Users = fields[1]
+			entry.Timer = fields[2]
+			entry.Reporter = fields[3]
+		}
+
+		igmpTab.Groups = append(igmpTab.Groups, entry)
+
 	}
+
+	return igmpTab, nil
 
 }
 
-func LinuxCollectPtype(key string) (PacketTypeHandlerTable, error) {
-	ptypeTab := PacketTypeHandlerTable{}
+// func LinuxCollectPtype(key string) (PacketTypeHandlerTable, error) {
+// 	ptypeTab := PacketTypeHandlerTable{}
 
-	content, err := os.ReadFile(DirMap[key])
-	if err != nil {
-		return ptypeTab, err
-	}
+// 	content, err := os.ReadFile(DirMap[key])
+// 	if err != nil {
+// 		return ptypeTab, err
+// 	}
 
-	lines := strings.Split(string(content), "\n")
+// 	lines := strings.Split(string(content), "\n")
 
-	for _, line := range lines {
-		// TODO
-	}
-}
+// 	for _, line := range lines {
+// 		// TODO
+// 	}
+// }
 
 
 func LinuxCollectIfInet6(key string) (IPv6AddressTable, error) {
