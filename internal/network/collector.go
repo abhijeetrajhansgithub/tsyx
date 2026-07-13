@@ -59,6 +59,12 @@ func LinuxCollectIGMP6 (key string) (MulticastGroupTable6, error) {
 	igmpTab := MulticastGroupTable6{}
 
 	// TODO
+	content, err := os.ReadFile(DirMap[key])
+	if err != nil {
+		return igmpTab, err
+	}
+
+	
 
 	return igmpTab, nil
 }
