@@ -58,13 +58,16 @@ var DirMap map[string]string = map[string]string{
 func LinuxCollectIGMP6 (key string) (MulticastGroupTable6, error) {
 	igmpTab := MulticastGroupTable6{}
 
-	// TODO
 	content, err := os.ReadFile(DirMap[key])
 	if err != nil {
 		return igmpTab, err
 	}
 
 	lines := strings.Split(string(content), "\n")
+
+	for _, line := range lines {
+		// TODO
+	}
 
 	return igmpTab, nil
 }
