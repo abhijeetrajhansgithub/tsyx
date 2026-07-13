@@ -64,7 +64,7 @@ func LinuxCollectIGMP6 (key string) (MulticastGroupTable6, error) {
 		return igmpTab, err
 	}
 
-	
+	lines := strings.Split(string(content), "\n")
 
 	return igmpTab, nil
 }
