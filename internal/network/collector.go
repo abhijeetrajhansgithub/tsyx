@@ -55,6 +55,14 @@ var DirMap map[string]string = map[string]string{
 	"etc_services":   "/etc/services",
 }
 
+func LinuxCollectIGMP6 (key string) (MulticastGroupTable6, error) {
+	igmpTab := MulticastGroupTable6{}
+
+	// TODO
+
+	return igmpTab, nil
+}
+
 func LinuxCollectIGMP(key string) (MulticastGroupTable, error) {
 	igmpTab := MulticastGroupTable{}
 
