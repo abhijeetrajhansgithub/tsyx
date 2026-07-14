@@ -71,6 +71,10 @@ func LinuxCollectIGMP6 (key string) (MulticastGroupTable6, error) {
 
 		length := len(fields)
 
+		if length != 6 {
+			continue
+		}
+
 		entry := MulticastGroup6{
 			InterfaceIndex: fields[0],
 			InterfaceName: fields[1],
