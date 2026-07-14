@@ -70,6 +70,17 @@ func LinuxCollectIGMP6 (key string) (MulticastGroupTable6, error) {
 		fields := strings.Fields(line)
 
 		length := len(fields)
+
+		entry := MulticastGroup6{
+			InterfaceIndex: fields[0],
+			InterfaceName: fields[1],
+			Address: fields[2],
+			Users: fields[3],
+			Flags: fields[4],
+			Timer: fields[5],
+		}
+
+		igmpTab.Groups = append(igmpTab.Groups, entry)
 	}
 
 	return igmpTab, nil
