@@ -36,6 +36,7 @@ func FormatIGMP6 (table MulticastGroupTable6) {
 	}
 }
 
+
 func FormatIGMP (table MulticastGroupTable) {
 	if len(table.Groups) == 0 {
 		fmt.Println("No IGMP entries found.")
