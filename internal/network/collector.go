@@ -67,6 +67,9 @@ func LinuxCollectIGMP6 (key string) (MulticastGroupTable6, error) {
 
 	for _, line := range lines {
 		// TODO
+		fields := strings.Fields(line)
+
+		length := len(fields)
 	}
 
 	return igmpTab, nil
