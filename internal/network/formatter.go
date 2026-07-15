@@ -5,6 +5,41 @@ import (
 	"strings"
 )
 
+func FormatPType(handlers []PacketTypeHandler) {
+	if len(handlers) == 0 {
+		fmt.Println("No packet type handlers found.")
+		return
+	}
+
+	fmt.Printf(
+		"%-10s %-20s %-30s %-20s\n",
+		"Type",
+		"Device",
+		"Function",
+		"Module",
+	)
+
+	for _, handler := range handlers {
+		device := handler.Device
+		if device == "" {
+			device = "*"
+		}
+
+		module := handler.Module
+		if module == "" {
+			module = "-"
+		}
+
+		fmt.Printf(
+			"%-10s %-20s %-30s %-20s\n",
+			handler.Type,
+			device,
+			handler.Function,
+			module,
+		)
+	}
+}
+
 func FormatIGMP6 (table MulticastGroupTable6) {
 	if len(table.Groups) == 0 {
 		fmt.Println("No IGMP entries found.")

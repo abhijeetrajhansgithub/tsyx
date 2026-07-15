@@ -123,6 +123,14 @@ var netCmd = &cobra.Command{
 			}
 
 			net.FormatIGMP6(igmpInfo)
+		
+		case "proc_ptype":
+			ptypeInfo, err := net.LinuxCollectPtype(key)
+			if err != nil {
+				return err
+			}
+
+			net.FormatPType(ptypeInfo.Handlers)
 
 		} 
 
