@@ -79,6 +79,7 @@ type PacketTypeHandler struct {
 	Type     string
 	Device   string
 	Function string
+	Module   string
 }
 
 // PacketTypeHandlerTable holds all entries read from /proc/net/ptype.

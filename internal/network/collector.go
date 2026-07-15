@@ -137,20 +137,69 @@ func LinuxCollectIGMP(key string) (MulticastGroupTable, error) {
 
 }
 
-// func LinuxCollectPtype(key string) (PacketTypeHandlerTable, error) {
-// 	ptypeTab := PacketTypeHandlerTable{}
+func LinuxCollectPtype(key string) (PacketTypeHandlerTable, error) {
+	ptypeTab := PacketTypeHandlerTable{}
 
-// 	content, err := os.ReadFile(DirMap[key])
-// 	if err != nil {
-// 		return ptypeTab, err
-// 	}
+	content, err := os.ReadFile(DirMap[key])
+	if err != nil {
+		return ptypeTab, err
+	}
 
-// 	lines := strings.Split(string(content), "\n")
+	lines := strings.Split(string(content), "\n")
 
-// 	for _, line := range lines {
-// 		// TODO
-// 	}
-// }
+	for _, line := range lines {
+		line = strings.TrimSpace(line)
+
+		// Skip empty lines and header
+		if line == "" || strings.HasPrefix(line, "Type") {
+			continue
+		}
+
+		fields := strings.Fields(line)
+
+		var handler PacketTypeHandler
+
+		switch len(fields) {
+
+		// Example:
+		// 0800 ip_rcv
+		case 2:
+			handler.Type = fields[0]
+			handler.Function = fields[1]
+
+		// Example:
+		// 0004 llc_rcv [llc]
+		// or
+		// 0800 eth0 ip_rcv
+		case 3:
+			handler.Type = fields[0]
+
+			if strings.HasPrefix(fields[2], "[") {
+				handler.Function = fields[1]
+				handler.Module = strings.Trim(fields[2], "[]")
+			} else {
+				handler.Device = fields[1]
+				handler.Function = fields[2]
+			}
+
+		// Example:
+		// 0800 eth0 ip_rcv [llc]
+		case 4:
+			handler.Type = fields[0]
+			handler.Device = fields[1]
+			handler.Function = fields[2]
+			handler.Module = strings.Trim(fields[3], "[]")
+
+		default:
+			continue
+		}
+
+		ptypeTab.Handlers = append(ptypeTab.Handlers, handler)
+
+	}
+
+	return ptypeTab, nil
+}
 
 
 func LinuxCollectIfInet6(key string) (IPv6AddressTable, error) {
