@@ -59,12 +59,15 @@ func LinuxCollectInterfaceDevice(key string) (InterfaceDevice, error) {
 	intDevice := InterfaceDevice{}
 	// TODO
 
-	content, err := os.ReadFile(DirMap[key])
-	if err != nil {
-		return intDevice, err
-	}
+	if key == "sys_class_net" {
+		// Collect Id
+		id, err := ReadSysId()
+		if err != nil {
+			return intDevice, err
+		}
 
-	lines := strings.Split(string(content), "\n")
+		// collect device_id
+	}
 
 	return intDevice, nil
 }
