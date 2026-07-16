@@ -52,3 +52,23 @@ func ReadSysClassId() (string, error) {
 
 }
 
+func ReadSysDriverOverride() (string, error) {
+	content, err := os.ReadFile("/sys/class/eth0/device/driver_override")
+	if err != nil {
+		return "", err
+	}
+
+	line := string(content)
+	fields := strings.Fields(line)
+
+	var str string
+
+	if len(fields) > 0 {
+		str = fields[0]
+	} else {
+		str = ""
+	}
+
+	return str, nil
+}
+

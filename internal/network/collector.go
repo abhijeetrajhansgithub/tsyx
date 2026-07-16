@@ -77,6 +77,12 @@ func LinuxCollectInterfaceDevice(key string) (InterfaceDevice, error) {
 		if err != nil {
 			return intDevice, err
 		}
+
+		// collect driver_override
+		driver_override, err := ReadSysDriverOverride()
+		if err != nil {
+			return intDevice, err
+		}
 	}
 
 	return intDevice, nil
