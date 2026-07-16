@@ -17,3 +17,20 @@ func ReadSysId() (string, error){
 
 	return fields[0], nil
 }
+
+func ReadSysDeviceId() (string, error) {
+	content, err := os.ReadFile("/sys/class/eth0/device/devide_id")
+	if err != nil {
+		return "", err
+	}
+
+	line := string(content)
+	fields := strings.Fields(line)
+
+	var str string = fields[0]
+	str = strings.Trim(str, "{}")
+
+	return str, nil
+
+
+}
