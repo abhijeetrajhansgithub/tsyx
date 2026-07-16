@@ -71,6 +71,12 @@ func LinuxCollectInterfaceDevice(key string) (InterfaceDevice, error) {
 		if err != nil {
 			return intDevice, err
 		}
+
+		// collect class_id
+		class_id, err := ReadSysClassId()
+		if err != nil {
+			return intDevice, err
+		}
 	}
 
 	return intDevice, nil
