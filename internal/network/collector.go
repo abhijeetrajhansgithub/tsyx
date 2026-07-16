@@ -59,6 +59,13 @@ func LinuxCollectInterfaceDevice(key string) (InterfaceDevice, error) {
 	intDevice := InterfaceDevice{}
 	// TODO
 
+	content, err := os.ReadFile(DirMap[key])
+	if err != nil {
+		return intDevice, err
+	}
+
+	lines := strings.Split(string(content), "\n")
+
 	return intDevice, nil
 }
 
