@@ -84,7 +84,9 @@ func LinuxCollectInterfaceDevice(key string) (InterfaceDevice, error) {
 			return intDevice, err
 		}
 
-		
+		// collect mod_alias
+
+
 	}
 
 	return intDevice, nil
