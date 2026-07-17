@@ -102,6 +102,12 @@ func LinuxCollectInterfaceDevice(key string) (InterfaceDevice, error) {
 			return intDevice, err
 		}
 
+		// collect vendor
+		vendor, err := ReadSysVendor()
+		if err != nil {
+			return intDevice, err
+		}
+
 
 
 	}

@@ -50,3 +50,7 @@ func ReadSysState() (string, error) {
 	return readSysFile("state", false)
 }
 
+func ReadSysVendor() (string, error) {
+	return readSysFile("vendor", false)
+}
+
