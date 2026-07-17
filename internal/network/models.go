@@ -202,7 +202,6 @@ type InterfaceDevice struct {
 	NUMANode          string
 	State             string
 	Vendor            string
-	VendorPortMapping []string
 	Power             DevicePowerInfo
 	Subsystem         DeviceSubsystemInfo
 	Uevent            DeviceUeventInfo

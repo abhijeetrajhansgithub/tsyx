@@ -54,3 +54,57 @@ func ReadSysVendor() (string, error) {
 	return readSysFile("vendor", false)
 }
 
+// ----------------------------------------------
+
+func ReadSysPower() (DevicePowerInfo, error) {
+	dpInfo := DevicePowerInfo{}
+
+	// control
+	control, err := readSysFile(
+		"power/control",
+		false,
+	)
+
+	if err != nil {
+		return dpInfo, err
+	}
+
+	// runtime_active_time
+	runtime_active_time, err := readSysFile(
+		"power/runtime_active_time",
+		false,
+	)
+
+	if err != nil {
+		return dpInfo, err
+	}
+
+	// runtime_status
+	runtime_status, err := readSysFile(
+		"power/runtime_status",
+		false,
+	)
+
+	if err != nil {
+		return dpInfo, err
+	}
+
+	// runtime_suspended_time
+	runtime_suspended_time, err := readSysFile(
+		"power/runtime_suspended_time",
+		false,
+	)
+
+	if err != nil {
+		return dpInfo, err
+	}
+
+	dpInfo.Control = control
+	dpInfo.RuntimeActiveTime = runtime_active_time
+	dpInfo.RuntimeStatus = runtime_status
+	dpInfo.RuntimeSuspendedTime = runtime_suspended_time
+
+	return dpInfo, nil
+
+
+}

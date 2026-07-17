@@ -108,6 +108,12 @@ func LinuxCollectInterfaceDevice(key string) (InterfaceDevice, error) {
 			return intDevice, err
 		}
 
+		// power
+		power, err := ReadSysPower()
+		if err != nil {
+			return intDevice, err
+		}
+
 
 
 	}
