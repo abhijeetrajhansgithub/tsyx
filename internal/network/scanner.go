@@ -45,3 +45,8 @@ func ReadSysModalias() (string, error) {
 func ReadSysNumaNode() (string, error) {
 	return readSysFile("numa_node", false)
 }
+
+func ReadSysState() (string, error) {
+	return readSysFile("state", false)
+}
+

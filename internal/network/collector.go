@@ -95,7 +95,13 @@ func LinuxCollectInterfaceDevice(key string) (InterfaceDevice, error) {
 		if err != nil {
 			return intDevice, err
 		}
-		
+
+		// collect state
+		state, err := ReadSysState()
+		if err != nil {
+			return intDevice, err
+		}
+
 
 
 	}
