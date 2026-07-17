@@ -90,6 +90,12 @@ func LinuxCollectInterfaceDevice(key string) (InterfaceDevice, error) {
 			return intDevice, err
 		}
 
+		// collect numa_node
+		numa_node, err := ReadSysNumaNode()
+		if err != nil {
+			return intDevice, err
+		}
+
 
 	}
 

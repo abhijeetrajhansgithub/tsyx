@@ -41,3 +41,7 @@ func ReadSysDriverOverride() (string, error) {
 func ReadSysModalias() (string, error) {
 	return readSysFile("modalias", false)
 }
+
+func ReadSysNumaNode() (string, error) {
+	return readSysFile("numa_node", false)
+}
