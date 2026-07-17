@@ -95,6 +95,7 @@ func LinuxCollectInterfaceDevice(key string) (InterfaceDevice, error) {
 		if err != nil {
 			return intDevice, err
 		}
+		
 
 
 	}
