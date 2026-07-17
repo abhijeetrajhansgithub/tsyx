@@ -5,70 +5,39 @@ import (
 	"strings"
 )
 
+const sysDevicePath = "/sys/class/eth0/device/"
 
-func ReadSysId() (string, error){
-	content, err := os.ReadFile("/sys/class/eth0/device/id")
+func readSysFile(name string, trimBraces bool) (string, error) {
+	content, err := os.ReadFile(sysDevicePath + name)
 	if err != nil {
 		return "", err
 	}
 
-	line := string(content)
-	fields := strings.Fields(line)
+	s := strings.TrimSpace(string(content))
 
-	return fields[0], nil
+	if trimBraces {
+		s = strings.Trim(s, "{}")
+	}
+
+	return s, nil
+}
+
+func ReadSysId() (string, error) {
+	return readSysFile("id", false)
 }
 
 func ReadSysDeviceId() (string, error) {
-	content, err := os.ReadFile("/sys/class/eth0/device/devide_id")
-	if err != nil {
-		return "", err
-	}
-
-	line := string(content)
-	fields := strings.Fields(line)
-
-	var str string = fields[0]
-	str = strings.Trim(str, "{}")
-
-	return str, nil
-
-
+	return readSysFile("device_id", true)
 }
 
 func ReadSysClassId() (string, error) {
-	content, err := os.ReadFile("/sys/class/eth0/device/class_id")
-	if err != nil {
-		return "", err
-	}
-
-	line := string(content)
-	fields := strings.Fields(line)
-
-	var str string = fields[0]
-	str = strings.Trim(str, "{}")
-
-	return str, nil
-
-
+	return readSysFile("class_id", true)
 }
 
 func ReadSysDriverOverride() (string, error) {
-	content, err := os.ReadFile("/sys/class/eth0/device/driver_override")
-	if err != nil {
-		return "", err
-	}
-
-	line := string(content)
-	fields := strings.Fields(line)
-
-	var str string
-
-	if len(fields) > 0 {
-		str = fields[0]
-	} else {
-		str = ""
-	}
-
-	return str, nil
+	return readSysFile("driver_override", false)
 }
 
+func ReadSysModalias() (string, error) {
+	return readSysFile("modalias", false)
+}

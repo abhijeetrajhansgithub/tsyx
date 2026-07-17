@@ -85,6 +85,10 @@ func LinuxCollectInterfaceDevice(key string) (InterfaceDevice, error) {
 		}
 
 		// collect mod_alias
+		modalias, err := ReadSysModalias()
+		if err != nil {
+			return intDevice, err
+		}
 
 
 	}
