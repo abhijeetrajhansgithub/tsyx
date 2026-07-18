@@ -141,6 +141,12 @@ type DeviceSubsystemInfo struct {
 	Hibernation      string
 }
 
+// DeviceUeventInfo describes the uevent metadata reported for a device.
+type DeviceUeventInfo struct {
+	Driver   string
+	Modalias string
+}
+
 // DeviceMonitorInfo describes paravirtual client/server monitor channel state.
 type DeviceMonitorInfo struct {
 	ClientConnectionID string
@@ -198,6 +204,7 @@ type InterfaceDevice struct {
 	Vendor            string
 	Power             DevicePowerInfo
 	Subsystem         DeviceSubsystemInfo
+	Uevent            DeviceUeventInfo
 	Monitor           DeviceMonitorInfo
 	RingBuffer        DeviceRingBuffer
 	Channels          map[string]InterfaceChannel
