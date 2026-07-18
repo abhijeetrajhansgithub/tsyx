@@ -119,6 +119,11 @@ func LinuxCollectInterfaceDevice(key string) (InterfaceDevice, error) {
 			return intDevice, err
 		}
 
+		uevent, err := ReadSysUevent()
+		if err != nil {
+			return intDevice, err
+		}
+
 
 	}
 
