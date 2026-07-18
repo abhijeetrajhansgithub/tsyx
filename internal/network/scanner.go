@@ -136,10 +136,3 @@ func ReadSysSubsystem() (DeviceSubsystemInfo, error) {
 	return dsinfo, nil
 }
 
-func ReadSysUevent() (DeviceUeventInfo, error) {
-	uevent := DeviceUeventInfo{}
-
-	// TODO
-
-	return uevent, nil
-}
