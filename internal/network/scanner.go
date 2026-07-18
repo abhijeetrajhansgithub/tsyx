@@ -2,7 +2,6 @@ package net
 
 import (
 	"os"
-	"path/filepath"
 	"strings"
 )
 
