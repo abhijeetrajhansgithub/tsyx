@@ -114,6 +114,10 @@ func LinuxCollectInterfaceDevice(key string) (InterfaceDevice, error) {
 			return intDevice, err
 		}
 
+		subsystem, err := ReadSysSubsystem()
+		if err != nil {
+			return intDevice, err
+		}
 
 
 	}
