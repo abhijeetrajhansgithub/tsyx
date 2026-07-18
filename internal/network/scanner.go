@@ -2,6 +2,7 @@ package net
 
 import (
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -136,10 +137,41 @@ func ReadSysSubsystem() (DeviceSubsystemInfo, error) {
 	return dsinfo, nil
 }
 
+
 func ReadSysUevent() (DeviceUeventInfo, error) {
 	uevent := DeviceUeventInfo{}
 
-	// TODO
-	
+	// TODO: Replace "uevent" with the absolute path, e.g., "/sys/class/net/eth0/device/uevent"
+	data, err := os.ReadFile("uevent")
+	if err != nil {
+		return uevent, err
+	}
+
+	lines := strings.Split(string(data), "\n")
+
+	for _, line := range lines {
+		// Skip empty lines (like the trailing newline at the end of the file)
+		if line == "" {
+			continue
+		}
+
+		fields := strings.Split(line, "=")
+
+		// Prevent index out of bounds panic if a line doesn't contain an "="
+		if len(fields) != 2 {
+			continue
+		}
+
+		// Correct way to make a string uppercase in Go
+		key := strings.ToUpper(fields[0])
+		val := fields[1]
+
+		if key == "DRIVER" {
+			uevent.Driver = val
+		} else if key == "MODALIAS" {
+			uevent.Modalias = val
+		}
+	}
+
 	return uevent, nil
 }
