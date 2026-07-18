@@ -198,7 +198,6 @@ type InterfaceDevice struct {
 	Vendor            string
 	Power             DevicePowerInfo
 	Subsystem         DeviceSubsystemInfo
-	Uevent            DeviceUeventInfo
 	Monitor           DeviceMonitorInfo
 	RingBuffer        DeviceRingBuffer
 	Channels          map[string]InterfaceChannel
