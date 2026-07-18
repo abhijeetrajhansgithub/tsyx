@@ -141,6 +141,5 @@ func ReadSysUevent() (DeviceUeventInfo, error) {
 
 	// TODO
 	
-
 	return uevent, nil
 }
