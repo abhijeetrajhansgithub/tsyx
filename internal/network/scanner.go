@@ -106,5 +106,33 @@ func ReadSysPower() (DevicePowerInfo, error) {
 
 	return dpInfo, nil
 
+}
+
+
+func ReadSysSubsystem() (DeviceSubsystemInfo, error) {
+	dsinfo := DeviceSubsystemInfo{}
+
+	drivers_autoprobe, err := readSysFile(
+		"subsystem/drivers_autoprobe",
+		false,
+	)
+
+	if err != nil {
+		return dsinfo, err
+	}
+
+	hibernation, err := readSysFile(
+		"subsystem/hibernation",
+		false,
+	)
+
+	if err != nil {
+		return dsinfo, err
+	}
+
+	dsinfo.DriversAutoprobe = drivers_autoprobe
+	dsinfo.Hibernation = hibernation
+
+	return dsinfo, nil
 
 }
