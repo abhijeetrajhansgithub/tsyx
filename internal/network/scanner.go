@@ -134,5 +134,4 @@ func ReadSysSubsystem() (DeviceSubsystemInfo, error) {
 	dsinfo.Hibernation = hibernation
 
 	return dsinfo, nil
-
 }
