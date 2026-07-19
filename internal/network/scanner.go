@@ -291,6 +291,53 @@ func ReadSysRingBuffer() (DeviceRingBuffer, error) {
 		return drb, err
 	}
 
+	out_intr_mask, err := readSysFile(
+		"out_intr_mask",
+		false,
+	)
+
+	if err != nil {
+		return drb, err
+	}
+
+	out_read_bytes_avail, err := readSysFile(
+		"out_read_bytes_avail",
+		false,
+	)
+
+	if err != nil {
+		return drb, err
+	}
+
+	out_read_index, err := readSysFile(
+		"out_read_index",
+		false,
+	)
+
+	if err != nil {
+		return drb, err
+	}
+
+	out_write_bytes_avail, err := readSysFile(
+		"out_write_bytes_avail",
+		false,
+	)
+
+	if err != nil {
+		return drb, err
+	}
+
+	out_write_index, err := readSysFile(
+		"out_write_index",
+		false,
+	)
+
+	if err != nil {
+		return drb, err
+	}
+
+	
+
 
 	return drb, nil
 }
