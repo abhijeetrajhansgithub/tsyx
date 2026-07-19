@@ -177,8 +177,7 @@ func ReadSysUevent() (DeviceUeventInfo, error) {
 
 func ReadSysMonitor() (DeviceMonitorInfo, error) {
 	dmi := DeviceMonitorInfo{}
-
-	// client_monitor_conn_id
+	
 	client_monitor_conn_id, err := readSysFile(
 		"client_monitor_conn_id",
 		false,
