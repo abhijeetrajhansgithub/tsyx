@@ -232,4 +232,14 @@ func ReadSysMonitor() (DeviceMonitorInfo, error) {
 	if err != nil {
 		return dmi, err
 	}
+
+	// assign values if no error
+	dmi.ClientConnectionID = client_monitor_conn_id
+	dmi.ClientLatency = client_monitor_latency
+	dmi.ClientPending = client_monitor_pending
+	dmi.ServerConnectionID = server_monitor_conn_id
+	dmi.ServerLatency = server_monitor_latency
+	dmi.ServerPending = server_monitor_pending
+
+	return dmi, nil
 }
