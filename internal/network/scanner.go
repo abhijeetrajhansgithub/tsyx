@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-const sysDevicePath = "/sys/class/eth0/device/"
+const sysDevicePath = "/sys/class/net/eth0/device/"
 
 func readSysFile(name string, trimBraces bool) (string, error) {
 	content, err := os.ReadFile(sysDevicePath + name)
@@ -181,6 +181,51 @@ func ReadSysMonitor() (DeviceMonitorInfo, error) {
 	// client_monitor_conn_id
 	client_monitor_conn_id, err := readSysFile(
 		"client_monitor_conn_id",
+		false,
+	)
+
+	if err != nil {
+		return dmi, err
+	}
+
+	client_monitor_latency, err := readSysFile(
+		"client_monitor_latency",
+		false,
+	)
+
+	if err != nil {
+		return dmi, err
+	}
+
+	client_monitor_pending, err := readSysFile(
+		"client_monitor_pending",
+		false,
+	)
+
+	if err != nil {
+		return dmi, err
+	}
+
+	server_monitor_conn_id, err := readSysFile(
+		"server_monitor_conn_id",
+		false,
+	)
+
+	if err != nil {
+		return dmi, err
+	}
+
+	server_monitor_latency, err := readSysFile(
+		"server_monitor_latency",
+		false,
+	)
+
+	if err != nil {
+		return dmi, err
+	}
+
+	server_monitor_pending, err := readSysFile(
+		"server_monitor_pending",
 		false,
 	)
 
