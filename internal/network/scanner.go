@@ -177,7 +177,7 @@ func ReadSysUevent() (DeviceUeventInfo, error) {
 
 func ReadSysMonitor() (DeviceMonitorInfo, error) {
 	dmi := DeviceMonitorInfo{}
-	
+
 	client_monitor_conn_id, err := readSysFile(
 		"client_monitor_conn_id",
 		false,
@@ -241,4 +241,10 @@ func ReadSysMonitor() (DeviceMonitorInfo, error) {
 	dmi.ServerPending = server_monitor_pending
 
 	return dmi, nil
+}
+
+func ReadSysRingBuffer() (DeviceRingBuffer, error) {
+	drb := DeviceRingBuffer{}
+
+	return drb, nil
 }

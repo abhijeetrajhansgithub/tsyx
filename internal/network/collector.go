@@ -124,6 +124,11 @@ func LinuxCollectInterfaceDevice(key string) (InterfaceDevice, error) {
 			return intDevice, err
 		}
 
+		monitoring, err := ReadSysMonitor()
+		if err != nil {
+			return intDevice, err
+		}
+
 
 	}
 
