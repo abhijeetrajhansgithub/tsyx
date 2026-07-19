@@ -264,6 +264,15 @@ func ReadSysRingBuffer() (DeviceRingBuffer, error) {
 		return drb, err
 	}
 
+	in_read_index, err := readSysFile(
+		"in_read_index",
+		false,
+	)
+
+	if err != nil {
+		return drb, err
+	}
+
 
 
 	return drb, nil
