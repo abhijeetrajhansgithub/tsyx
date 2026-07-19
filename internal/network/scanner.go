@@ -336,7 +336,18 @@ func ReadSysRingBuffer() (DeviceRingBuffer, error) {
 		return drb, err
 	}
 
-	
+	// assign the values
+	drb.InInterruptMask = in_intr_mask
+	drb.InReadBytesAvail = in_read_bytes_avail
+	drb.InReadIndex = in_read_index
+	drb.InWriteBytesAvail = in_write_bytes_avail
+	drb.InWriteIndex = in_write_index
+
+	drb.OutInterruptMask = out_intr_mask
+	drb.OutReadBytesAvail = out_read_bytes_avail
+	drb.OutReadIndex = out_read_index
+	drb.OutWriteBytesAvail = out_write_bytes_avail
+	drb.OutWriteIndex = out_write_index
 
 
 	return drb, nil
