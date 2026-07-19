@@ -246,5 +246,14 @@ func ReadSysMonitor() (DeviceMonitorInfo, error) {
 func ReadSysRingBuffer() (DeviceRingBuffer, error) {
 	drb := DeviceRingBuffer{}
 
+	in_intr_mask, err := readSysFile(
+		"in_intr_mask",
+		false,
+	)
+
+	if err != nil {
+		return drb, err
+	}
+
 	return drb, nil
 }
