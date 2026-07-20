@@ -459,6 +459,24 @@ func ReadSysInterfaceChannel (map[string]InterfaceChannel, error) {
 			return nil, err
 		}
 
+		entry := InterfaceChannel{
+			CPU:          _cpu,
+			Events:       _events,
+			InMask:       _inMask,
+			Interrupts:   _interrupts,
+			IntrInFull:   _intrInFull,
+			IntrOutEmpty: _intrOutEmpty,
+			Latency:      _latency,
+			MonitorID:    _monitorID,
+			OutFullFirst: _outFullFirst,
+			OutFullTotal: _outFullTotal,
+			OutMask:      _outMask,
+			Pending:      _pending,
+			ReadAvail:    _readAvail,
+			SubchannelID: _subchannelID,
+			WriteAvail:   _writeAvail,
+		}
+
 
 
 
