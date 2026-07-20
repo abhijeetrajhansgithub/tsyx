@@ -140,7 +140,7 @@ func LinuxCollectInterfaceDevice(key string) (InterfaceDevice, error) {
 			return intDevice, err
 		}
 
-		intDevice.Channels = channels
+		intDevice.ID = id
 		intDevice.DeviceID = device_id 
 		intDevice.ClassID = class_id 
 		intDevice.DriverOverride = driver_override 
