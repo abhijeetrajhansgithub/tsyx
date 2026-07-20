@@ -354,5 +354,30 @@ func ReadSysRingBuffer() (DeviceRingBuffer, error) {
 }
 
 func ReadSysInterfaceChannel (map[string]InterfaceChannel, error) {
-	
+
+	var interfaceMap map[string]InterfaceChannel
+
+	path := "/sys/class/net/eth0/device/channels"
+
+	entries, err := os.ReadDir(path)
+	if err != nil {
+		panic(err)
+	}
+
+	for _, entry := range entries {
+		if !entry.IsDir() {
+			continue
+		}
+
+		fmt.Println("Channel:", entry.Name())
+
+		inner_dir_name := entry.Name()
+
+		inner_dir_path = path + "/" + inner_dir_name
+
+
+
+
+	return interfaceMap, nil
+
 }
