@@ -3,6 +3,7 @@ package net
 import (
 	"os"
 	"strings"
+	"path/filepath"
 )
 
 const sysDevicePath = "/sys/class/net/eth0/device/"
