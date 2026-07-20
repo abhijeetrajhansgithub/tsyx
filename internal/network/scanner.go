@@ -384,22 +384,80 @@ func ReadSysInterfaceChannel (map[string]InterfaceChannel, error) {
 
 		inner_dir_path = path + "/" + inner_dir_name
 
-		_cpu := readSysInterfaceChannelElements("cpu", inner_dir_path)
-		_events := readSysInterfaceChannelElements("events", inner_dir_path)
-		_inMask := readSysInterfaceChannelElements("in_mask", inner_dir_path)
-		_interrupts := readSysInterfaceChannelElements("interrupts", inner_dir_path)
-		_intrInFull := readSysInterfaceChannelElements("intr_in_full", inner_dir_path)
-		_intrOutEmpty := readSysInterfaceChannelElements("intr_out_empty", inner_dir_path)
-		_latency := readSysInterfaceChannelElements("latency", inner_dir_path)
-		_monitorID := readSysInterfaceChannelElements("monitor_id", inner_dir_path)
-		_outFullFirst := readSysInterfaceChannelElements("out_full_first", inner_dir_path)
-		_outFullTotal := readSysInterfaceChannelElements("out_full_total", inner_dir_path)
-		_outMask := readSysInterfaceChannelElements("out_mask", inner_dir_path)
-		_pending := readSysInterfaceChannelElements("pending", inner_dir_path)
-		_readAvail := readSysInterfaceChannelElements("read_avail", inner_dir_path)
-		_subchannelID := readSysInterfaceChannelElements("subchannel_id", inner_dir_path)
-		_writeAvail := readSysInterfaceChannelElements("write_avail", inner_dir_path)
+		_cpu, err := readSysInterfaceChannelElements("cpu", inner_dir_path)
+		if err != nil {
+			return nil, err
+		}
 
+		_events, err := readSysInterfaceChannelElements("events", inner_dir_path)
+		if err != nil {
+			return nil, err
+		}
+
+		_inMask, err := readSysInterfaceChannelElements("in_mask", inner_dir_path)
+		if err != nil {
+			return nil, err
+		}
+
+		_interrupts, err := readSysInterfaceChannelElements("interrupts", inner_dir_path)
+		if err != nil {
+			return nil, err
+		}
+
+		_intrInFull, err := readSysInterfaceChannelElements("intr_in_full", inner_dir_path)
+		if err != nil {
+			return nil, err
+		}
+
+		_intrOutEmpty, err := readSysInterfaceChannelElements("intr_out_empty", inner_dir_path)
+		if err != nil {
+			return nil, err
+		}
+
+		_latency, err := readSysInterfaceChannelElements("latency", inner_dir_path)
+		if err != nil {
+			return nil, err
+		}
+
+		_monitorID, err := readSysInterfaceChannelElements("monitor_id", inner_dir_path)
+		if err != nil {
+			return nil, err
+		}
+
+		_outFullFirst, err := readSysInterfaceChannelElements("out_full_first", inner_dir_path)
+		if err != nil {
+			return nil, err
+		}
+
+		_outFullTotal, err := readSysInterfaceChannelElements("out_full_total", inner_dir_path)
+		if err != nil {
+			return nil, err
+		}
+
+		_outMask, err := readSysInterfaceChannelElements("out_mask", inner_dir_path)
+		if err != nil {
+			return nil, err
+		}
+
+		_pending, err := readSysInterfaceChannelElements("pending", inner_dir_path)
+		if err != nil {
+			return nil, err
+		}
+
+		_readAvail, err := readSysInterfaceChannelElements("read_avail", inner_dir_path)
+		if err != nil {
+			return nil, err
+		}
+
+		_subchannelID, err := readSysInterfaceChannelElements("subchannel_id", inner_dir_path)
+		if err != nil {
+			return nil, err
+		}
+
+		_writeAvail, err := readSysInterfaceChannelElements("write_avail", inner_dir_path)
+		if err != nil {
+			return nil, err
+		}
 
 
 
