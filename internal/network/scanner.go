@@ -354,23 +354,22 @@ func ReadSysRingBuffer() (DeviceRingBuffer, error) {
 }
 
 func readSysInterfaceChannelElements(key string, path string) (string, error) {
-	content, err := os.ReadDir(path + "/" + key)
+	content, err := os.ReadFile(path + "/" + key)
 	if err != nil {
 		return "", err
 	}
 
-	return string(content), nil
+	return strings.TrimSpace(string(content)), nil
 }
 
-func ReadSysInterfaceChannel (map[string]InterfaceChannel, error) {
-
-	var interfaceMap map[string]InterfaceChannel
+func ReadSysInterfaceChannel() (map[string]InterfaceChannel, error) {
+	interfaceMap := make(map[string]InterfaceChannel)
 
 	path := "/sys/class/net/eth0/device/channels"
 
 	entries, err := os.ReadDir(path)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	for _, entry := range entries {
@@ -378,88 +377,85 @@ func ReadSysInterfaceChannel (map[string]InterfaceChannel, error) {
 			continue
 		}
 
-		fmt.Println("Channel:", entry.Name())
+		innerDirName := entry.Name()
+		innerDirPath := filepath.Join(path, innerDirName)
 
-		inner_dir_name := entry.Name()
-
-		inner_dir_path = path + "/" + inner_dir_name
-
-		_cpu, err := readSysInterfaceChannelElements("cpu", inner_dir_path)
+		_cpu, err := readSysInterfaceChannelElements("cpu", innerDirPath)
 		if err != nil {
 			return nil, err
 		}
 
-		_events, err := readSysInterfaceChannelElements("events", inner_dir_path)
+		_events, err := readSysInterfaceChannelElements("events", innerDirPath)
 		if err != nil {
 			return nil, err
 		}
 
-		_inMask, err := readSysInterfaceChannelElements("in_mask", inner_dir_path)
+		_inMask, err := readSysInterfaceChannelElements("in_mask", innerDirPath)
 		if err != nil {
 			return nil, err
 		}
 
-		_interrupts, err := readSysInterfaceChannelElements("interrupts", inner_dir_path)
+		_interrupts, err := readSysInterfaceChannelElements("interrupts", innerDirPath)
 		if err != nil {
 			return nil, err
 		}
 
-		_intrInFull, err := readSysInterfaceChannelElements("intr_in_full", inner_dir_path)
+		_intrInFull, err := readSysInterfaceChannelElements("intr_in_full", innerDirPath)
 		if err != nil {
 			return nil, err
 		}
 
-		_intrOutEmpty, err := readSysInterfaceChannelElements("intr_out_empty", inner_dir_path)
+		_intrOutEmpty, err := readSysInterfaceChannelElements("intr_out_empty", innerDirPath)
 		if err != nil {
 			return nil, err
 		}
 
-		_latency, err := readSysInterfaceChannelElements("latency", inner_dir_path)
+		_latency, err := readSysInterfaceChannelElements("latency", innerDirPath)
 		if err != nil {
 			return nil, err
 		}
 
-		_monitorID, err := readSysInterfaceChannelElements("monitor_id", inner_dir_path)
+		_monitorID, err := readSysInterfaceChannelElements("monitor_id", innerDirPath)
 		if err != nil {
 			return nil, err
 		}
 
-		_outFullFirst, err := readSysInterfaceChannelElements("out_full_first", inner_dir_path)
+		_outFullFirst, err := readSysInterfaceChannelElements("out_full_first", innerDirPath)
 		if err != nil {
 			return nil, err
 		}
 
-		_outFullTotal, err := readSysInterfaceChannelElements("out_full_total", inner_dir_path)
+		_outFullTotal, err := readSysInterfaceChannelElements("out_full_total", innerDirPath)
 		if err != nil {
 			return nil, err
 		}
 
-		_outMask, err := readSysInterfaceChannelElements("out_mask", inner_dir_path)
+		_outMask, err := readSysInterfaceChannelElements("out_mask", innerDirPath)
 		if err != nil {
 			return nil, err
 		}
 
-		_pending, err := readSysInterfaceChannelElements("pending", inner_dir_path)
+		_pending, err := readSysInterfaceChannelElements("pending", innerDirPath)
 		if err != nil {
 			return nil, err
 		}
 
-		_readAvail, err := readSysInterfaceChannelElements("read_avail", inner_dir_path)
+		_readAvail, err := readSysInterfaceChannelElements("read_avail", innerDirPath)
 		if err != nil {
 			return nil, err
 		}
 
-		_subchannelID, err := readSysInterfaceChannelElements("subchannel_id", inner_dir_path)
+		_subchannelID, err := readSysInterfaceChannelElements("subchannel_id", innerDirPath)
 		if err != nil {
 			return nil, err
 		}
 
-		_writeAvail, err := readSysInterfaceChannelElements("write_avail", inner_dir_path)
+		_writeAvail, err := readSysInterfaceChannelElements("write_avail", innerDirPath)
 		if err != nil {
 			return nil, err
 		}
 
-		entry := InterfaceChannel{
+		channel := InterfaceChannel{
 			CPU:          _cpu,
 			Events:       _events,
 			InMask:       _inMask,
@@ -477,9 +473,8 @@ func ReadSysInterfaceChannel (map[string]InterfaceChannel, error) {
 			WriteAvail:   _writeAvail,
 		}
 
-
-
+		interfaceMap[innerDirName] = channel
+	}
 
 	return interfaceMap, nil
-
 }
