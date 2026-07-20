@@ -352,3 +352,7 @@ func ReadSysRingBuffer() (DeviceRingBuffer, error) {
 
 	return drb, nil
 }
+
+func ReadSysInterfaceChannel (map[string]InterfaceChannel, error) {
+	
+}
