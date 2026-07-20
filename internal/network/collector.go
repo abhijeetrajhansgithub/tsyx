@@ -2,6 +2,7 @@ package net
 
 import (
 	// "fmt"
+	"fmt"
 	"os"
 	"strings"
 )
@@ -129,12 +130,34 @@ func LinuxCollectInterfaceDevice(key string) (InterfaceDevice, error) {
 			return intDevice, err
 		}
 
+		ring_buffer, err := ReadSysRingBuffer()
+		if err != nil {
+			return intDevice, err
+		}
+
 		channels, err := ReadSysInterfaceChannel()
 		if err != nil {
 			return intDevice, err
 		}
 
+		intDevice.Channels = channels
+		intDevice.DeviceID = device_id 
+		intDevice.ClassID = class_id 
+		intDevice.DriverOverride = driver_override 
+		intDevice.Modalias = modalias 
+		intDevice.NUMANode = numa_node
+		intDevice.State = state 
+		intDevice.Vendor = vendor 
+		intDevice.Power = power 
+		intDevice.Subsystem = subsystem 
+		intDevice.Uevent = uevent 
+		intDevice.Monitor = monitoring 
+		intDevice.RingBuffer = ring_buffer
+		intDevice.Channels = channels 
 
+
+	} else {
+		fmt.Println("sys_class_net not found!")
 	}
 
 	return intDevice, nil
