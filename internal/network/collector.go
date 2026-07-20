@@ -129,6 +129,11 @@ func LinuxCollectInterfaceDevice(key string) (InterfaceDevice, error) {
 			return intDevice, err
 		}
 
+		channels, err := ReadSysInterfaceChannel()
+		if err != nil {
+			return intDevice, err
+		}
+
 
 	}
 
