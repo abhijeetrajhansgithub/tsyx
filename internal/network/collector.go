@@ -94,6 +94,23 @@ func LinuxCollectNetworkInterface(key string) (NetworkInterfaces, error) {
 			return netif, err
 		}
 
+		broadcast, err := ReadGenericData(fullDirPath, "broadcast")
+		if err != nil {
+			netif, err
+		}
+
+		carrier, err := ReadGenericData(fullDirPath, "carrier")
+		if err != nil {
+			return netif, err
+		}
+
+		dev_id, err := ReadGenericData(fullDirPath, "dev_id")
+		if err != nil {
+			return netif, err
+		}
+
+		
+
 	}
 
 	return netif, nil
