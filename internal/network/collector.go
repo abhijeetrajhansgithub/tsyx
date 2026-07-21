@@ -2,7 +2,6 @@ package net
 
 import (
 	// "fmt"
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
