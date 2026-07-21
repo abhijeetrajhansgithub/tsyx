@@ -3,9 +3,10 @@ package net
 import (
 	// "fmt"
 	"fmt"
+	"hash/crc32"
 	"os"
-	"strings"
 	"path/filepath"
+	"strings"
 )
 
 var DirMap map[string]string = map[string]string{
@@ -99,7 +100,7 @@ func LinuxCollectNetworkInterface(key string) (NetworkInterfaces, error) {
 			return netif, err
 		}
 
-		carrier_info, err := ReadGenericData(fullDirPath, "carrier")
+		carrier_info, err := LinucCollectCarrierInfo(name)
 		if err != nil {
 			return netif, err
 		}
@@ -125,17 +126,52 @@ func LinuxCollectNetworkInterface(key string) (NetworkInterfaces, error) {
 			AddressLength: addr_len,
 			Address: address,
 			Broadcast: broadcast,
-			Carrier,
+			Carrier: carrier_info,
 			DevID: dev_id,
 			DevPort: dev_port,
 			Device: device,
 
 		}
 
+		netif.Interfaces = append(netif.Interfaces, entry)
+
 	}
 
 	return netif, nil
 
+}
+
+func LinucCollectCarrierInfo(dir string) (CarrierInfo, error) {
+	carrier := CarrierInfo{}
+
+	basePath := "/sys/class/net/" + dir
+
+	status, err := os.ReadFile(filepath.Join(basePath, "carrier"))
+	if err != nil {
+		return carrier, err
+	}
+
+	carrier_changes, err := os.ReadFile(filepath.Join(basePath, "carrier_changes"))
+	if err != nil {
+		return carrier, err
+	}
+
+	carrier_up_count, err := os.ReadFile(filepath.Join(basePath, "carrier_up_count"))
+	if err != nil {
+		return carrier, err
+	}
+
+	carrier_down_count, err := os.ReadFile(filepath.Join(basePath, "carrier_down_count"))
+	if err != nil {
+		return carrier, err
+	}
+
+	carrier.Status = string(status)
+	carrier.Changes = string(carrier_changes)
+	carrier.UpCount = string(carrier_up_count)
+	carrier.DownCount = string(carrier_down_count)
+
+	return carrier, nil
 }
 
 func LinuxCollectInterfaceDevice(dir string) (InterfaceDevice, error) {
