@@ -96,10 +96,10 @@ func LinuxCollectNetworkInterface(key string) (NetworkInterfaces, error) {
 
 		broadcast, err := ReadGenericData(fullDirPath, "broadcast")
 		if err != nil {
-			netif, err
+			return netif, err
 		}
 
-		carrier, err := ReadGenericData(fullDirPath, "carrier")
+		carrier_info, err := ReadGenericData(fullDirPath, "carrier")
 		if err != nil {
 			return netif, err
 		}
@@ -114,7 +114,23 @@ func LinuxCollectNetworkInterface(key string) (NetworkInterfaces, error) {
 			return netif, err
 		}
 
-		device, err := 
+		device, err := LinuxCollectInterfaceDevice(name)
+		if err != nil {
+			return netif, err
+		}
+
+		entry := NetworkInterface{
+			Name: name,
+			AddressAssignType: addr_assign_type,
+			AddressLength: addr_len,
+			Address: address,
+			Broadcast: broadcast,
+			Carrier,
+			DevID: dev_id,
+			DevPort: dev_port,
+			Device: device,
+
+		}
 
 	}
 
@@ -122,109 +138,101 @@ func LinuxCollectNetworkInterface(key string) (NetworkInterfaces, error) {
 
 }
 
-func LinuxCollectInterfaceDevice(key string) (InterfaceDevice, error) {
+func LinuxCollectInterfaceDevice(dir string) (InterfaceDevice, error) {
 	intDevice := InterfaceDevice{}
-	// TODO
-
-	if key == "sys_class_net" {
-		// Collect Id
-		id, err := ReadSysId()
-		if err != nil {
-			return intDevice, err
-		}
-
-		// collect device_id
-		device_id, err := ReadSysDeviceId()
-		if err != nil {
-			return intDevice, err
-		}
-
-		// collect class_id
-		class_id, err := ReadSysClassId()
-		if err != nil {
-			return intDevice, err
-		}
-
-		// collect driver_override
-		driver_override, err := ReadSysDriverOverride()
-		if err != nil {
-			return intDevice, err
-		}
-
-		// collect mod_alias
-		modalias, err := ReadSysModalias()
-		if err != nil {
-			return intDevice, err
-		}
-
-		// collect numa_node
-		numa_node, err := ReadSysNumaNode()
-		if err != nil {
-			return intDevice, err
-		}
-
-		// collect state
-		state, err := ReadSysState()
-		if err != nil {
-			return intDevice, err
-		}
-
-		// collect vendor
-		vendor, err := ReadSysVendor()
-		if err != nil {
-			return intDevice, err
-		}
-
-		// power
-		power, err := ReadSysPower()
-		if err != nil {
-			return intDevice, err
-		}
-
-		subsystem, err := ReadSysSubsystem()
-		if err != nil {
-			return intDevice, err
-		}
-
-		uevent, err := ReadSysUevent()
-		if err != nil {
-			return intDevice, err
-		}
-
-		monitoring, err := ReadSysMonitor()
-		if err != nil {
-			return intDevice, err
-		}
-
-		ring_buffer, err := ReadSysRingBuffer()
-		if err != nil {
-			return intDevice, err
-		}
-
-		channels, err := ReadSysInterfaceChannel()
-		if err != nil {
-			return intDevice, err
-		}
-
-		intDevice.ID = id
-		intDevice.DeviceID = device_id 
-		intDevice.ClassID = class_id 
-		intDevice.DriverOverride = driver_override 
-		intDevice.Modalias = modalias 
-		intDevice.NUMANode = numa_node
-		intDevice.State = state 
-		intDevice.Vendor = vendor 
-		intDevice.Power = power 
-		intDevice.Subsystem = subsystem 
-		intDevice.Uevent = uevent 
-		intDevice.Monitor = monitoring 
-		intDevice.RingBuffer = ring_buffer
-		intDevice.Channels = channels 
-
-
-	} else {
-		fmt.Println("sys_class_net not found!")
+	// Collect Id
+	id, err := ReadSysId(dir)
+	if err != nil {
+		return intDevice, err
 	}
+
+	// collect device_id
+	device_id, err := ReadSysDeviceId(dir)
+	if err != nil {
+		return intDevice, err
+	}
+
+	// collect class_id
+	class_id, err := ReadSysClassId(dir)
+	if err != nil {
+		return intDevice, err
+	}
+
+	// collect driver_override
+	driver_override, err := ReadSysDriverOverride(dir)
+	if err != nil {
+		return intDevice, err
+	}
+
+	// collect mod_alias
+	modalias, err := ReadSysModalias(dir)
+	if err != nil {
+		return intDevice, err
+	}
+
+	// collect numa_node
+	numa_node, err := ReadSysNumaNode(dir)
+	if err != nil {
+		return intDevice, err
+	}
+
+	// collect state
+	state, err := ReadSysState(dir)
+	if err != nil {
+		return intDevice, err
+	}
+
+	// collect vendor
+	vendor, err := ReadSysVendor(dir)
+	if err != nil {
+		return intDevice, err
+	}
+
+	// power
+	power, err := ReadSysPower(dir)
+	if err != nil {
+		return intDevice, err
+	}
+
+	subsystem, err := ReadSysSubsystem(dir)
+	if err != nil {
+		return intDevice, err
+	}
+
+	uevent, err := ReadSysUevent(dir)
+	if err != nil {
+		return intDevice, err
+	}
+
+	monitoring, err := ReadSysMonitor(dir)
+	if err != nil {
+		return intDevice, err
+	}
+
+	ring_buffer, err := ReadSysRingBuffer(dir)
+	if err != nil {
+		return intDevice, err
+	}
+
+	channels, err := ReadSysInterfaceChannel(dir)
+	if err != nil {
+		return intDevice, err
+	}
+
+	intDevice.ID = id
+	intDevice.DeviceID = device_id 
+	intDevice.ClassID = class_id 
+	intDevice.DriverOverride = driver_override 
+	intDevice.Modalias = modalias 
+	intDevice.NUMANode = numa_node
+	intDevice.State = state 
+	intDevice.Vendor = vendor 
+	intDevice.Power = power 
+	intDevice.Subsystem = subsystem 
+	intDevice.Uevent = uevent 
+	intDevice.Monitor = monitoring 
+	intDevice.RingBuffer = ring_buffer
+	intDevice.Channels = channels 
 
 	return intDevice, nil
 }
