@@ -6,10 +6,11 @@ import (
 	"path/filepath"
 )
 
-const sysDevicePath = "/sys/class/net/eth0/device/"
+// const sysClassNetPath = "/sys/class/net/eth0/device/"
+const sysClassNetPath = "/sys/class/net/"
 
-func readSysFile(name string, trimBraces bool) (string, error) {
-	content, err := os.ReadFile(sysDevicePath + name)
+func readSysFile(dir string, name string, trimBraces bool) (string, error) {
+	content, err := os.ReadFile(sysClassNetPath + dir + "/device/" + name)
 	if err != nil {
 		return "", err
 	}
@@ -23,45 +24,46 @@ func readSysFile(name string, trimBraces bool) (string, error) {
 	return s, nil
 }
 
-func ReadSysId() (string, error) {
-	return readSysFile("id", false)
+func ReadSysId(dir string) (string, error) {
+	return readSysFile(dir, "id", false)
 }
 
-func ReadSysDeviceId() (string, error) {
-	return readSysFile("device_id", true)
+func ReadSysDeviceId(dir string) (string, error) {
+	return readSysFile(dir, "device_id", true)
 }
 
-func ReadSysClassId() (string, error) {
-	return readSysFile("class_id", true)
+func ReadSysClassId(dir string) (string, error) {
+	return readSysFile(dir, "class_id", true)
 }
 
-func ReadSysDriverOverride() (string, error) {
-	return readSysFile("driver_override", false)
+func ReadSysDriverOverride(dir string) (string, error) {
+	return readSysFile(dir, "driver_override", false)
 }
 
-func ReadSysModalias() (string, error) {
-	return readSysFile("modalias", false)
+func ReadSysModalias(dir string) (string, error) {
+	return readSysFile(dir, "modalias", false)
 }
 
-func ReadSysNumaNode() (string, error) {
-	return readSysFile("numa_node", false)
+func ReadSysNumaNode(dir string) (string, error) {
+	return readSysFile(dir, "numa_node", false)
 }
 
-func ReadSysState() (string, error) {
-	return readSysFile("state", false)
+func ReadSysState(dir string) (string, error) {
+	return readSysFile(dir, "state", false)
 }
 
-func ReadSysVendor() (string, error) {
-	return readSysFile("vendor", false)
+func ReadSysVendor(dir string) (string, error) {
+	return readSysFile(dir, "vendor", false)
 }
 
 // ----------------------------------------------
 
-func ReadSysPower() (DevicePowerInfo, error) {
+func ReadSysPower(dir string) (DevicePowerInfo, error) {
 	dpInfo := DevicePowerInfo{}
 
 	// control
 	control, err := readSysFile(
+		dir, 
 		"power/control",
 		false,
 	)
@@ -72,6 +74,7 @@ func ReadSysPower() (DevicePowerInfo, error) {
 
 	// runtime_active_time
 	runtime_active_time, err := readSysFile(
+		dir,
 		"power/runtime_active_time",
 		false,
 	)
@@ -82,6 +85,7 @@ func ReadSysPower() (DevicePowerInfo, error) {
 
 	// runtime_status
 	runtime_status, err := readSysFile(
+		dir,
 		"power/runtime_status",
 		false,
 	)
@@ -92,6 +96,7 @@ func ReadSysPower() (DevicePowerInfo, error) {
 
 	// runtime_suspended_time
 	runtime_suspended_time, err := readSysFile(
+		dir,
 		"power/runtime_suspended_time",
 		false,
 	)
@@ -110,10 +115,11 @@ func ReadSysPower() (DevicePowerInfo, error) {
 }
 
 
-func ReadSysSubsystem() (DeviceSubsystemInfo, error) {
+func ReadSysSubsystem(dir string) (DeviceSubsystemInfo, error) {
 	dsinfo := DeviceSubsystemInfo{}
 
 	drivers_autoprobe, err := readSysFile(
+		dir,
 		"subsystem/drivers_autoprobe",
 		false,
 	)
@@ -123,6 +129,7 @@ func ReadSysSubsystem() (DeviceSubsystemInfo, error) {
 	}
 
 	hibernation, err := readSysFile(
+		dir,
 		"subsystem/hibernation",
 		false,
 	)
@@ -138,7 +145,7 @@ func ReadSysSubsystem() (DeviceSubsystemInfo, error) {
 }
 
 
-func ReadSysUevent() (DeviceUeventInfo, error) {
+func ReadSysUevent(dir string) (DeviceUeventInfo, error) {
 	uevent := DeviceUeventInfo{}
 
 	// TODO: Replace "uevent" with the absolute path, e.g., "/sys/class/net/eth0/device/uevent"

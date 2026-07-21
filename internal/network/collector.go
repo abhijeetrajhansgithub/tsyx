@@ -109,7 +109,12 @@ func LinuxCollectNetworkInterface(key string) (NetworkInterfaces, error) {
 			return netif, err
 		}
 
-		
+		dev_port, err := ReadGenericData(fullDirPath, "dev_port") 
+		if err != nil {
+			return netif, err
+		}
+
+		device, err := 
 
 	}
 
