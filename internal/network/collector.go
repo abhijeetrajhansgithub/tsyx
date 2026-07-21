@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"path/filepath"
 )
 
 var DirMap map[string]string = map[string]string{
@@ -59,6 +60,26 @@ var DirMap map[string]string = map[string]string{
 func LinuxCollectNetworkInterface(key string) (NetworkInterfaces, error) {
 	netif := NetworkInterfaces{}
 	//TODO
+
+	// get the directories
+	basePath := "/sys/class/net"
+
+	// inside folders: eth0, lo
+	entries, err := os.ReadDir(basePath)
+	if err != nil {
+		return netif, err
+	}
+
+	for _, dir := range entries {
+		if !dir.IsDir() {
+			continue
+		}
+
+		fullDirPath := filepath.Join(basePath, dir.Name())
+
+		fmt.Println(dir.Name())
+		fmt.Println(fullDirPath)
+	}
 
 	return netif, nil
 

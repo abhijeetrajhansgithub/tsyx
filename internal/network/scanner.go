@@ -479,3 +479,19 @@ func ReadSysInterfaceChannel() (map[string]InterfaceChannel, error) {
 
 	return interfaceMap, nil
 }
+
+
+func ReadGenericData(path string, file string) (string, error) {
+	fPath := filepath.Join(path, file)
+
+	content, err := os.ReadFile(fPath)
+	if err!=nil {
+		return "", err
+	}
+
+	s := string(content)
+	s = strings.TrimSpace(s)
+
+	return s, nil
+
+}
