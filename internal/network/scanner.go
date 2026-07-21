@@ -149,7 +149,7 @@ func ReadSysUevent(dir string) (DeviceUeventInfo, error) {
 	uevent := DeviceUeventInfo{}
 
 	// TODO: Replace "uevent" with the absolute path, e.g., "/sys/class/net/eth0/device/uevent"
-	data, err := os.ReadFile("uevent")
+	data, err := os.ReadFile(sysClassNetPath + dir + "/device/uevent")
 	if err != nil {
 		return uevent, err
 	}
