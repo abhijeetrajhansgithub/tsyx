@@ -3,7 +3,6 @@ package net
 import (
 	// "fmt"
 	"fmt"
-	"hash/crc32"
 	"os"
 	"path/filepath"
 	"strings"
