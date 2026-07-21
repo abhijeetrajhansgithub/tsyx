@@ -480,6 +480,10 @@ func ReadSysInterfaceChannel() (map[string]InterfaceChannel, error) {
 	return interfaceMap, nil
 }
 
+// =============================================================================================
+// =============================================================================================
+// =============================================================================================
+// Generic Data Reader Function
 
 func ReadGenericData(path, file string) (string, error) {
 	content, err := os.ReadFile(filepath.Join(path, file))

@@ -77,8 +77,23 @@ func LinuxCollectNetworkInterface(key string) (NetworkInterfaces, error) {
 
 		fullDirPath := filepath.Join(basePath, dir.Name())
 
-		fmt.Println(dir.Name())
-		fmt.Println(fullDirPath)
+		name := dir.Name()
+
+		addr_assign_type, err := ReadGenericData(fullDirPath, "addr_assign_type")
+		if err != nil {
+			return netif, err
+		}
+
+		addr_len, err := ReadGenericData(fullDirPath, "addr_len")
+		if err != nil {
+			return netif, err
+		}
+
+		address, err := ReadGenericData(fullDirPath, "address")
+		if err != nil {
+			return netif, err
+		}
+
 	}
 
 	return netif, nil
