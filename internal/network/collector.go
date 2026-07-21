@@ -2,6 +2,7 @@ package net
 
 import (
 	// "fmt"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -59,6 +60,8 @@ var DirMap map[string]string = map[string]string{
 func LinuxCollectNetworkInterface(key string) (NetworkInterfaces, error) {
 	netif := NetworkInterfaces{}
 	//TODO
+
+	fmt.Println("[ LinuxCollectNetworkInterface ] KEY: " + key)
 
 	// get the directories
 	basePath := "/sys/class/net"
