@@ -183,10 +183,11 @@ func ReadSysUevent(dir string) (DeviceUeventInfo, error) {
 	return uevent, nil
 }
 
-func ReadSysMonitor() (DeviceMonitorInfo, error) {
+func ReadSysMonitor(dir string) (DeviceMonitorInfo, error) {
 	dmi := DeviceMonitorInfo{}
 
 	client_monitor_conn_id, err := readSysFile(
+		dir,
 		"client_monitor_conn_id",
 		false,
 	)
@@ -196,6 +197,7 @@ func ReadSysMonitor() (DeviceMonitorInfo, error) {
 	}
 
 	client_monitor_latency, err := readSysFile(
+		dir,
 		"client_monitor_latency",
 		false,
 	)
@@ -205,6 +207,7 @@ func ReadSysMonitor() (DeviceMonitorInfo, error) {
 	}
 
 	client_monitor_pending, err := readSysFile(
+		dir,
 		"client_monitor_pending",
 		false,
 	)
@@ -214,6 +217,7 @@ func ReadSysMonitor() (DeviceMonitorInfo, error) {
 	}
 
 	server_monitor_conn_id, err := readSysFile(
+		dir,
 		"server_monitor_conn_id",
 		false,
 	)
@@ -223,6 +227,7 @@ func ReadSysMonitor() (DeviceMonitorInfo, error) {
 	}
 
 	server_monitor_latency, err := readSysFile(
+		dir,
 		"server_monitor_latency",
 		false,
 	)
@@ -232,6 +237,7 @@ func ReadSysMonitor() (DeviceMonitorInfo, error) {
 	}
 
 	server_monitor_pending, err := readSysFile(
+		dir,
 		"server_monitor_pending",
 		false,
 	)
@@ -251,10 +257,11 @@ func ReadSysMonitor() (DeviceMonitorInfo, error) {
 	return dmi, nil
 }
 
-func ReadSysRingBuffer() (DeviceRingBuffer, error) {
+func ReadSysRingBuffer(dir string) (DeviceRingBuffer, error) {
 	drb := DeviceRingBuffer{}
 
 	in_intr_mask, err := readSysFile(
+		dir,
 		"in_intr_mask",
 		false,
 	)
@@ -264,6 +271,7 @@ func ReadSysRingBuffer() (DeviceRingBuffer, error) {
 	}
 
 	in_read_bytes_avail, err := readSysFile(
+		dir,
 		"in_read_bytes_avail",
 		false,
 	)
@@ -273,6 +281,7 @@ func ReadSysRingBuffer() (DeviceRingBuffer, error) {
 	}
 
 	in_read_index, err := readSysFile(
+		dir,
 		"in_read_index",
 		false,
 	)
@@ -282,6 +291,7 @@ func ReadSysRingBuffer() (DeviceRingBuffer, error) {
 	}
 
 	in_write_bytes_avail, err := readSysFile(
+		dir,
 		"in_write_bytes_avail",
 		false,
 	)
@@ -291,6 +301,7 @@ func ReadSysRingBuffer() (DeviceRingBuffer, error) {
 	}
 
 	in_write_index, err := readSysFile(
+		dir,
 		"in_write_index",
 		false,
 	)
@@ -300,6 +311,7 @@ func ReadSysRingBuffer() (DeviceRingBuffer, error) {
 	}
 
 	out_intr_mask, err := readSysFile(
+		dir,
 		"out_intr_mask",
 		false,
 	)
@@ -309,6 +321,7 @@ func ReadSysRingBuffer() (DeviceRingBuffer, error) {
 	}
 
 	out_read_bytes_avail, err := readSysFile(
+		dir,
 		"out_read_bytes_avail",
 		false,
 	)
@@ -318,6 +331,7 @@ func ReadSysRingBuffer() (DeviceRingBuffer, error) {
 	}
 
 	out_read_index, err := readSysFile(
+		dir,
 		"out_read_index",
 		false,
 	)
@@ -327,6 +341,7 @@ func ReadSysRingBuffer() (DeviceRingBuffer, error) {
 	}
 
 	out_write_bytes_avail, err := readSysFile(
+		dir,
 		"out_write_bytes_avail",
 		false,
 	)
@@ -336,6 +351,7 @@ func ReadSysRingBuffer() (DeviceRingBuffer, error) {
 	}
 
 	out_write_index, err := readSysFile(
+		dir,
 		"out_write_index",
 		false,
 	)
@@ -370,10 +386,10 @@ func readSysInterfaceChannelElements(key string, path string) (string, error) {
 	return strings.TrimSpace(string(content)), nil
 }
 
-func ReadSysInterfaceChannel() (map[string]InterfaceChannel, error) {
+func ReadSysInterfaceChannel(dir string) (map[string]InterfaceChannel, error) {
 	interfaceMap := make(map[string]InterfaceChannel)
 
-	path := "/sys/class/net/eth0/device/channels"
+	path := "/sys/class/net/" + dir + "/device/channels"
 
 	entries, err := os.ReadDir(path)
 	if err != nil {
@@ -492,7 +508,7 @@ func ReadSysInterfaceChannel() (map[string]InterfaceChannel, error) {
 // =============================================================================================
 // Generic Data Reader Function
 
-func ReadGenericData(path, file string) (string, error) {
+func ReadGenericData(path string, file string) (string, error) {
 	content, err := os.ReadFile(filepath.Join(path, file))
 	if err != nil {
 		return "", err
