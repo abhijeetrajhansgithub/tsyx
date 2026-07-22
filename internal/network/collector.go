@@ -79,8 +79,20 @@ func LinuxCollectRouteCacheTable(key string) (RouteCacheTable, error) {
 			Destination: fields[1],
 			Gateway: fields[2],
 			Flags: fields[3],
-			RefCount: fields[5],
+			RefCount: fields[4],
+			Use: fields[5],
+			Metric: fields[6],
+			Source: fields[7],
+			MTU: fields[8],
+			Window: fields[9],
+			IRTT: fields[10],
+			TOS: fields[11],
+			HardwareHeaderRef: fields[12],
+			HardwareHeaderUpToDate: fields[13],
+			SpecificDestination: fields[14],
 		}
+
+		routeCacheTable.Routes = append(routeCacheTable.Routes, entry)
 	}
 
 	return routeCacheTable, nil
