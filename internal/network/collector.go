@@ -67,8 +67,19 @@ func LinusCollectRouteTable(key string) (RouteTable, error) {
 
 	lines := strings.Split(string(content), "\n")
 
-	for _, line := range lines {
+	for i, line := range lines {
+		if i == 0 {
+			continue
+		}
 		// TODO
+		fields := strings.Fields(line)
+
+		entry := RouteEntry{
+			Interface: fields[0],
+			Destination: fields[1],
+			Gateway: fields[2],
+		}
+
 	}
 
 	return routeTable, nil
