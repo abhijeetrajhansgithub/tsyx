@@ -57,6 +57,12 @@ var DirMap map[string]string = map[string]string{
 	"etc_services":   "/etc/services",
 }
 
+func LinuxCollectFIBTrieStatistics(key string) (FIBTrieStatistics, error) {
+	fib := FIBTrieStatistics{}
+
+	return fib, nil
+}
+
 func LinuxCollectRouteCacheTable(key string) (RouteCacheTable, error) {
 	routeCacheTable := RouteCacheTable{}
 
