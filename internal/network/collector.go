@@ -57,6 +57,12 @@ var DirMap map[string]string = map[string]string{
 	"etc_services":   "/etc/services",
 }
 
+func LinusCollectRouteTable(key string) (RouteTable, error) {
+	routeTable := RouteTable{}
+
+	return routeTable, nil
+}
+
 func LinuxCollectNetworkInterface(key string) (NetworkInterfaces, error) {
 	netif := NetworkInterfaces{}
 	//TODO
