@@ -65,6 +65,12 @@ func LinusCollectRouteTable(key string) (RouteTable, error) {
 		return routeTable, err
 	}
 
+	lines := strings.Split(string(content), "\n")
+
+	for _, line := range lines {
+		// TODO
+	}
+
 	return routeTable, nil
 }
 
