@@ -78,6 +78,14 @@ func LinusCollectRouteTable(key string) (RouteTable, error) {
 			Interface: fields[0],
 			Destination: fields[1],
 			Gateway: fields[2],
+			Flags: fields[3],
+			RefCount: fields[4],
+			Use: fields[5],
+			Metric: fields[6],
+			Mask: fields[7],
+			MTU: fields[8],
+			Window: fields[9],
+			IRTT: fields[10],
 		}
 
 	}
