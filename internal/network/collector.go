@@ -60,6 +60,29 @@ var DirMap map[string]string = map[string]string{
 func LinuxCollectRouteCacheTable(key string) (RouteCacheTable, error) {
 	routeCacheTable := RouteCacheTable{}
 
+	content, err := os.ReadFile(DirMap[key])
+	if err != nil {
+		return routeCacheTable, err
+	}
+
+	lines := strings.Split(string(content), "\n") 
+
+	for i, line := range lines {
+		if i == 0 {
+			continue
+		}
+
+		fields := strings.Fields(line)
+
+		entry := RouteCacheEntry{
+			Interface: fields[0],
+			Destination: fields[1],
+			Gateway: fields[2],
+			Flags: fields[3],
+			RefCount: fields[5],
+		}
+	}
+
 	return routeCacheTable, nil
 }
 
