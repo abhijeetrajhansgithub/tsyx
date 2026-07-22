@@ -60,6 +60,11 @@ var DirMap map[string]string = map[string]string{
 func LinusCollectRouteTable(key string) (RouteTable, error) {
 	routeTable := RouteTable{}
 
+	content, err := os.ReadFile(DirMap[key])
+	if err != nil {
+		return routeTable, err
+	}
+
 	return routeTable, nil
 }
 
