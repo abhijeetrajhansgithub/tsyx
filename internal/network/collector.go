@@ -57,7 +57,13 @@ var DirMap map[string]string = map[string]string{
 	"etc_services":   "/etc/services",
 }
 
-func LinusCollectRouteTable(key string) (RouteTable, error) {
+func LinuxCollectRouteCacheTable(key string) (RouteCacheTable, error) {
+	routeCacheTable := RouteCacheTable{}
+
+	return routeCacheTable, nil
+}
+
+func LinuxCollectRouteTable(key string) (RouteTable, error) {
 	routeTable := RouteTable{}
 
 	content, err := os.ReadFile(DirMap[key])
