@@ -88,6 +88,8 @@ func LinusCollectRouteTable(key string) (RouteTable, error) {
 			IRTT: fields[10],
 		}
 
+		routeTable.Routes = append(routeTable.Routes, entry)
+
 	}
 
 	return routeTable, nil
