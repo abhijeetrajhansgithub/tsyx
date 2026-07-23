@@ -2,6 +2,7 @@ package net
 
 import (
 	"os"
+	"fmt"
 	"strings"
 	"path/filepath"
 )
@@ -523,12 +524,36 @@ func ReadGenericData(path string, file string) (string, error) {
 // Fib Trie Reader Function
 
 func ReadFibTrieSection(section string, content string) (FIBTrieSection, error) {
-	if strings.HasPrefix(section, "Main:") {
-		content = strings.Split(content, "Main:")[1]
-		content = strings.Split(content, "Local:")[0]
+	fib := FIBTrieSection{}
 
-		main = strings.Split(content, "Counters:")[0]
-		counters = strings.Split(content, "Counters:")[1]
- 
+	var sectionContent string
+
+	switch section {
+	case "Main":
+		parts := strings.Split(content, "Main:")
+		if len(parts) < 2 {
+			return fib, fmt.Errorf("Main section not found")
+		}
+
+		sectionContent = strings.Split(parts[1], "Local:")[0]
+
+	case "Local":
+		parts := strings.Split(content, "Local:")
+		if len(parts) < 2 {
+			return fib, fmt.Errorf("Local section not found")
+		}
+
+		sectionContent = parts[1]
+
+	default:
+		return fib, fmt.Errorf("unknown section %q", section)
 	}
+
+	parts := strings.Split(sectionContent, "Counters:")
+	if len(parts) != 2 {
+		return fib, fmt.Errorf("Counters section missing")
+	}
+
+	mainPart := parts[0]
+	counterPart := parts[1]
 }
