@@ -6,7 +6,6 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"regexp"
 )
 
 var DirMap map[string]string = map[string]string{
