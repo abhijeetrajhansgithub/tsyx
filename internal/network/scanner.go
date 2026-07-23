@@ -595,4 +595,42 @@ func ReadFibTrieSection(section string, content string) (FIBTrieSection, error) 
 			fib.TotalSizeKB = fields[2]
 		}
 	}
+
+	// ---------------- Counters ----------------
+
+	for _, line := range strings.Split(counterPart, "\n") {
+		line = strings.TrimSpace(line)
+
+		if line == "" || strings.HasPrefix(line, "---------") {
+			continue
+		}
+
+		key, value, found := strings.Cut(line, "=")
+		if !found {
+			continue
+		}
+
+		key = strings.TrimSpace(key)
+		value = strings.TrimSpace(value)
+
+		switch key {
+		case "gets":
+			fib.Counters.Gets = value
+
+		case "backtracks":
+			fib.Counters.Backtracks = value
+
+		case "semantic match passed":
+			fib.Counters.SemanticMatchPassed = value
+
+		case "semantic match miss":
+			fib.Counters.SemanticMatchMiss = value
+
+		case "null node hit":
+			fib.Counters.NullNodeHit = value
+
+		case "skipped node resize":
+			fib.Counters.SkippedNodeResize = value
+		}
+	}
 }
