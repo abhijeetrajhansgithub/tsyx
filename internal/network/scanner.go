@@ -516,3 +516,12 @@ func ReadGenericData(path string, file string) (string, error) {
 
 	return strings.TrimSpace(string(content)), nil
 }
+
+// =============================================================================================
+// =============================================================================================
+// =============================================================================================
+// Fib Trie Reader Function
+
+func ReadFibTrieSection(section string, content string) (FIBTrieSection, error) {
+	
+}

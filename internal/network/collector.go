@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"regexp"
 )
 
 var DirMap map[string]string = map[string]string{
@@ -71,8 +72,28 @@ func LinuxCollectFIBTrieStatistics(key string) (FIBTrieStatistics, error) {
 
 	lines := strings.Split(string(content), "\n")
 
+	var size_of_leaf string
+	var size_of_tnode string
+
 	for _, line := range lines {
 		// TODO
+		if strings.HasPrefix(line, "Basic info:") {
+			re := regexp.MustCompile(`(\d+) bytes`)
+			matches := re.FindAllStringSubmatch(line, -1)
+
+			size_of_leaf = matches[0][1]
+			size_of_tnode = matches[1][1]
+
+			fib.LeafSizeBytes = size_of_leaf
+			fib.TNodeSizeBytes = size_of_tnode
+		}
+
+		if strings.HasPrefix(line, "Main: ") {
+			data, err := ReadFibTrieSection("Main: ", string(content))
+			if err != nil {
+				return fib, err
+			}
+		}
 	}
 
 	return fib, nil
