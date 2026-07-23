@@ -633,4 +633,6 @@ func ReadFibTrieSection(section string, content string) (FIBTrieSection, error) 
 			fib.Counters.SkippedNodeResize = value
 		}
 	}
+
+	return fib, nil
 }
