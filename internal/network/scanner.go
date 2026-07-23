@@ -523,5 +523,12 @@ func ReadGenericData(path string, file string) (string, error) {
 // Fib Trie Reader Function
 
 func ReadFibTrieSection(section string, content string) (FIBTrieSection, error) {
-	
+	if strings.HasPrefix(section, "Main:") {
+		content = strings.Split(content, "Main:")[1]
+		content = strings.Split(content, "Local:")[0]
+
+		main = strings.Split(content, "Counters:")[0]
+		counters = strings.Split(content, "Counters:")[1]
+ 
+	}
 }
