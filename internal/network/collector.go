@@ -58,42 +58,40 @@ var DirMap map[string]string = map[string]string{
 	"etc_services":   "/etc/services",
 }
 
-
 func LinuxCollectFIBTrieStatistics(key string) (FIBTrieStatistics, error) {
-	fib := FIBTrieStatistics{}
-
 	if key != "proc_fib_triestat" {
-		return fib, fmt.Errorf("Wrong key for LinuxCollectFIBTrieStatistics")
+		return FIBTrieStatistics{}, fmt.Errorf("wrong key for LinuxCollectFIBTrieStatistics")
 	}
-	content, err := os.ReadFile(DirMap[key]) // key = proc_fib_triestat
+
+	content, err := os.ReadFile(DirMap[key])
 	if err != nil {
-		return fib, err
+		return FIBTrieStatistics{}, err
 	}
 
-	lines := strings.Split(string(content), "\n")
+	var fib FIBTrieStatistics
+	data := string(content)
 
-	var size_of_leaf string
-	var size_of_tnode string
+	// Parse basic info
+	_, err = fmt.Sscanf(
+		data,
+		"Basic info: size of leaf: %s bytes, size of tnode: %s bytes.",
+		&fib.LeafSizeBytes,
+		&fib.TNodeSizeBytes,
+	)
+	if err != nil {
+		return FIBTrieStatistics{}, err
+	}
 
-	for _, line := range lines {
-		// TODO
-		if strings.HasPrefix(line, "Basic info:") {
-			re := regexp.MustCompile(`(\d+) bytes`)
-			matches := re.FindAllStringSubmatch(line, -1)
+	// Parse Main section
+	fib.Main, err = ReadFibTrieSection("Main", data)
+	if err != nil {
+		return FIBTrieStatistics{}, err
+	}
 
-			size_of_leaf = matches[0][1]
-			size_of_tnode = matches[1][1]
-
-			fib.LeafSizeBytes = size_of_leaf
-			fib.TNodeSizeBytes = size_of_tnode
-		}
-
-		if strings.HasPrefix(line, "Main: ") {
-			data, err := ReadFibTrieSection("Main: ", string(content))
-			if err != nil {
-				return fib, err
-			}
-		}
+	// Parse Local section
+	fib.Local, err = ReadFibTrieSection("Local", data)
+	if err != nil {
+		return FIBTrieStatistics{}, err
 	}
 
 	return fib, nil
