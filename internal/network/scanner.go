@@ -556,4 +556,43 @@ func ReadFibTrieSection(section string, content string) (FIBTrieSection, error) 
 
 	mainPart := parts[0]
 	counterPart := parts[1]
+
+	// ---------------- Main ----------------
+	for _, line := range strings.Split(mainPart, "\n") {
+		line = strings.TrimSpace(line)
+
+		switch {
+		case strings.HasPrefix(line, "Aver depth:"):
+			fib.AverageDepth = strings.Fields(line)[2]
+
+		case strings.HasPrefix(line, "Max depth:"):
+			fib.MaxDepth = strings.Fields(line)[2]
+
+		case strings.HasPrefix(line, "Leaves:"):
+			fib.Leaves = strings.Fields(line)[1]
+
+		case strings.HasPrefix(line, "Prefixes:"):
+			fib.Prefixes = strings.Fields(line)[1]
+
+		case strings.HasPrefix(line, "Internal nodes:"):
+			fib.InternalNodes = strings.Fields(line)[2]
+
+		case strings.HasPrefix(line, "1:"):
+			fields := strings.Fields(line)
+			// 1: 1  2: 4  3: 1
+			fib.Depth1 = fields[1]
+			fib.Depth2 = fields[3]
+			fib.Depth3 = fields[5]
+
+		case strings.HasPrefix(line, "Pointers:"):
+			fib.Pointers = strings.Fields(line)[1]
+
+		case strings.HasPrefix(line, "Null ptrs:"):
+			fib.NullPtrs = strings.Fields(line)[2]
+
+		case strings.HasPrefix(line, "Total size:"):
+			fields := strings.Fields(line)
+			fib.TotalSizeKB = fields[2]
+		}
+	}
 }
