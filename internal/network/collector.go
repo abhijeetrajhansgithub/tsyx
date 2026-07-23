@@ -61,6 +61,20 @@ var DirMap map[string]string = map[string]string{
 func LinuxCollectFIBTrieStatistics(key string) (FIBTrieStatistics, error) {
 	fib := FIBTrieStatistics{}
 
+	if key != "proc_fib_triestat" {
+		return fib, fmt.Errorf("Wrong key for LinuxCollectFIBTrieStatistics")
+	}
+	content, err := os.ReadFile(DirMap[key]) // key = proc_fib_triestat
+	if err != nil {
+		return fib, err
+	}
+
+	lines := strings.Split(string(content), "\n")
+
+	for _, line := range lines {
+		// TODO
+	}
+
 	return fib, nil
 }
 
