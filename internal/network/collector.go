@@ -107,6 +107,8 @@ func LinuxCollectUDP(key string) (UDPConnectionTable, error) {
 			MemoryPointer: fields[11],
 			Drops: fields[12],
 		}
+
+		udp.Connections = append(udp.Connections, entry)
 	}
 
 	return udp, nil
