@@ -82,14 +82,7 @@ func LinuxCollectTCP(key string) (TCPConnectionTable, error) {  // key: tcp ot t
 			continue 
 		}
 
-		var strInode strings.Builder
-
-		for i, val := range fields {
-			if i>=9 {
-				strInode.WriteString(val)
-				strInode.WriteString(" ")
-			}
-		}
+		inode := strings.Join(fields[9:], " ")
 
 		txrx := strings.SplitN(fields[4], ":", 2)
 		timer := strings.SplitN(fields[5], ":", 2)
@@ -110,7 +103,7 @@ func LinuxCollectTCP(key string) (TCPConnectionTable, error) {  // key: tcp ot t
 
 			UID: fields[7],
 			Timeout: fields[8],
-			Inode: strInode.String(),
+			Inode: inode,
 		}
 
 		tcp.Connections = append(tcp.Connections, entry)
