@@ -74,13 +74,46 @@ func LinuxCollectTCP(key string) (TCPConnectionTable, error) {  // key: tcp ot t
 
 		fields := strings.Fields(line)
 
+		if len(fields) == 0 {
+			continue
+		}
+
+		if len(fields) < 10 {
+			continue 
+		}
+
+		var strInode strings.Builder
+
+		for i, val := range fields {
+			if i>=9 {
+				strInode.WriteString(val)
+				strInode.WriteString(" ")
+			}
+		}
+
+		txrx := strings.SplitN(fields[4], ":", 2)
+		timer := strings.SplitN(fields[5], ":", 2)
+
 		entry := ConnectionEntry{
 			Slot: fields[0],
 			LocalAddress: fields[1],
 			RemoteAddress: fields[2],
 			State: fields[3],
-			TxQueue: fields[4],
+			TxQueue: txrx[0],
+			RxQueue: txrx[1],
+
+			Timer: TimerInfo{
+				Type: timer[0],
+				Expires: timer[1],
+				Retransmits: fields[6],
+			},
+
+			UID: fields[7],
+			Timeout: fields[8],
+			Inode: strInode.String(),
 		}
+
+		tcp.Connections = append(tcp.Connections, entry)
 	}
 
 	return tcp, nil
