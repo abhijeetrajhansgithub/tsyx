@@ -57,6 +57,12 @@ var DirMap map[string]string = map[string]string{
 	"etc_services":   "/etc/services",
 }
 
+func LinuxCollectUDP(key string) (UDPConnectionTable, error) {
+	udp := UDPConnectionTable{}
+
+	return udp, nil
+}
+
 func LinuxCollectTCP(key string) (TCPConnectionTable, error) {  // key: tcp ot tcp6
 	tcp := TCPConnectionTable{}
 
