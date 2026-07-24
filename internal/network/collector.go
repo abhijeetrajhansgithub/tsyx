@@ -57,6 +57,12 @@ var DirMap map[string]string = map[string]string{
 	"etc_services":   "/etc/services",
 }
 
+func LinuxCollectTCP(key string) (TCPConnectionTable, error) {  // key: tcp ot tcp6
+	tcp := TCPConnectionTable{}
+
+	return tcp, nil
+}
+
 func LinuxCollectFIBTrieStatistics(key string) (FIBTrieStatistics, error) {
 	if key != "proc_fib_triestat" {
 		return FIBTrieStatistics{}, fmt.Errorf("wrong key for LinuxCollectFIBTrieStatistics")
