@@ -60,6 +60,29 @@ var DirMap map[string]string = map[string]string{
 func LinuxCollectTCP(key string) (TCPConnectionTable, error) {  // key: tcp ot tcp6
 	tcp := TCPConnectionTable{}
 
+	content, err := os.ReadFile(DirMap[key])
+	if err != nil {
+		return tcp, err
+	}
+
+	lines := strings.Split(string(content), "\n")
+
+	for i, line := range lines {
+		if i==0 {
+			continue
+		}
+
+		fields := strings.Fields(line)
+
+		entry := ConnectionEntry{
+			Slot: fields[0],
+			LocalAddress: fields[1],
+			RemoteAddress: fields[2],
+			State: fields[3],
+			TxQueue: fields[4],
+		}
+	}
+
 	return tcp, nil
 }
 
