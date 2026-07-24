@@ -349,7 +349,7 @@ type TCPConnectionTable struct { // files: /proc/net/tcp, /proc/net/tcp6
 // UDPConnectionEntry extends ConnectionEntry with fields specific to UDP
 // sockets.
 type UDPConnectionEntry struct {
-	ConnectionEntry
+	connection ConnectionEntry
 	RefCount      string
 	MemoryPointer string
 	Drops         string

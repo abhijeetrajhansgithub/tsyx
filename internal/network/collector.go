@@ -60,10 +60,59 @@ var DirMap map[string]string = map[string]string{
 func LinuxCollectUDP(key string) (UDPConnectionTable, error) {
 	udp := UDPConnectionTable{}
 
+	content, err := os.ReadFile(DirMap[key]) // key: udp or udp6
+	if err != nil {
+		return udp, err
+	}
+
+	lines := strings.Split(string(content), "\n")
+
+	for i, line := range lines {
+		if i==0 {
+			continue
+		}
+
+		fields := strings.Fields(line)
+
+		if len(fields) == 0 {
+			continue
+		}
+
+		if len(fields) < 13 {
+			continue
+		}
+
+		txrx := strings.SplitN(fields[4], ":", 2)
+		timer := strings.SplitN(fields[5], ":", 2)
+
+		entry := UDPConnectionEntry{
+			connection: ConnectionEntry{
+				Slot: fields[0],
+				LocalAddress: fields[1],
+				RemoteAddress: fields[2],
+				State: fields[3],
+				TxQueue: txrx[0],
+				RxQueue: txrx[1],
+				Timer: TimerInfo{
+					Type: timer[0],
+					Expires: timer[1],
+					Retransmits: fields[6],
+				},
+				UID: fields[7],
+				Timeout: fields[8],
+				Inode: fields[9],
+			},
+
+			RefCount: fields[10],
+			MemoryPointer: fields[11],
+			Drops: fields[12],
+		}
+	}
+
 	return udp, nil
 }
 
-func LinuxCollectTCP(key string) (TCPConnectionTable, error) {  // key: tcp ot tcp6
+func LinuxCollectTCP(key string) (TCPConnectionTable, error) {  // key: tcp or tcp6
 	tcp := TCPConnectionTable{}
 
 	content, err := os.ReadFile(DirMap[key])
