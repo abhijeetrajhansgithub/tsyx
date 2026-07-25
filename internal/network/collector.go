@@ -57,6 +57,19 @@ const DirMap map[string]string = map[string]string{
 	"etc_services":   "/etc/services",
 }
 
+func LinuxCollectPacketSocketTable(key string) (PacketSocketTable, error) {
+	pack := PacketSocketTable{}
+
+	content, err := os.ReadFile(DirMap[key])
+	if err != nil {
+		return pack, err
+	}
+
+	lines := strings.Split(string(content), "\n")
+
+	return pack, nil
+}
+
 func LinuxCollectUnixSocketTable(key string) (UnixSocketTable, error) {
 	unix := UnixSocketTable{}
 
