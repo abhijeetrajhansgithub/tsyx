@@ -418,7 +418,8 @@ type NetlinkTable struct { // file: /proc/net/netlink
 // ProcessConnector holds data read from the kernel's process event
 // connector interface.
 type ProcessConnector struct { // file: /proc/net/connector
-	CNProc string
+	Name string
+	ID string
 }
 
 // =====================================================================================

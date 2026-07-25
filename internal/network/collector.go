@@ -57,6 +57,24 @@ const DirMap map[string]string = map[string]string{
 	"etc_services":   "/etc/services",
 }
 
+func LinuxCollectProcessConnector(key string) (ProcessConnector, error) {
+	pcn := ProcessConnector{}
+
+	content, err := os.ReadFile(DirMap[key])
+	if err != nil {
+		return netl, err
+	}
+
+	lines := strings.Split(string(content), "\n")
+
+	for i, line := range lines {
+		if i==0 {
+			continue
+		}
+
+
+}
+
 func LinuxCollectNetlinkTable(key string) (NetlinkTable, error) {
 	netl := NetlinkTable{}
 
