@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-var DirMap map[string]string = map[string]string{
+const DirMap map[string]string = map[string]string{
 	// =========================
 	// /proc/net
 	// =========================
@@ -59,6 +59,34 @@ var DirMap map[string]string = map[string]string{
 
 func LinuxCollectUnixSocketTable(key string) (UnixSocketTable, error) {
 	unix := UnixSocketTable{}
+
+	content, err := os.ReadFile(DirMap[key]) 
+	if err != nil {
+		return unix, err
+	}
+
+	lines := strings.Split(string(content), "\n")
+
+	for i, line := range lines {
+		if i==0 {
+			continue
+		}
+
+		fields := strings.Fields(line)
+
+		entry := UnixSocketEntry{
+			Num: fields[0],
+			RefCount: fields[1],
+			Protocol: fields[2],
+			Flags: fields[3],
+			Type: fields[4],
+			State: fields[5],
+			Inode: fields[6],
+			Path: fields[7],
+		}
+
+		unix.Sockets = append(unix.Sockets, entry)
+	}
 
 	return unix, nil
 }
