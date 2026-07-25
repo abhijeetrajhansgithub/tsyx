@@ -72,6 +72,24 @@ func LinuxCollectProcessConnector(key string) (ProcessConnector, error) {
 			continue
 		}
 
+		fields := strings.Fields(line)
+
+		if len(fields) < 2 {
+			continue
+		}
+
+		pcn.Name = fields[0]
+		pcn.ID = fields[1]
+
+		if pcn.Name != "" && pcn.ID != "" {
+			break
+		}
+
+
+	}
+
+	return pcn, nil
+
 
 }
 
