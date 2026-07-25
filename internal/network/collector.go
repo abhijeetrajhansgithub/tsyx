@@ -64,6 +64,37 @@ func LinuxCollectNetlinkTable(key string) (NetlinkTable, error) {
 	if err != nil {
 		return netl, err
 	}
+
+	lines := strings.Split(string(content), "\n")
+
+	for i, line := range lines {
+		if i==0 {
+			continue
+		}
+
+		fields := strings.Fields(line)
+
+		if len(fields) < 10 {
+			continue
+		}
+
+		entry := NetlinkSocket{
+			Socket: fields[0],
+			Protocol: fields[1],
+			PID: fields[2],
+			Groups: fields[3],
+			RecvMem: fields[4],
+			SendMem: fields[5],
+			Dump: fields[6],
+			Locks: fields[7],
+			Drops: fields[8],
+			Inode: fields[9],
+		}
+
+		netl.Sockets = append(netl.Sockets, entry)
+	}
+
+	return netl, nil
 }
 
 func LinuxCollectPacketSocketTable(key string) (PacketSocketTable, error) {
