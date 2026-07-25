@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-const DirMap map[string]string = map[string]string{
+var DirMap map[string]string = map[string]string{
 	// =========================
 	// /proc/net
 	// =========================
@@ -62,7 +62,7 @@ func LinuxCollectProcessConnector(key string) (ProcessConnector, error) {
 
 	content, err := os.ReadFile(DirMap[key])
 	if err != nil {
-		return netl, err
+		return pcn, err
 	}
 
 	lines := strings.Split(string(content), "\n")
