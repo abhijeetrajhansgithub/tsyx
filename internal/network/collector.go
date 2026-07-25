@@ -67,6 +67,34 @@ func LinuxCollectPacketSocketTable(key string) (PacketSocketTable, error) {
 
 	lines := strings.Split(string(content), "\n")
 
+	for i, line := range lines {
+		if i==0 {
+			continue
+		}
+
+		fields := strings.Fields(line)
+
+		if len(fields) < 9 {
+			continue
+		}
+
+		entry := PacketSocketEntry{
+			Socket: fields[0],
+			RefCount: fields[1],
+			Type: fields[2],
+			Protocol: fields[3],
+			Interface: fields[4],
+			RecvQueue: fields[5],
+			RecvMem: fields[6],
+			User: fields[7],
+			Inode: fields[8],
+		}
+
+		pack.Sockets = append(pack.Sockets, entry)
+
+
+	}
+
 	return pack, nil
 }
 
@@ -86,6 +114,10 @@ func LinuxCollectUnixSocketTable(key string) (UnixSocketTable, error) {
 		}
 
 		fields := strings.Fields(line)
+
+		if len(fields) < 8 {
+			continue
+		}
 
 		entry := UnixSocketEntry{
 			Num: fields[0],
