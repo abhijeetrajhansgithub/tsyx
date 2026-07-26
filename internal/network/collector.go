@@ -71,6 +71,9 @@ func LinuxCollectNetworkExtendedStatistics(key string) (NetworkExtendedStatistic
 		return netstats, err
 	}
 
+	netstats.TCP = tcp 
+	netstats.IP = ip
+
 	return netstats, nil
 }
 
