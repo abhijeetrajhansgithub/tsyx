@@ -63,6 +63,12 @@ func LinuxCollectIPExtendedStatistics(key string) (IPExtendedStatistics, error) 
 	return ipes, nil
 }
 
+func LinuxCollectTCPExtendedStatistics(key string) (TCPExtendedStatistics, error) {
+	tes := TCPExtendedStatistics{}
+
+	return tes, nil
+}
+
 func LinuxCollectProcessConnector(key string) (ProcessConnector, error) {
 	pcn := ProcessConnector{}
 
