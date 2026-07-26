@@ -57,6 +57,12 @@ var DirMap map[string]string = map[string]string{
 	"etc_services":   "/etc/services",
 }
 
+func LinuxCollectIPExtendedStatistics(key string) (IPExtendedStatistics, error) {
+	ipes := IPExtendedStatistics{}
+
+	return ipes, nil
+}
+
 func LinuxCollectProcessConnector(key string) (ProcessConnector, error) {
 	pcn := ProcessConnector{}
 
