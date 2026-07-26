@@ -58,13 +58,70 @@ var DirMap map[string]string = map[string]string{
 }
 
 func LinuxCollectIPExtendedStatistics(key string) (IPExtendedStatistics, error) {
-	ipes := IPExtendedStatistics{}
+	ies := IPExtendedStatistics{}
 
-	return ipes, nil
+	content, err := os.ReadFile(DirMap[key])
+	if err != nil {
+		return ies, err
+	}
+
+	lines := strings.Split(string(content), "\n")
+
+	for i := 0; i < len(lines)-1; i++ {
+		if strings.HasPrefix(lines[i], "IpExt:") {
+			fields := strings.Fields(lines[i])
+			values := strings.Fields(lines[i+1])
+
+			if len(fields) != len(values) {
+				return ies, fmt.Errorf("IpExt fields/value count mismatch")
+			}
+
+			data := make(map[string]string)
+			for j := 1; j < len(fields); j++ { // Skip "IpExt:"
+				data[fields[j]] = values[j]
+			}
+
+			ies.InNoRoutes = data["InNoRoutes"]
+			ies.InTruncatedPkts = data["InTruncatedPkts"]
+			ies.InMcastPkts = data["InMcastPkts"]
+			ies.OutMcastPkts = data["OutMcastPkts"]
+			ies.InBcastPkts = data["InBcastPkts"]
+			ies.OutBcastPkts = data["OutBcastPkts"]
+			ies.InOctets = data["InOctets"]
+			ies.OutOctets = data["OutOctets"]
+			ies.InMcastOctets = data["InMcastOctets"]
+			ies.OutMcastOctets = data["OutMcastOctets"]
+			ies.InBcastOctets = data["InBcastOctets"]
+			ies.OutBcastOctets = data["OutBcastOctets"]
+			ies.InCsumErrors = data["InCsumErrors"]
+			ies.InNoECTPkts = data["InNoECTPkts"]
+			ies.InECT1Pkts = data["InECT1Pkts"]
+			ies.InECT0Pkts = data["InECT0Pkts"]
+			ies.InCEPkts = data["InCEPkts"]
+			ies.ReasmOverlaps = data["ReasmOverlaps"]
+
+			break
+		}
+	}
+
+	return ies, nil
 }
 
 func LinuxCollectTCPExtendedStatistics(key string) (TCPExtendedStatistics, error) {
 	tes := TCPExtendedStatistics{}
+
+	content, err := os.ReadFile(DirMap[key])
+	if err != nil {
+		return tes, err
+	}
+
+	lines := strings.Split(string(content), "\n")
+
+	for _, line := range lines {
+		if strings.HasPrefix(line, "TcpExt:") {
+
+		}
+	}
 
 	return tes, nil
 }
