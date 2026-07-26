@@ -463,7 +463,7 @@ type TCPExtendedStatistics struct {
 	RenoReorder               string
 	TSReorder                 string
 	FullUndo                  string
-	PartialUndo                string
+	PartialUndo               string
 	DSACKUndo                 string
 	LossUndo                  string
 	LostRetransmit            string

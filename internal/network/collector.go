@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"reflect"
 )
 
 var DirMap map[string]string = map[string]string{
@@ -101,6 +102,148 @@ func LinuxCollectIPExtendedStatistics(key string) (IPExtendedStatistics, error) 
 	return ies, nil
 }
 
+// tcpExtFieldMap maps the column names as they appear in the "TcpExt:" header
+// line of /proc/net/netstat to the corresponding TCPExtendedStatistics field.
+// Using a name-based map (instead of positional indices) means the parser
+// keeps working even if the kernel adds, removes, or reorders counters.
+var tcpExtFieldMap = map[string]string{
+	"SyncookiesSent":            "SyncookiesSent",
+	"SyncookiesRecv":            "SyncookiesRecv",
+	"SyncookiesFailed":          "SyncookiesFailed",
+	"EmbryonicRsts":             "EmbryonicRsts",
+	"PruneCalled":               "PruneCalled",
+	"RcvPruned":                 "RcvPruned",
+	"OfoPruned":                 "OfoPruned",
+	"OutOfWindowIcmps":          "OutOfWindowICMPs",
+	"LockDroppedIcmps":          "LockDroppedICMPs",
+	"ArpFilter":                 "ArpFilter",
+	"TW":                        "TimeWait",
+	"TWRecycled":                "TimeWaitRecycled",
+	"TWKilled":                  "TimeWaitKilled",
+	"PAWSActive":                "PAWSActive",
+	"PAWSEstab":                 "PAWSEstab",
+	"BeyondWindow":              "BeyondWindow",
+	"TSEcrRejected":             "TSEcrRejected",
+	"PAWSOldAck":                "PAWSOldAck",
+	"PAWSTimewait":              "PAWSTimewait",
+	"DelayedACKs":               "DelayedACKs",
+	"DelayedACKLocked":          "DelayedACKLocked",
+	"DelayedACKLost":            "DelayedACKLost",
+	"ListenOverflows":           "ListenOverflows",
+	"ListenDrops":               "ListenDrops",
+	"TCPHPHits":                 "HPHits",
+	"TCPPureAcks":               "PureAcks",
+	"TCPHPAcks":                 "HPAcks",
+	"TCPRenoRecovery":           "RenoRecovery",
+	"TCPSackRecovery":           "SackRecovery",
+	"TCPSACKReneging":           "SACKReneging",
+	"TCPSACKReorder":            "SACKReorder",
+	"TCPRenoReorder":            "RenoReorder",
+	"TCPTSReorder":              "TSReorder",
+	"TCPFullUndo":               "FullUndo",
+	"TCPPartialUndo":            "PartialUndo",
+	"TCPDSACKUndo":              "DSACKUndo",
+	"TCPLossUndo":               "LossUndo",
+	"TCPLostRetransmit":         "LostRetransmit",
+	"TCPRenoFailures":           "RenoFailures",
+	"TCPSackFailures":           "SackFailures",
+	"TCPLossFailures":           "LossFailures",
+	"TCPFastRetrans":            "FastRetrans",
+	"TCPSlowStartRetrans":       "SlowStartRetrans",
+	"TCPTimeouts":               "Timeouts",
+	"TCPLossProbes":             "LossProbes",
+	"TCPLossProbeRecovery":      "LossProbeRecovery",
+	"TCPRenoRecoveryFail":       "RenoRecoveryFail",
+	"TCPSackRecoveryFail":       "SackRecoveryFail",
+	"TCPRcvCollapsed":           "RcvCollapsed",
+	"TCPBacklogCoalesce":        "BacklogCoalesce",
+	"TCPDSACKOldSent":           "DSACKOldSent",
+	"TCPDSACKOfoSent":           "DSACKOfoSent",
+	"TCPDSACKRecv":              "DSACKRecv",
+	"TCPDSACKOfoRecv":           "DSACKOfoRecv",
+	"TCPAbortOnData":            "AbortOnData",
+	"TCPAbortOnClose":           "AbortOnClose",
+	"TCPAbortOnMemory":          "AbortOnMemory",
+	"TCPAbortOnTimeout":         "AbortOnTimeout",
+	"TCPAbortOnLinger":          "AbortOnLinger",
+	"TCPAbortFailed":            "AbortFailed",
+	"TCPMemoryPressures":        "MemoryPressures",
+	"TCPMemoryPressuresChrono":  "MemoryPressuresChrono",
+	"TCPSACKDiscard":            "SACKDiscard",
+	"TCPDSACKIgnoredOld":        "DSACKIgnoredOld",
+	"TCPDSACKIgnoredNoUndo":     "DSACKIgnoredNoUndo",
+	"TCPSpuriousRTOs":           "SpuriousRTOs",
+	"TCPMD5NotFound":            "MD5NotFound",
+	"TCPMD5Unexpected":          "MD5Unexpected",
+	"TCPMD5Failure":             "MD5Failure",
+	"TCPSackShifted":            "SackShifted",
+	"TCPSackMerged":             "SackMerged",
+	"TCPSackShiftFallback":      "SackShiftFallback",
+	"TCPBacklogDrop":            "BacklogDrop",
+	"PFMemallocDrop":            "PFMemallocDrop",
+	"TCPMinTTLDrop":             "MinTTLDrop",
+	"TCPDeferAcceptDrop":        "DeferAcceptDrop",
+	"IPReversePathFilter":       "IPReversePathFilter",
+	"TCPTimeWaitOverflow":       "TimeWaitOverflow",
+	"TCPReqQFullDoCookies":      "ReqQFullDoCookies",
+	"TCPReqQFullDrop":           "ReqQFullDrop",
+	"TCPRetransFail":            "RetransFail",
+	"TCPRcvCoalesce":            "RcvCoalesce",
+	"TCPOFOQueue":               "OFOQueue",
+	"TCPOFODrop":                "OFODrop",
+	"TCPOFOMerge":               "OFOMerge",
+	"TCPChallengeACK":           "ChallengeACK",
+	"TCPSYNChallenge":           "SYNChallenge",
+	"TCPFastOpenActive":         "FastOpenActive",
+	"TCPFastOpenActiveFail":     "FastOpenActiveFail",
+	"TCPFastOpenPassive":        "FastOpenPassive",
+	"TCPFastOpenPassiveFail":    "FastOpenPassiveFail",
+	"TCPFastOpenListenOverflow": "FastOpenListenOverflow",
+	"TCPFastOpenCookieReqd":     "FastOpenCookieReqd",
+	"TCPFastOpenBlackhole":      "FastOpenBlackhole",
+	"TCPSpuriousRtxHostQueues":  "SpuriousRtxHostQueues",
+	"BusyPollRxPackets":         "BusyPollRxPackets",
+	"TCPAutoCorking":            "AutoCorking",
+	"TCPFromZeroWindowAdv":      "FromZeroWindowAdv",
+	"TCPToZeroWindowAdv":        "ToZeroWindowAdv",
+	"TCPWantZeroWindowAdv":      "WantZeroWindowAdv",
+	"TCPSynRetrans":             "SynRetrans",
+	"TCPOrigDataSent":           "OrigDataSent",
+	"TCPHystartTrainDetect":     "HystartTrainDetect",
+	"TCPHystartTrainCwnd":       "HystartTrainCwnd",
+	"TCPHystartDelayDetect":     "HystartDelayDetect",
+	"TCPHystartDelayCwnd":       "HystartDelayCwnd",
+	"TCPACKSkippedSynRecv":      "ACKSkippedSynRecv",
+	"TCPACKSkippedPAWS":         "ACKSkippedPAWS",
+	"TCPACKSkippedSeq":          "ACKSkippedSeq",
+	"TCPACKSkippedFinWait2":     "ACKSkippedFinWait2",
+	"TCPACKSkippedTimeWait":     "ACKSkippedTimeWait",
+	"TCPACKSkippedChallenge":    "ACKSkippedChallenge",
+	"TCPWinProbe":               "WinProbe",
+	"TCPKeepAlive":              "KeepAlive",
+	"TCPMTUPFail":               "MTUPFail",
+	"TCPMTUPSuccess":            "MTUPSuccess",
+	"TCPDelivered":              "Delivered",
+	"TCPDeliveredCE":            "DeliveredCE",
+	"TCPAckCompressed":          "AckCompressed",
+	"TCPZeroWindowDrop":         "ZeroWindowDrop",
+	"TCPRcvQDrop":               "RcvQDrop",
+	"TCPWqueueTooBig":           "WqueueTooBig",
+	"TCPFastOpenPassiveAltKey":  "FastOpenPassiveAltKey",
+	"TcpTimeoutRehash":          "TimeoutRehash",
+	"TcpDuplicateDataRehash":    "DuplicateDataRehash",
+	"TCPDSACKRecvSegs":          "DSACKRecvSegs",
+	"TCPDSACKIgnoredDubious":    "DSACKIgnoredDubious",
+	"TCPMigrateReqSuccess":      "MigrateReqSuccess",
+	"TCPMigrateReqFailure":      "MigrateReqFailure",
+	"TCPPLBRehash":              "PLBRehash",
+	"TCPAORequired":             "AORequired",
+	"TCPAOBad":                  "AOBad",
+	"TCPAOKeyNotFound":          "AOKeyNotFound",
+	"TCPAOGood":                 "AOGood",
+	"TCPAODroppedIcmps":         "AODroppedICMPs",
+}
+
 func LinuxCollectTCPExtendedStatistics(key string) (TCPExtendedStatistics, error) {
 	tes := TCPExtendedStatistics{}
 
@@ -112,154 +255,42 @@ func LinuxCollectTCPExtendedStatistics(key string) (TCPExtendedStatistics, error
 	lines := strings.Split(string(content), "\n")
 
 	for i := 0; i < len(lines)-1; i++ {
-		if strings.HasPrefix(lines[i], "TcpExt:") {
-			values := strings.Fields(lines[i+1])
+		if !strings.HasPrefix(lines[i], "TcpExt:") {
+			continue
+		}
 
-			if len(values) < 132 { // "TcpExt:" + 131 values
-				return tes, fmt.Errorf("invalid TcpExt statistics")
+		headers := strings.Fields(lines[i])[1:]  // drop the "TcpExt:" label
+		values := strings.Fields(lines[i+1])[1:] // drop the "TcpExt:" label
+
+		if len(headers) != len(values) {
+			return tes, fmt.Errorf(
+				"invalid TcpExt statistics: %d headers but %d values",
+				len(headers), len(values),
+			)
+		}
+
+		v := reflect.ValueOf(&tes).Elem()
+
+		for idx, name := range headers {
+			fieldName, known := tcpExtFieldMap[name]
+			if !known {
+				// A counter the kernel added that we don't track yet.
+				// Skip it instead of failing the whole parse.
+				continue
 			}
 
-			tes.SyncookiesSent = values[1]
-			tes.SyncookiesRecv = values[2]
-			tes.SyncookiesFailed = values[3]
-			tes.EmbryonicRsts = values[4]
-			tes.PruneCalled = values[5]
-			tes.RcvPruned = values[6]
-			tes.OfoPruned = values[7]
-			tes.OutOfWindowICMPs = values[8]
-			tes.LockDroppedICMPs = values[9]
-			tes.ArpFilter = values[10]
-			tes.TimeWait = values[11]
-			tes.TimeWaitRecycled = values[12]
-			tes.TimeWaitKilled = values[13]
-			tes.PAWSActive = values[14]
-			tes.PAWSEstab = values[15]
-			tes.BeyondWindow = values[16]
-			tes.TSEcrRejected = values[17]
-			tes.PAWSOldAck = values[18]
-			tes.PAWSTimewait = values[19]
-			tes.DelayedACKs = values[20]
-			tes.DelayedACKLocked = values[21]
-			tes.DelayedACKLost = values[22]
-			tes.ListenOverflows = values[23]
-			tes.ListenDrops = values[24]
-			tes.HPHits = values[25]
-			tes.PureAcks = values[26]
-			tes.HPAcks = values[27]
-			tes.RenoRecovery = values[28]
-			tes.SackRecovery = values[29]
-			tes.SACKReneging = values[30]
-			tes.SACKReorder = values[31]
-			tes.RenoReorder = values[32]
-			tes.TSReorder = values[33]
-			tes.FullUndo = values[34]
-			tes.PartialUndo = values[35]
-			tes.DSACKUndo = values[36]
-			tes.LossUndo = values[37]
-			tes.LostRetransmit = values[38]
-			tes.RenoFailures = values[39]
-			tes.SackFailures = values[40]
-			tes.LossFailures = values[41]
-			tes.FastRetrans = values[42]
-			tes.SlowStartRetrans = values[43]
-			tes.Timeouts = values[44]
-			tes.LossProbes = values[45]
-			tes.LossProbeRecovery = values[46]
-			tes.RenoRecoveryFail = values[47]
-			tes.SackRecoveryFail = values[48]
-			tes.RcvCollapsed = values[49]
-			tes.BacklogCoalesce = values[50]
-			tes.DSACKOldSent = values[51]
-			tes.DSACKOfoSent = values[52]
-			tes.DSACKRecv = values[53]
-			tes.DSACKOfoRecv = values[54]
-			tes.AbortOnData = values[55]
-			tes.AbortOnClose = values[56]
-			tes.AbortOnMemory = values[57]
-			tes.AbortOnTimeout = values[58]
-			tes.AbortOnLinger = values[59]
-			tes.AbortFailed = values[60]
-			tes.MemoryPressures = values[61]
-			tes.MemoryPressuresChrono = values[62]
-			tes.SACKDiscard = values[63]
-			tes.DSACKIgnoredOld = values[64]
-			tes.DSACKIgnoredNoUndo = values[65]
-			tes.SpuriousRTOs = values[66]
-			tes.MD5NotFound = values[67]
-			tes.MD5Unexpected = values[68]
-			tes.MD5Failure = values[69]
-			tes.SackShifted = values[70]
-			tes.SackMerged = values[71]
-			tes.SackShiftFallback = values[72]
-			tes.BacklogDrop = values[73]
-			tes.PFMemallocDrop = values[74]
-			tes.MinTTLDrop = values[75]
-			tes.DeferAcceptDrop = values[76]
-			tes.IPReversePathFilter = values[77]
-			tes.TimeWaitOverflow = values[78]
-			tes.ReqQFullDoCookies = values[79]
-			tes.ReqQFullDrop = values[80]
-			tes.RetransFail = values[81]
-			tes.RcvCoalesce = values[82]
-			tes.OFOQueue = values[83]
-			tes.OFODrop = values[84]
-			tes.OFOMerge = values[85]
-			tes.ChallengeACK = values[86]
-			tes.SYNChallenge = values[87]
-			tes.FastOpenActive = values[88]
-			tes.FastOpenActiveFail = values[89]
-			tes.FastOpenPassive = values[90]
-			tes.FastOpenPassiveFail = values[91]
-			tes.FastOpenListenOverflow = values[92]
-			tes.FastOpenCookieReqd = values[93]
-			tes.FastOpenBlackhole = values[94]
-			tes.SpuriousRtxHostQueues = values[95]
-			tes.BusyPollRxPackets = values[96]
-			tes.AutoCorking = values[97]
-			tes.FromZeroWindowAdv = values[98]
-			tes.ToZeroWindowAdv = values[99]
-			tes.WantZeroWindowAdv = values[100]
-			tes.SynRetrans = values[101]
-			tes.OrigDataSent = values[102]
-			tes.HystartTrainDetect = values[103]
-			tes.HystartTrainCwnd = values[104]
-			tes.HystartDelayDetect = values[105]
-			tes.HystartDelayCwnd = values[106]
-			tes.ACKSkippedSynRecv = values[107]
-			tes.ACKSkippedPAWS = values[108]
-			tes.ACKSkippedSeq = values[109]
-			tes.ACKSkippedFinWait2 = values[110]
-			tes.ACKSkippedTimeWait = values[111]
-			tes.ACKSkippedChallenge = values[112]
-			tes.WinProbe = values[113]
-			tes.KeepAlive = values[114]
-			tes.MTUPFail = values[115]
-			tes.MTUPSuccess = values[116]
-			tes.Delivered = values[117]
-			tes.DeliveredCE = values[118]
-			tes.AckCompressed = values[119]
-			tes.ZeroWindowDrop = values[120]
-			tes.RcvQDrop = values[121]
-			tes.WqueueTooBig = values[122]
-			tes.FastOpenPassiveAltKey = values[123]
-			tes.TimeoutRehash = values[124]
-			tes.DuplicateDataRehash = values[125]
-			tes.DSACKRecvSegs = values[126]
-			tes.DSACKIgnoredDubious = values[127]
-			tes.MigrateReqSuccess = values[128]
-			tes.MigrateReqFailure = values[129]
-			tes.PLBRehash = values[130]
-			tes.AORequired = values[131]
-			tes.AOBad = values[132]
-			tes.AOKeyNotFound = values[133]
-			tes.AOGood = values[134]
-			tes.AODroppedICMPs = values[135]
+			f := v.FieldByName(fieldName)
+			if !f.IsValid() || !f.CanSet() {
+				continue
+			}
 
-			break
+			f.SetString(values[idx])
 		}
+
+		return tes, nil
 	}
 
-	return tes, nil
+	return tes, fmt.Errorf("TcpExt section not found in %s", DirMap[key])
 }
 
 func LinuxCollectProcessConnector(key string) (ProcessConnector, error) {
