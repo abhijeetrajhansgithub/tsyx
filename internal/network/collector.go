@@ -58,6 +58,12 @@ var DirMap map[string]string = map[string]string{
 	"etc_services":   "/etc/services",
 }
 
+func LinuxCollectSNMPIPStatistics(key string) (SNMPIPStatistics, error) {
+	snmp := SNMPIPStatistics{}
+
+	return snmp, nil
+}
+
 func LinuxCollectNetworkExtendedStatistics(key string) (NetworkExtendedStatistics, error) {
 	netstats := NetworkExtendedStatistics{}
 
