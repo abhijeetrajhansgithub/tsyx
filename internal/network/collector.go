@@ -61,6 +61,15 @@ var DirMap map[string]string = map[string]string{
 func LinuxCollectSNMPICMPStatistics(key string) (SNMPICMPStatistics, error) {
 	snmpicmp := SNMPICMPStatistics{}
 
+	content, err := os.ReadFile(DirMap[key])
+	if err != nil {
+		return snmpicmp, err
+	}
+
+	lines := strings.Split(string(content), "\n")
+
+	var count int
+
 	return snmpicmp, nil
 }
 
