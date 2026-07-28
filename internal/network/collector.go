@@ -70,6 +70,22 @@ func LinuxCollectSNMPICMPStatistics(key string) (SNMPICMPStatistics, error) {
 
 	var count int
 
+	for idx, line := range lines {
+		if idx == 2 {
+			fields := strings.Fields(line)
+			count = len(fields)
+			continue
+		}
+
+		if idx == 3 {
+			fields := strings.Fields(line)
+
+			if len(fields) != count {
+				continue
+			}
+		}
+	}
+
 	return snmpicmp, nil
 }
 
