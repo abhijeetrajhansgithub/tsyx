@@ -89,6 +89,12 @@ func LinuxCollectSNMPIPStatistics(key string) (SNMPIPStatistics, error) {
 				InHdrErrors: fields[4],
 				InAddrErrors: fields[5],
 				ForwDatagrams: fields[6],
+				InUnknownProtos: fields[7],
+				InDiscards: fields[8],
+				InDelivers: fields[9],
+				OutRequests: fields[10],
+				OutDiscards: fields[11],
+				OutNoRoutes: fields[12],
 			}
 		}
 	}
