@@ -66,6 +66,33 @@ func LinuxCollectSNMPIPStatistics(key string) (SNMPIPStatistics, error) {
 		return snmp, err
 	}
 
+	lines := strings.Split(string(content), "\n")
+
+	var count int
+
+	for idx, line := range lines {
+		if idx == 0 {
+			fields := strings.Fields(line)
+			count = len(fields)
+		}
+		if idx == 1 {
+			fields := strings.Fields(line)
+
+			if len(fields) != count {
+				continue
+			}
+
+			entry := SNMPIPStatistics{
+				Forwarding: fields[1],
+				DefaultTTL: fields[2],
+				InReceives: fields[3],
+				InHdrErrors: fields[4],
+				InAddrErrors: fields[5],
+				ForwDatagrams: fields[6],
+			}
+		}
+	}
+
 	return snmp, nil
 }
 
