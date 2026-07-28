@@ -74,7 +74,9 @@ func LinuxCollectSNMPIPStatistics(key string) (SNMPIPStatistics, error) {
 		if idx == 0 {
 			fields := strings.Fields(line)
 			count = len(fields)
+			continue
 		}
+
 		if idx == 1 {
 			fields := strings.Fields(line)
 
@@ -82,20 +84,30 @@ func LinuxCollectSNMPIPStatistics(key string) (SNMPIPStatistics, error) {
 				continue
 			}
 
-			entry := SNMPIPStatistics{
-				Forwarding: fields[1],
-				DefaultTTL: fields[2],
-				InReceives: fields[3],
-				InHdrErrors: fields[4],
-				InAddrErrors: fields[5],
-				ForwDatagrams: fields[6],
+			snmp = SNMPIPStatistics{
+				Forwarding:      fields[1],
+				DefaultTTL:      fields[2],
+				InReceives:      fields[3],
+				InHdrErrors:     fields[4],
+				InAddrErrors:    fields[5],
+				ForwDatagrams:   fields[6],
 				InUnknownProtos: fields[7],
-				InDiscards: fields[8],
-				InDelivers: fields[9],
-				OutRequests: fields[10],
-				OutDiscards: fields[11],
-				OutNoRoutes: fields[12],
+				InDiscards:      fields[8],
+				InDelivers:      fields[9],
+				OutRequests:     fields[10],
+				OutDiscards:     fields[11],
+				OutNoRoutes:     fields[12],
+				ReasmTimeout:    fields[13],
+				ReasmReqds:      fields[14],
+				ReasmOKs:        fields[15],
+				ReasmFails:      fields[16],
+				FragOKs:         fields[17],
+				FragFails:       fields[18],
+				FragCreates:     fields[19],
+				OutTransmits:    fields[20],
 			}
+
+			break
 		}
 	}
 
