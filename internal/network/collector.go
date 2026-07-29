@@ -63,12 +63,28 @@ func LinuxCollectSNMPTCPStatistics(key string) (SNMPTCPStatistics, error) {
 
 	content, err := os.ReadFile(DirMap[key])
 	if err != nil {
-		return snmpicmp, err
+		return tcp, err
 	}
 
 	lines := strings.Split(string(content), "\n")
 
 	var count int
+
+	for idx, line := range lines {
+		if idx == 4 {
+			fields := strings.Fields(line)
+			count = len(fields)
+			continue
+		}
+
+		if idx == 5 {
+			fields := strings.Fields(line)
+
+			if len(fields) != count {
+				continue
+			}
+		}
+	}
 
 	return tcp, nil
 }
