@@ -58,6 +58,19 @@ var DirMap map[string]string = map[string]string{
 	"etc_services":   "/etc/services",
 }
 
+func LinuxCollectSNMPUDPStatistics(key string) (UDPStatistics, error) {
+	udp := UDPStatistics{}
+
+	content, err := os.ReadFile(DirMap[key])
+	if err != nil {
+		return tcp, err
+	}
+
+	lines := strings.Split(string(content), "\n")
+
+	return udp, nil
+}
+
 func LinuxCollectSNMPTCPStatistics(key string) (SNMPTCPStatistics, error) {
 	tcp := SNMPTCPStatistics{}
 
