@@ -58,6 +58,37 @@ var DirMap map[string]string = map[string]string{
 	"etc_services":   "/etc/services",
 }
 
+func LinuxCollectSNMPUDP_Lite_Statistics(key string) (UDPStatistics, error) {
+	udp := UDPStatistics{}
+
+	content, err := os.ReadFile(DirMap[key])
+	if err != nil {
+		return udp, err
+	}
+
+	lines := strings.Split(string(content), "\n")
+
+	var count int 
+
+	for idx, line := range lines {
+		if idx == 8 {
+			fields := strings.Fields(line)
+			count = len(fields)
+			continue
+		}
+
+		if idx == 9 {
+			fields := strings.Fields(line)
+
+			if len(fields) != count {
+				continue
+			}
+		}
+	}
+
+	return udp, nil
+}
+
 func LinuxCollectSNMPUDPStatistics(key string) (UDPStatistics, error) {
 	udp := UDPStatistics{}
 
