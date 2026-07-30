@@ -63,10 +63,28 @@ func LinuxCollectSNMPUDPStatistics(key string) (UDPStatistics, error) {
 
 	content, err := os.ReadFile(DirMap[key])
 	if err != nil {
-		return tcp, err
+		return udp, err
 	}
 
 	lines := strings.Split(string(content), "\n")
+
+	var count int 
+
+	for idx, line := range lines {
+		if idx == 6 {
+			fields := strings.Fields(line)
+			count = len(fields)
+			continue
+		}
+
+		if idx == 7 {
+			fields := strings.Fields(line)
+
+			if len(fields) != count {
+				continue
+			}
+		}
+	}
 
 	return udp, nil
 }
