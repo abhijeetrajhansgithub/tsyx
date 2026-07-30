@@ -68,7 +68,38 @@ func LinuxCollectSNMPStatistics(key string) (SNMPStatistics, error) {
 
 	snmp.IP = ip 
 
-	
+	icmp, err := LinuxCollectSNMPICMPStatistics(key)
+	if err != nil {
+		return snmp, err
+	}
+
+	snmp.ICMP = icmp
+
+	snmp.ICMPMsg = SNMPICMPMessageStatistics{}
+
+	tcp, err := LinuxCollectSNMPTCPStatistics(key)
+	if err != nil {
+		return snmp, err
+	}
+
+	snmp.TCP = tcp
+
+	udp, err := LinuxCollectSNMPUDPStatistics(key)
+	if err != nil {
+		return snmp, err
+	}
+
+	snmp.UDP = udp
+
+	udp_lite, err := LinuxCollectSNMPUDP_Lite_Statistics(key)
+	if err != nil {
+		return snmp, err
+	}
+
+	snmp.UDPLite = udp_lite
+
+	return snmp, nil
+
 }
 
 func LinuxCollectSNMPUDP_Lite_Statistics(key string) (UDPStatistics, error) {
