@@ -66,7 +66,50 @@ func LinuxCollectSocketStatistics(key string) (SocketStatistics, error) {
 		return sock, err
 	}
 
-	
+	lines := strings.Split(string(content), "\n")
+
+	stc := SocketTypeCounters{}
+
+	for _, line := range lines {
+		__line__ := strings.TrimSpace(line)
+
+		fields := strings.Fields(__line__)
+
+		if len(fields) < 2 {
+			continue
+		}
+
+		value := strings.Join(fields[1:], ",")
+
+		if strings.HasPrefix(__line__, "sockets:") {
+			sock.Sockets = value			
+		}
+
+		if strings.HasPrefix(__line__, "TCP:") {
+			stc.TCP = value			
+		}
+
+		if strings.HasPrefix(__line__, "UDP:") {
+			stc.UDP = value			
+		}
+
+		if strings.HasPrefix(__line__, "UDPLITE:") {
+			stc.UDPLite = value			
+		}
+
+		if strings.HasPrefix(__line__, "RAW:") {
+			stc.RAW = value			
+		}
+
+		if strings.HasPrefix(__line__, "FRAG:") {
+			stc.Frag = value			
+		}
+	}
+
+	sock.Counters = stc
+
+	return sock, nil
+
 }
 
 func LinuxCollectSNMP6Statistics(key string) (SNMP6Statistics, error) {
