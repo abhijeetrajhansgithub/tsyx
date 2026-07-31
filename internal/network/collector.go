@@ -61,10 +61,76 @@ var DirMap map[string]string = map[string]string{
 func LinuxCollectTLSStatistics(key string) (TLSStatistics, error) {
 	tls := TLSStatistics{}
 
-	__curr__ := TLSSessionCounts{}
-	__total__ := TLSSessionCounts{}
-	__errors__ := TLSErrorCounts{}
-	__rekey__ := TLSRekeyCounts{}
+	curr := TLSSessionCounts{}
+	total := TLSSessionCounts{}
+	errors := TLSErrorCounts{}
+	rekey := TLSRekeyCounts{}
+
+	content, err := os.ReadFile(DirMap[key])
+	if err != nil {
+		return tls, err
+	}
+
+	lines := strings.Split(string(content), "\n")
+
+	for _, line := range lines {
+		fields := strings.Fields(line)
+		if len(fields) < 2 {
+			continue
+		}
+
+		key := fields[0]
+		value := fields[1]
+
+		switch key {
+		// Current sessions
+		case "TlsCurrTxSw":
+			curr.TxSoftware = value
+		case "TlsCurrRxSw":
+			curr.RxSoftware = value
+		case "TlsCurrTxDevice":
+			curr.TxDevice = value
+		case "TlsCurrRxDevice":
+			curr.RxDevice = value
+
+		// Total sessions
+		case "TlsTxSw":
+			total.TxSoftware = value
+		case "TlsRxSw":
+			total.RxSoftware = value
+		case "TlsTxDevice":
+			total.TxDevice = value
+		case "TlsRxDevice":
+			total.RxDevice = value
+
+		// Errors
+		case "TlsDecryptError":
+			errors.DecryptError = value
+		case "TlsRxDeviceResync":
+			errors.RxDeviceResync = value
+		case "TlsDecryptRetry":
+			errors.DecryptRetry = value
+		case "TlsRxNoPadViolation":
+			errors.RxNoPadViolation = value
+
+		// Rekey
+		case "TlsRxRekeyOk":
+			rekey.RxOK = value
+		case "TlsRxRekeyError":
+			rekey.RxError = value
+		case "TlsTxRekeyOk":
+			rekey.TxOK = value
+		case "TlsTxRekeyError":
+			rekey.TxError = value
+		case "TlsRxRekeyReceived":
+			rekey.RxReceived = value
+		}
+	}
+
+	tls.Current = curr
+	tls.Total = total
+	tls.Errors = errors
+	tls.Rekey = rekey
 
 	return tls, nil
 }
