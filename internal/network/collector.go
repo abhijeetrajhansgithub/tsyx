@@ -58,6 +58,12 @@ var DirMap map[string]string = map[string]string{
 	"etc_services":   "/etc/services",
 }
 
+func LinuxCollectProtocolStatisticsTable(key string) (ProtocolStatisticsTable, error) {
+	pstab := ProtocolStatisticsTable{}
+
+	return pstab, nil
+}
+
 func LinuxCollectSocketStatistics6(key string) (SocketStatistics6, error) {
 	sock := SocketStatistics6{}
 
