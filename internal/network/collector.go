@@ -61,6 +61,13 @@ var DirMap map[string]string = map[string]string{
 func LinuxCollectProtocolStatisticsTable(key string) (ProtocolStatisticsTable, error) {
 	pstab := ProtocolStatisticsTable{}
 
+	content, err := os.ReadFile(DirMap[key])
+	if err != nil {
+		return pstab, err
+	}
+
+	lines := strings.Split(string(content), "\n")
+
 	return pstab, nil
 }
 
