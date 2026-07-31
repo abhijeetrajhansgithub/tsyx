@@ -59,6 +59,33 @@ var DirMap map[string]string = map[string]string{
 }
 
 //TODO: working on SNMP6
+func LinuxCollectSNMP6Statistics(key string) (SNMP6Statistics, error) {
+	snmp6 := SNMP6Statistics{}
+
+	content, err := os.ReadFile(DirMap[key])
+	if err != nil {
+		return snmp6, err
+	}
+
+	var ans map[string]string
+
+	lines := strings.Split(string(content), "\n")
+
+	for _, line := range lines {
+		fields := strings.Fields(line)
+
+		if len(fields) != 2 {
+			continue
+		}
+
+		ans[fields[0]] = fields[1]
+	}
+
+	snmp6.Metrics = ans
+
+	return snmp6, nil
+
+}
 
 func LinuxCollectSNMPStatistics(key string) (SNMPStatistics, error) {
 	snmp := SNMPStatistics{}
