@@ -59,16 +59,57 @@ var DirMap map[string]string = map[string]string{
 }
 
 func LinuxCollectProtocolStatisticsTable(key string) (ProtocolStatisticsTable, error) {
-	pstab := ProtocolStatisticsTable{}
+    pstab := ProtocolStatisticsTable{}
 
-	content, err := os.ReadFile(DirMap[key])
-	if err != nil {
-		return pstab, err
-	}
+    capabilities := []string{
+        "cl", "co", "di", "ac", "io", "in", "de", "sh", "ss",
+        "gs", "se", "re", "bi", "br", "ha", "uh", "gp", "em",
+    }
 
-	lines := strings.Split(string(content), "\n")
+    content, err := os.ReadFile(DirMap[key])
+    if err != nil {
+        return pstab, err
+    }
 
-	return pstab, nil
+    lines := strings.Split(string(content), "\n")
+
+    for idx, line := range lines {
+        if idx == 0 {
+            continue
+        }
+
+        fields := strings.Fields(line)
+        if len(fields) < 8 {
+            continue
+        }
+
+        caps := make(map[string]string)
+
+        mapElems := fields[8:]
+
+        for i, cap := range capabilities {
+            if i >= len(mapElems) {
+                break
+            }
+            caps[cap] = mapElems[i]
+        }
+
+        entry := ProtocolStatistics{
+            Protocol:     fields[0],
+            Size:         fields[1],
+            Sockets:      fields[2],
+            Memory:       fields[3],
+            Press:        fields[4],
+            MaxHeader:    fields[5],
+            Slab:         fields[6],
+            Module:       fields[7],
+            Capabilities: caps,
+        }
+
+        pstab.Protocols = append(pstab.Protocols, entry)
+    }
+
+    return pstab, nil
 }
 
 func LinuxCollectSocketStatistics6(key string) (SocketStatistics6, error) {
