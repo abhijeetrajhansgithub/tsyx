@@ -58,6 +58,17 @@ var DirMap map[string]string = map[string]string{
 	"etc_services":   "/etc/services",
 }
 
+func LinuxCollectTLSStatistics(key string) (TLSStatistics, error) {
+	tls := TLSStatistics{}
+
+	__curr__ := TLSSessionCounts{}
+	__total__ := TLSSessionCounts{}
+	__errors__ := TLSErrorCounts{}
+	__rekey__ := TLSRekeyCounts{}
+
+	return tls, nil
+}
+
 func LinuxCollectProtocolStatisticsTable(key string) (ProtocolStatisticsTable, error) {
     pstab := ProtocolStatisticsTable{}
 
