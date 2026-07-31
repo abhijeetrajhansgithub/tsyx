@@ -58,7 +58,17 @@ var DirMap map[string]string = map[string]string{
 	"etc_services":   "/etc/services",
 }
 
-//TODO: working on SNMP6
+func LinuxCollectSocketStatistics(key string) (SocketStatistics, error) {
+	sock := SocketStatistics{}
+
+	content, err := os.ReadFile(DirMap[key])
+	if err != nil {
+		return sock, err
+	}
+
+	
+}
+
 func LinuxCollectSNMP6Statistics(key string) (SNMP6Statistics, error) {
 	snmp6 := SNMP6Statistics{}
 
