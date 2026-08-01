@@ -61,6 +61,101 @@ var DirMap map[string]string = map[string]string{
 func LinuxCollectXFRMStatistics(key string) (XFRMStatistics, error) {
 	xfm := XFRMStatistics{}
 
+	inbound := XFRMInboundStatistics{}
+	outbound := XFRMOutboundStatistics{}
+
+	content, err := os.ReadFile(DirMap[key])
+	if err != nil {
+		return xfm, err
+	}
+
+	lines := strings.Split(string(content), "\n")
+
+	for _, line := range lines {
+		fields := strings.Fields(line)
+		if len(fields) < 2 {
+			continue
+		}
+
+		key := fields[0]
+		value := fields[1]
+
+		switch key {
+		// Inbound
+		case "XfrmInError":
+			inbound.Error = value
+		case "XfrmInBufferError":
+			inbound.BufferError = value
+		case "XfrmInHdrError":
+			inbound.HeaderError = value
+		case "XfrmInNoStates":
+			inbound.NoStates = value
+		case "XfrmInStateProtoError":
+			inbound.StateProtoError = value
+		case "XfrmInStateModeError":
+			inbound.StateModeError = value
+		case "XfrmInStateSeqError":
+			inbound.StateSeqError = value
+		case "XfrmInStateExpired":
+			inbound.StateExpired = value
+		case "XfrmInStateMismatch":
+			inbound.StateMismatch = value
+		case "XfrmInStateInvalid":
+			inbound.StateInvalid = value
+		case "XfrmInStateDirError":
+			inbound.StateDirError = value
+		case "XfrmInTmplMismatch":
+			inbound.TemplateMismatch = value
+		case "XfrmInNoPols":
+			inbound.NoPolicies = value
+		case "XfrmInPolBlock":
+			inbound.PolicyBlock = value
+		case "XfrmInPolError":
+			inbound.PolicyError = value
+		case "XfrmInIptfsError":
+			inbound.IptfsError = value
+
+		// Outbound
+		case "XfrmOutError":
+			outbound.Error = value
+		case "XfrmOutBundleGenError":
+			outbound.BundleGenError = value
+		case "XfrmOutBundleCheckError":
+			outbound.BundleCheckError = value
+		case "XfrmOutNoStates":
+			outbound.NoStates = value
+		case "XfrmOutStateProtoError":
+			outbound.StateProtoError = value
+		case "XfrmOutStateModeError":
+			outbound.StateModeError = value
+		case "XfrmOutStateSeqError":
+			outbound.StateSeqError = value
+		case "XfrmOutStateExpired":
+			outbound.StateExpired = value
+		case "XfrmOutStateInvalid":
+			outbound.StateInvalid = value
+		case "XfrmOutStateDirError":
+			outbound.StateDirError = value
+		case "XfrmOutPolBlock":
+			outbound.PolicyBlock = value
+		case "XfrmOutPolDead":
+			outbound.PolicyDead = value
+		case "XfrmOutPolError":
+			outbound.PolicyError = value
+		case "XfrmOutNoQueueSpace":
+			outbound.NoQueueSpace = value
+
+		// Global
+		case "XfrmFwdHdrError":
+			xfm.ForwardHeaderError = value
+		case "XfrmAcquireError":
+			xfm.AcquireError = value
+		}
+	}
+
+	xfm.Inbound = inbound
+	xfm.Outbound = outbound
+
 	return xfm, nil
 }
 
