@@ -58,6 +58,19 @@ var DirMap map[string]string = map[string]string{
 	"etc_services":   "/etc/services",
 }
 
+func LinuxCollectHostname(key string) (Hostname, error) {
+	hostname := Hostname{}
+
+	content, err := os.ReadFile(DirMap[key])
+	if err != nil {
+		return hostname, err
+	}
+
+	hostname.Name = string(content)
+
+	return hostname, nil
+}
+
 func LinuxCollectOSRelease(key string) (OSRelease, error) {
 	osRelease := OSRelease{}
 
