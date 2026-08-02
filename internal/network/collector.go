@@ -61,6 +61,31 @@ var DirMap map[string]string = map[string]string{
 func LinuxCollectOSRelease(key string) (OSRelease, error) {
 	os_release := OSRelease{}
 
+	content, err := os.ReadFile(DirMap[key])
+	if err != nil {
+		return os_release, err
+	}
+
+	lines := strings.Split(string(content), "\n")
+
+	for _, line := range lines {
+		fields := strings.Split(line, "=")
+
+		if len(fields) != 0 {
+			continue
+		}
+
+		key := fields[0]
+		value := fields[1]
+
+		switch key {
+		case "PRETTY_NAME":
+			os_release.PrettyName = value
+		}
+
+	}
+
+
 	return os_release, nil
 }
 
