@@ -458,13 +458,12 @@ func LinuxCollectSNMP6Statistics(key string) (SNMP6Statistics, error) {
 		return snmp6, err
 	}
 
-	var ans map[string]string
+	ans := make(map[string]string)
 
 	lines := strings.Split(string(content), "\n")
 
 	for _, line := range lines {
 		fields := strings.Fields(line)
-
 		if len(fields) != 2 {
 			continue
 		}
@@ -475,7 +474,6 @@ func LinuxCollectSNMP6Statistics(key string) (SNMP6Statistics, error) {
 	snmp6.Metrics = ans
 
 	return snmp6, nil
-
 }
 
 func LinuxCollectSNMPStatistics(key string) (SNMPStatistics, error) {
