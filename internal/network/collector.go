@@ -59,34 +59,60 @@ var DirMap map[string]string = map[string]string{
 }
 
 func LinuxCollectOSRelease(key string) (OSRelease, error) {
-	os_release := OSRelease{}
+	osRelease := OSRelease{}
 
 	content, err := os.ReadFile(DirMap[key])
 	if err != nil {
-		return os_release, err
+		return osRelease, err
 	}
 
 	lines := strings.Split(string(content), "\n")
 
 	for _, line := range lines {
-		fields := strings.Split(line, "=")
+		line = strings.TrimSpace(line)
+		if line == "" {
+			continue
+		}
 
-		if len(fields) != 0 {
+		fields := strings.SplitN(line, "=", 2)
+		if len(fields) != 2 {
 			continue
 		}
 
 		key := fields[0]
-		value := fields[1]
+		value := strings.Trim(fields[1], `"`)
 
 		switch key {
 		case "PRETTY_NAME":
-			os_release.PrettyName = value
+			osRelease.PrettyName = value
+		case "NAME":
+			osRelease.Name = value
+		case "VERSION_ID":
+			osRelease.VersionID = value
+		case "VERSION":
+			osRelease.Version = value
+		case "VERSION_CODENAME":
+			osRelease.VersionCodename = value
+		case "ID":
+			osRelease.ID = value
+		case "ID_LIKE":
+			osRelease.IDLike = value
+		case "HOME_URL":
+			osRelease.HomeURL = value
+		case "SUPPORT_URL":
+			osRelease.SupportURL = value
+		case "BUG_REPORT_URL":
+			osRelease.BugReportURL = value
+		case "PRIVACY_POLICY_URL":
+			osRelease.PrivacyPolicyURL = value
+		case "UBUNTU_CODENAME":
+			osRelease.UbuntuCodename = value
+		case "LOGO":
+			osRelease.Logo = value
 		}
-
 	}
 
-
-	return os_release, nil
+	return osRelease, nil
 }
 
 func LinuxCollectXFRMStatistics(key string) (XFRMStatistics, error) {
