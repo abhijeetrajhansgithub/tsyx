@@ -61,6 +61,11 @@ var DirMap map[string]string = map[string]string{
 func LinuxCollectHostsFile(key string) (HostsFile, error) {
 	host := HostsFile{}
 
+	content, err := os.ReadFile(DirMap[key])
+	if err != nil {
+		return host, err
+	}
+
 	return host, nil
 }
 
