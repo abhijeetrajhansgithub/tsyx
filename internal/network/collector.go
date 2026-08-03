@@ -58,6 +58,12 @@ var DirMap map[string]string = map[string]string{
 	"etc_services":   "/etc/services",
 }
 
+func LinuxCollectHostsFile(key string) (HostsFile, error) {
+	host := HostsFile{}
+
+	return host, nil
+}
+
 func LinuxCollectHostname(key string) (Hostname, error) {
 	hostname := Hostname{}
 
