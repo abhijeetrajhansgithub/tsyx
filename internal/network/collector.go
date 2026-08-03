@@ -66,6 +66,49 @@ func LinuxCollectHostsFile(key string) (HostsFile, error) {
 		return host, err
 	}
 
+	lines := strings.Split(string(content), "\n")
+
+	for _, line := range lines {
+		line = strings.TrimSpace(line)
+
+		// Skip empty lines and comments
+		if line == "" || strings.HasPrefix(line, "#") {
+			continue
+		}
+
+		// First character must be 0-9, a-f, or A-F
+		first := line[0]
+		if !((first >= '0' && first <= '9') ||
+			(first >= 'a' && first <= 'f') ||
+			(first >= 'A' && first <= 'F')) {
+			continue
+		}
+
+		fields := strings.Fields(line)
+		if len(fields) < 2 {
+			continue
+		}
+
+		// Remove inline comments
+		for i, field := range fields {
+			if strings.HasPrefix(field, "#") {
+				fields = fields[:i]
+				break
+			}
+		}
+
+		if len(fields) < 2 {
+			continue
+		}
+
+		entry := HostsEntry{
+			IPAddress: fields[0],
+			Hostnames: fields[1:],
+		}
+
+		host.Entries = append(host.Entries, entry)
+	}
+
 	return host, nil
 }
 
