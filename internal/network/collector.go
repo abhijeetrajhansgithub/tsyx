@@ -61,6 +61,31 @@ var DirMap map[string]string = map[string]string{
 func LinuxCollectNsswitchConfiguration(key string) (NsswitchConfiguration, error) {
 	nsconf := NsswitchConfiguration{}
 
+	content, err := os.ReadFile(DirMap[key])
+	if err != nil {
+		return nsconf, err
+	}
+
+	lines := strings.Split(string(content),  "\n")
+
+	for _, line := range lines {
+		fields := strings.Fields(line)
+		
+		if strings.HasPrefix(line, "#") {
+			continue
+		}
+
+		key := strings.TrimSuffix(line, ":")
+		values := fields[1:]
+
+		entry := NsswitchEntry{
+			Database: key,
+			Sources: values,
+		}
+
+		nsconf.Entries = append(nsconf.Entries, entry)
+	}
+
 	return nsconf, nil
 }
 
