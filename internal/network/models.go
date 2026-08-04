@@ -877,10 +877,7 @@ type HostsFile struct { // file: /etc/hosts
 // ResolvConf holds parsed DNS resolver configuration from
 // /etc/resolv.conf.
 type ResolvConf struct { // file: /etc/resolv.conf
-	Nameservers []string
-	Search      []string
-	Domain      string
-	Options     []string
+	Content string
 }
 
 // NsswitchEntry represents a single database-to-source mapping from

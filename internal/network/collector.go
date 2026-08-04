@@ -61,6 +61,13 @@ var DirMap map[string]string = map[string]string{
 func LinuxCollectResolvConf(key string) (ResolvConf, error) {
 	resconf := ResolvConf{}
 
+	content, err := os.ReadFile(DirMap[key])
+	if err != nil {
+		return resconf, err
+	}
+
+	resconf.Content = string(content)
+
 	return resconf, nil
 }
 
