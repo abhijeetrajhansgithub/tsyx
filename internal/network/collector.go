@@ -58,6 +58,57 @@ var DirMap map[string]string = map[string]string{
 	"etc_services":   "/etc/services",
 }
 
+
+
+func LinuxCollectProtocolRegistry(key string) (ProtocolRegistry, error) {
+	prot := ProtocolRegistry{}
+
+	content, err := os.ReadFile(DirMap[key])
+	if err != nil {
+		return prot, err
+	}
+
+	lines := strings.Split(string(content), "\n")
+
+	for _, line := range lines {
+		line = strings.TrimSpace(line)
+
+		// Skip empty lines and full-line comments.
+		if line == "" || strings.HasPrefix(line, "#") {
+			continue
+		}
+
+		// Remove inline comments.
+		if idx := strings.Index(line, "#"); idx != -1 {
+			line = strings.TrimSpace(line[:idx])
+		}
+
+		if line == "" {
+			continue
+		}
+
+		fields := strings.Fields(line)
+
+		// Need at least: name and protocol number.
+		if len(fields) < 2 {
+			continue
+		}
+
+		entry := ProtocolDefinition{
+			Name:   fields[0],
+			Number: fields[1],
+		}
+
+		if len(fields) > 2 {
+			entry.Aliases = append(entry.Aliases, fields[2:]...)
+		}
+
+		prot.Protocols = append(prot.Protocols, entry)
+	}
+
+	return prot, nil
+}
+
 func LinuxCollectShellsFile(key string) (ShellsFile, error) {
 	shells := ShellsFile{}
 
