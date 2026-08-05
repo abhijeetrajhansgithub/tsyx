@@ -61,6 +61,39 @@ var DirMap map[string]string = map[string]string{
 func LinuxCollectPasswdFile(key string) (PasswdFile, error) {
 	pfile := PasswdFile{}
 
+	content, err := os.ReadFile(DirMap[key])
+	if err != nil {
+		return pfile, err
+	}
+
+	lines := strings.Split(string(content), "\n")
+
+	for _, line := range lines {
+		line = strings.TrimSpace(line)
+
+		// Skip empty lines and comments.
+		if line == "" || strings.HasPrefix(line, "#") {
+			continue
+		}
+
+		fields := strings.Split(line, ":")
+
+		// /etc/passwd must contain exactly 7 fields.
+		if len(fields) != 7 {
+			continue
+		}
+
+		pfile.Entries = append(pfile.Entries, PasswdEntry{
+			Username:      fields[0],
+			Password:      fields[1],
+			UID:           fields[2],
+			GID:           fields[3],
+			Comment:       fields[4],
+			HomeDirectory: fields[5],
+			Shell:         fields[6],
+		})
+	}
+
 	return pfile, nil
 }
 
