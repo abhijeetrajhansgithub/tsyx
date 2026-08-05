@@ -58,6 +58,23 @@ var DirMap map[string]string = map[string]string{
 	"etc_services":   "/etc/services",
 }
 
+func LinuxCollectShellsFile(key string) (ShellsFile, error) {
+	shells := ShellsFile{}
+
+	content, err := os.ReadFile(DirMap[key])
+	if err != nil {
+		return shells, err
+	}
+
+	lines := strings.Split(string(content), "\n")
+
+	for _, line := range lines {
+		shells.Paths = append(shells.Paths, line)
+	}
+
+	return shells, nil
+}
+
 func LinuxCollectPasswdFile(key string) (PasswdFile, error) {
 	pfile := PasswdFile{}
 
