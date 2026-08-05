@@ -58,6 +58,12 @@ var DirMap map[string]string = map[string]string{
 	"etc_services":   "/etc/services",
 }
 
+func LinuxCollectPasswdFile(key string) (PasswdFile, error) {
+	pfile := PasswdFile{}
+
+	return pfile, nil
+}
+
 func LinuxCollectNsswitchConfiguration(key string) (NsswitchConfiguration, error) {
 	nsconf := NsswitchConfiguration{}
 
