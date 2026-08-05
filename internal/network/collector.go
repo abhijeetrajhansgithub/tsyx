@@ -58,7 +58,11 @@ var DirMap map[string]string = map[string]string{
 	"etc_services":   "/etc/services",
 }
 
+func LinuxCollectServicesFile(key string) (ServicesFile, error) {
+	services := ServicesFile{}
 
+	return services, nil
+}
 
 func LinuxCollectProtocolRegistry(key string) (ProtocolRegistry, error) {
 	prot := ProtocolRegistry{}
