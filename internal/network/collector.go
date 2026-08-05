@@ -61,6 +61,56 @@ var DirMap map[string]string = map[string]string{
 func LinuxCollectServicesFile(key string) (ServicesFile, error) {
 	services := ServicesFile{}
 
+	content, err := os.ReadFile(DirMap[key])
+	if err != nil {
+		return services, err
+	}
+
+	lines := strings.Split(string(content), "\n")
+
+	for _, line := range lines {
+		line = strings.TrimSpace(line)
+
+		// Skip blank lines and comments.
+		if line == "" || strings.HasPrefix(line, "#") {
+			continue
+		}
+
+		// Remove inline comments.
+		if idx := strings.Index(line, "#"); idx != -1 {
+			line = strings.TrimSpace(line[:idx])
+		}
+
+		if line == "" {
+			continue
+		}
+
+		fields := strings.Fields(line)
+
+		// Need at least:
+		// service-name port/protocol
+		if len(fields) < 2 {
+			continue
+		}
+
+		portProto := strings.SplitN(fields[1], "/", 2)
+		if len(portProto) != 2 {
+			continue
+		}
+
+		entry := ServiceEntry{
+			Name:     fields[0],
+			Port:     portProto[0],
+			Protocol: portProto[1],
+		}
+
+		if len(fields) > 2 {
+			entry.Aliases = append(entry.Aliases, fields[2:]...)
+		}
+
+		services.Entries = append(services.Entries, entry)
+	}
+
 	return services, nil
 }
 
