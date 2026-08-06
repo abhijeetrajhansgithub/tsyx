@@ -134,6 +134,7 @@ var netCmd = &cobra.Command{
 
 		} 
 
+		
 
 		return nil
 	},
