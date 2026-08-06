@@ -5,6 +5,59 @@ import (
 	"strings"
 )
 
+func FormatServicesSummary(sf ServicesFile) string {
+	var tcpCount, udpCount int
+
+	for _, s := range sf.Entries {
+		switch strings.ToLower(s.Protocol) {
+		case "tcp":
+			tcpCount++
+		case "udp":
+			udpCount++
+		}
+	}
+
+	var b strings.Builder
+
+	b.WriteString("┌─────────────────────────────────────────────┐\n")
+	b.WriteString("│              SERVICES SUMMARY               │\n")
+	b.WriteString("├─────────────────────────────────────────────┤\n")
+	b.WriteString(fmt.Sprintf("  Total Services : %d\n", len(sf.Entries)))
+	b.WriteString(fmt.Sprintf("  TCP Services   : %d\n", tcpCount))
+	b.WriteString(fmt.Sprintf("  UDP Services   : %d\n", udpCount))
+	b.WriteString("└─────────────────────────────────────────────┘")
+
+	return b.String()
+}
+
+func FormatServicesDetailed(sf ServicesFile) string {
+	var b strings.Builder
+
+	b.WriteString(strings.TrimSpace(FormatServicesSummary(sf)))
+	b.WriteString("\n\n")
+
+	b.WriteString(fmt.Sprintf("%-24s %-8s %-8s %s\n",
+		"NAME", "PORT", "PROTO", "ALIASES"))
+	b.WriteString(strings.Repeat("─", 80))
+	b.WriteString("\n")
+
+	for _, s := range sf.Entries {
+		aliases := "-"
+		if len(s.Aliases) > 0 {
+			aliases = strings.Join(s.Aliases, ", ")
+		}
+
+		b.WriteString(fmt.Sprintf("%-24s %-8s %-8s %s\n",
+			s.Name,
+			s.Port,
+			strings.ToUpper(s.Protocol),
+			aliases,
+		))
+	}
+
+	return strings.TrimSpace(b.String())
+}
+
 func FormatPType(handlers []PacketTypeHandler) {
 	if len(handlers) == 0 {
 		fmt.Println("No packet type handlers found.")
@@ -40,7 +93,7 @@ func FormatPType(handlers []PacketTypeHandler) {
 	}
 }
 
-func FormatIGMP6 (table MulticastGroupTable6) {
+func FormatIGMP6(table MulticastGroupTable6) {
 	if len(table.Groups) == 0 {
 		fmt.Println("No IGMP entries found.")
 		return
@@ -72,7 +125,7 @@ func FormatIGMP6 (table MulticastGroupTable6) {
 }
 
 
-func FormatIGMP (table MulticastGroupTable) {
+func FormatIGMP(table MulticastGroupTable) {
 	if len(table.Groups) == 0 {
 		fmt.Println("No IGMP entries found.")
 		return

@@ -1828,7 +1828,7 @@ func LinuxCollectInterfaceDevice(dir string) (InterfaceDevice, error) {
 	return intDevice, nil
 }
 
-func LinuxCollectIGMP6 (key string) (MulticastGroupTable6, error) {
+func LinuxCollectIGMP6(key string) (MulticastGroupTable6, error) {
 	igmpTab := MulticastGroupTable6{}
 
 	content, err := os.ReadFile(DirMap[key])
