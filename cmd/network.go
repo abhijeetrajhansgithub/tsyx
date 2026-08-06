@@ -133,6 +133,14 @@ var netCmd = &cobra.Command{
 			net.FormatPType(ptypeInfo.Handlers)
 		
 		case "proc_route":
+
+		case "etc_protocols":
+			prot, err := net.LinuxCollectProtocolRegistry(key)
+			if err != nil {
+				return err
+			}
+
+			net.FormatProtocolRegistryDetailed(prot)
 		
 		case "etc_services":
 			serv, err := net.LinuxCollectServicesFile(key)
@@ -140,7 +148,7 @@ var netCmd = &cobra.Command{
 				return err
 			}
 
-			net.FormatServicesSummary(serv)
+			net.FormatServicesDetailed(serv)
 
 
 

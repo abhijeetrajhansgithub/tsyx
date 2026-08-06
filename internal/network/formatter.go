@@ -5,6 +5,52 @@ import (
 	"strings"
 )
 
+func FormatProtocolRegistrySummary(pr ProtocolRegistry) string {
+	var aliasCount int
+
+	for _, p := range pr.Protocols {
+		aliasCount += len(p.Aliases)
+	}
+
+	var b strings.Builder
+
+	b.WriteString("┌─────────────────────────────────────────────┐\n")
+	b.WriteString("│             PROTOCOLS SUMMARY               │\n")
+	b.WriteString("├─────────────────────────────────────────────┤\n")
+	b.WriteString(fmt.Sprintf("  Total Protocols : %d\n", len(pr.Protocols)))
+	b.WriteString(fmt.Sprintf("  Total Aliases   : %d\n", aliasCount))
+	b.WriteString("└─────────────────────────────────────────────┘")
+
+	return b.String()
+}
+
+func FormatProtocolRegistryDetailed(pr ProtocolRegistry) string {
+	var b strings.Builder
+
+	b.WriteString(strings.TrimSpace(FormatProtocolRegistrySummary(pr)))
+	b.WriteString("\n\n")
+
+	b.WriteString(fmt.Sprintf("%-24s %-10s %s\n",
+		"NAME", "NUMBER", "ALIASES"))
+	b.WriteString(strings.Repeat("─", 70))
+	b.WriteString("\n")
+
+	for _, p := range pr.Protocols {
+		aliases := "-"
+		if len(p.Aliases) > 0 {
+			aliases = strings.Join(p.Aliases, ", ")
+		}
+
+		b.WriteString(fmt.Sprintf("%-24s %-10s %s\n",
+			p.Name,
+			p.Number,
+			aliases,
+		))
+	}
+
+	return strings.TrimSpace(b.String())
+}
+
 func FormatServicesSummary(sf ServicesFile) string {
 	var tcpCount, udpCount int
 
