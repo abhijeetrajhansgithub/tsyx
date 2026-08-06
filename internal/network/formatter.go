@@ -3,7 +3,40 @@ package net
 import (
 	"fmt"
 	"strings"
+	"path/filepath"
 )
+
+func FormatShellsSummary(sf ShellsFile) string {
+	var b strings.Builder
+
+	b.WriteString("┌─────────────────────────────────────────────┐\n")
+	b.WriteString("│               SHELLS SUMMARY                │\n")
+	b.WriteString("├─────────────────────────────────────────────┤\n")
+	b.WriteString(fmt.Sprintf("  Installed Shells : %d\n", len(sf.Paths)))
+	b.WriteString("└─────────────────────────────────────────────┘")
+
+	return b.String()
+}
+
+func FormatShellsDetailed(sf ShellsFile) string {
+	var b strings.Builder
+
+	b.WriteString(strings.TrimSpace(FormatShellsSummary(sf)))
+	b.WriteString("\n\n")
+
+	b.WriteString(fmt.Sprintf("%-20s %s\n", "SHELL", "PATH"))
+	b.WriteString(strings.Repeat("─", 70))
+	b.WriteString("\n")
+
+	for _, path := range sf.Paths {
+		b.WriteString(fmt.Sprintf("%-20s %s\n",
+			filepath.Base(path),
+			path,
+		))
+	}
+
+	return strings.TrimSpace(b.String())
+}
 
 func FormatProtocolRegistrySummary(pr ProtocolRegistry) string {
 	var aliasCount int

@@ -134,6 +134,14 @@ var netCmd = &cobra.Command{
 		
 		case "proc_route":
 
+		case "etc_shells":
+			shells, err := net.LinuxCollectShellsFile(key)
+			if err != nil {
+				return err
+			}
+
+			net.FormatShellsDetailed(shells)
+
 		case "etc_protocols":
 			prot, err := net.LinuxCollectProtocolRegistry(key)
 			if err != nil {

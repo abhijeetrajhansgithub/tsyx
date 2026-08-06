@@ -174,6 +174,12 @@ func LinuxCollectShellsFile(key string) (ShellsFile, error) {
 	lines := strings.Split(string(content), "\n")
 
 	for _, line := range lines {
+		line = strings.TrimSpace(line)
+
+		if line == "" || strings.HasPrefix(line, "#") {
+			continue
+		}
+
 		shells.Paths = append(shells.Paths, line)
 	}
 
