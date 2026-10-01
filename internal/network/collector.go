@@ -114,6 +114,7 @@ func LinuxCollectServicesFile(key string) (ServicesFile, error) {
 	return services, nil
 }
 
+// file: /etc/protocols
 func LinuxCollectProtocolRegistry(key string) (ProtocolRegistry, error) {
 	prot := ProtocolRegistry{}
 
@@ -163,6 +164,7 @@ func LinuxCollectProtocolRegistry(key string) (ProtocolRegistry, error) {
 	return prot, nil
 }
 
+// file: /etc/shells
 func LinuxCollectShellsFile(key string) (ShellsFile, error) {
 	shells := ShellsFile{}
 
