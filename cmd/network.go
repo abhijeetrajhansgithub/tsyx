@@ -134,6 +134,16 @@ var netCmd = &cobra.Command{
 		
 		case "proc_route":
 
+		case "etc_resolv_conf":
+			resInfo, err := net.LinuxCollectResolvConf(key)
+
+			if err != nil {
+				return err
+			}
+
+			// TODO
+
+
 		case "etc_nsswitch":
 			nswInfo, err := net.LinuxCollectNsswitchConfiguration(key)
 
