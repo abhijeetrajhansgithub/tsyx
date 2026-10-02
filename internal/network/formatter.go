@@ -8,6 +8,19 @@ import (
 )
 
 
+func FormatResolvConf(res ResolvConf) {
+	var b strings.Builder
+
+	b.WriteString("┌───────────────────────────────────────────────┐\n")
+	b.WriteString("│                  ResolvConf                   │\n")
+	b.WriteString("├───────────────────────────────────────────────┤\n")
+
+	b.WriteString(res.Content)
+
+	fmt.Print(b.String())
+
+}
+
 func FormatNsswitchConfiguration(nsw NsswitchConfiguration) {
 	var b strings.Builder
 

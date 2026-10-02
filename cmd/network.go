@@ -141,7 +141,7 @@ var netCmd = &cobra.Command{
 				return err
 			}
 
-			// TODO
+			net.FormatResolvConf(resInfo)
 
 
 		case "etc_nsswitch":
