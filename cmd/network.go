@@ -135,13 +135,13 @@ var netCmd = &cobra.Command{
 		case "proc_route":
 
 		case "etc_nsswitch":
-			_, err := net.LinuxCollectNsswitchConfiguration(key)
+			nswInfo, err := net.LinuxCollectNsswitchConfiguration(key)
 
 			if err != nil {
 				return err
 			}
 
-			// TODO
+			net.FormatNsswitchConfiguration(nswInfo)
 
 
 		case "etc_passwd":
@@ -151,7 +151,7 @@ var netCmd = &cobra.Command{
 				return err
 			}
 
-			net.FormatPasswd(pswdInfo)
+			net.FormatPasswdFile(pswdInfo)
 
 		case "etc_shells":
 			shells, err := net.LinuxCollectShellsFile(key)

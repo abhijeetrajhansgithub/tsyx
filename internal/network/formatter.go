@@ -7,7 +7,16 @@ import (
 	"strconv"
 )
 
-func FormatPasswd(pswd PasswdFile) {
+
+func FormatNsswitchConfiguration(nsw NsswitchConfiguration) {
+	var b strings.Builder
+
+	b.WriteString("┌───────────────────────────────────────────────┐\n")
+	b.WriteString("│                 nsswitch.conf                 │\n")
+	b.WriteString("├───────────────────────────────────────────────┤\n")
+}
+
+func FormatPasswdFile(pswd PasswdFile) {
 	var b strings.Builder
 
 	b.WriteString("┌───────────────────────────────────────────────┐\n")
