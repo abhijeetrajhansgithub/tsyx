@@ -14,6 +14,27 @@ func FormatNsswitchConfiguration(nsw NsswitchConfiguration) {
 	b.WriteString("┌───────────────────────────────────────────────┐\n")
 	b.WriteString("│                 nsswitch.conf                 │\n")
 	b.WriteString("├───────────────────────────────────────────────┤\n")
+
+	for i, item := range nsw.Entries {
+		b.WriteString("│ Entry ")
+		b.WriteString(strconv.Itoa(i))
+		b.WriteString("                                      │\n")
+		b.WriteString("├───────────────────────────────────────────────┤\n")
+
+		b.WriteString("│ Database       : ")
+		b.WriteString(item.Database)
+		b.WriteString("\n")
+
+		b.WriteString("│ Sources        : ")
+		b.WriteString(strings.Join(item.Sources, ", "))
+		b.WriteString("\n")
+
+		b.WriteString("├───────────────────────────────────────────────┤\n")
+	}
+
+	b.WriteString("└───────────────────────────────────────────────┘\n")
+
+	fmt.Print(b.String())
 }
 
 func FormatPasswdFile(pswd PasswdFile) {

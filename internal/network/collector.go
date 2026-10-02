@@ -237,19 +237,24 @@ func LinuxCollectNsswitchConfiguration(key string) (NsswitchConfiguration, error
 
 	lines := strings.Split(string(content),  "\n")
 
-	for _, line := range lines {
-		fields := strings.Fields(line)
-		
-		if strings.HasPrefix(line, "#") {
+	for _, line := range lines {		
+		// Ignore empty lines and comments
+		if line == "" || strings.HasPrefix(line, "#") {
 			continue
 		}
 
-		key := strings.TrimSuffix(line, ":")
-		values := fields[1:]
+		fields := strings.Fields(line)
+
+		if len(fields) < 2 {
+			continue
+		}
+
+		database := strings.TrimSuffix(fields[0], ":")
+		sources := fields[1:]
 
 		entry := NsswitchEntry{
-			Database: key,
-			Sources: values,
+			Database: database,
+			Sources: sources,
 		}
 
 		nsconf.Entries = append(nsconf.Entries, entry)
