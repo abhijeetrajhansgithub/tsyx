@@ -4,7 +4,49 @@ import (
 	"fmt"
 	"strings"
 	"path/filepath"
+	"strconv"
 )
+
+func FormatPasswd(pswd PasswdFile) {
+	var b strings.Builder
+
+	b.WriteString("┌───────────────────────────────────────────────┐\n")
+	b.WriteString("│                   PasswdFile                  │\n")
+	b.WriteString("├───────────────────────────────────────────────┤\n")
+
+	for i, p := range pswd.Entries {
+		b.WriteString("│ Entry ")
+		b.WriteString(strconv.Itoa(i))
+		b.WriteString("                                      │\n")
+		b.WriteString("├───────────────────────────────────────────────┤\n")
+
+		b.WriteString("│ Username       : ")
+		b.WriteString(p.Username)
+		b.WriteString("\n")
+		b.WriteString("│ Password       : ")
+		b.WriteString(p.Password)
+		b.WriteString("\n")
+		b.WriteString("│ UID            : ")
+		b.WriteString(p.UID)
+		b.WriteString("\n")
+		b.WriteString("│ GID            : ")
+		b.WriteString(p.GID)
+		b.WriteString("\n")
+		b.WriteString("│ Comment        : ")
+		b.WriteString(p.Comment)
+		b.WriteString("\n")
+		b.WriteString("│ Home Directory : ")
+		b.WriteString(p.HomeDirectory)
+		b.WriteString("\n")
+		b.WriteString("│ Shell          : ")
+		b.WriteString(p.Shell)
+		b.WriteByte('\n')
+
+		b.WriteString("└───────────────────────────────────────────────┘\n")
+	}
+
+	fmt.Print(b.String())
+}
 
 func FormatShellsSummary(sf ShellsFile) string {
 	var b strings.Builder
