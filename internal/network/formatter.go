@@ -8,11 +8,19 @@ import (
 )
 
 
+func FormatHostName(name Hostname) {
+	var b strings.Builder
+
+	b.WriteString(name.Name)
+	fmt.Print(b.String())
+}
+
+
 func FormatHostsFile(hosts HostsFile) {
 	var b strings.Builder
 
 	b.WriteString("┌─────────────────────────────────────────────────────────────────┐\n")
-	b.WriteString("│                            ResolvConf                           │\n")
+	b.WriteString("│                            HostsFile                            │\n")
 	b.WriteString("├─────────────────────────────────────────────────────────────────┤\n")
 
 	for i, host := range hosts.Entries {
