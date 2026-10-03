@@ -8,6 +8,33 @@ import (
 )
 
 
+func FormatOSRelease(info OSRelease) {
+	var b strings.Builder
+
+	b.WriteString("┌─────────────────────────────────────────────────────┐\n")
+	b.WriteString("│                       os-release                    │\n")
+	b.WriteString("├─────────────────────────────────────────────────────┤\n")
+
+	fmt.Fprintf(&b, "│ Pretty Name        : %-30s │\n", info.PrettyName)
+	fmt.Fprintf(&b, "│ Name               : %-30s │\n", info.Name)
+	fmt.Fprintf(&b, "│ Version ID         : %-30s │\n", info.VersionID)
+	fmt.Fprintf(&b, "│ Version            : %-30s │\n", info.Version)
+	fmt.Fprintf(&b, "│ Version Codename   : %-30s │\n", info.VersionCodename)
+	fmt.Fprintf(&b, "│ ID                 : %-30s │\n", info.ID)
+	fmt.Fprintf(&b, "│ ID Like            : %-30s │\n", info.IDLike)
+	fmt.Fprintf(&b, "│ Home URL           : %-30s │\n", info.HomeURL)
+	fmt.Fprintf(&b, "│ Support URL        : %-30s │\n", info.SupportURL)
+	fmt.Fprintf(&b, "│ Bug Report URL     : %-30s │\n", info.BugReportURL)
+	fmt.Fprintf(&b, "│ Privacy Policy URL : %-30s │\n", info.PrivacyPolicyURL)
+	fmt.Fprintf(&b, "│ Ubuntu Codename    : %-30s │\n", info.UbuntuCodename)
+	fmt.Fprintf(&b, "│ Logo               : %-30s │\n", info.Logo)
+
+	b.WriteString("└─────────────────────────────────────────────────────┘\n")
+
+	fmt.Print(b.String())
+}
+
+
 func FormatHostName(name Hostname) {
 	var b strings.Builder
 

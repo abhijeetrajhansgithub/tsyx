@@ -134,6 +134,15 @@ var netCmd = &cobra.Command{
 		
 		case "proc_route":
 
+		case "etc_os_release":
+			osInfo, err := net.LinuxCollectOSRelease(key)
+
+			if err != nil {
+				return err
+			}
+
+			net.FormatOSRelease(osInfo)
+
 		case "etc_hostname":
 			hostname, err := net.LinuxCollectHostname(key) 
 			if err != nil {
