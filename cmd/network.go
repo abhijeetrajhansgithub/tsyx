@@ -134,6 +134,14 @@ var netCmd = &cobra.Command{
 		
 		case "proc_route":
 
+		case "etc_hosts":
+			hostInfo, err := net.LinuxCollectHostsFile(key)
+			if err != nil {
+				return err
+			}
+
+			net.FormatHostsFile(hostInfo)
+
 		case "etc_resolv_conf":
 			resInfo, err := net.LinuxCollectResolvConf(key)
 

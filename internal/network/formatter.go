@@ -8,6 +8,32 @@ import (
 )
 
 
+func FormatHostsFile(hosts HostsFile) {
+	var b strings.Builder
+
+	b.WriteString("┌─────────────────────────────────────────────────────────────────┐\n")
+	b.WriteString("│                            ResolvConf                           │\n")
+	b.WriteString("├─────────────────────────────────────────────────────────────────┤\n")
+
+	for i, host := range hosts.Entries {
+		b.WriteString("│ Entry ")
+		b.WriteString(strconv.Itoa(i))
+		b.WriteString("                                                         │\n")
+		b.WriteString("├─────────────────────────────────────────────────────────────────┤\n")
+
+		b.WriteString("│ Database        : ")
+		b.WriteString(host.IPAddress)
+		b.WriteString("\n")
+
+		b.WriteString("│ Hostnames       : ")
+		b.WriteString(strings.Join(host.Hostnames, ", "))
+		b.WriteString("\n")
+	}
+
+	fmt.Print(b.String())
+}
+
+
 func FormatResolvConf(res ResolvConf) {
 	var b strings.Builder
 
