@@ -135,7 +135,12 @@ var netCmd = &cobra.Command{
 		case "proc_route":
 		
 		case "sys_class_net":
-			
+			sysClassNetInfo, err := net.LinuxCollectNetworkInterface(key)
+			if err != nil {
+				return err
+			}
+
+			// TODO
 
 		case "etc_os_release":
 			osInfo, err := net.LinuxCollectOSRelease(key)
