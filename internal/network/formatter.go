@@ -7,6 +7,9 @@ import (
 	"strconv"
 )
 
+func FormatNetworkInterfaces(interfaces NetworkInterfaces) {
+	
+}
 
 func FormatOSRelease(info OSRelease) {
 	var b strings.Builder

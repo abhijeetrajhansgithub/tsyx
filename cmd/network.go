@@ -140,7 +140,7 @@ var netCmd = &cobra.Command{
 				return err
 			}
 
-			// TODO
+			net.FormatNetworkInterfaces(sysClassNetInfo)
 
 		case "etc_os_release":
 			osInfo, err := net.LinuxCollectOSRelease(key)
