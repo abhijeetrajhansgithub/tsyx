@@ -8,7 +8,135 @@ import (
 )
 
 func FormatNetworkInterfaces(interfaces NetworkInterfaces) {
-	
+	var b strings.Builder
+
+	b.WriteString("┌─────────────────────────────────────────────────────┐\n")
+	b.WriteString("│                  Network Interfaces                 │\n")
+	b.WriteString("├─────────────────────────────────────────────────────┤\n")
+
+	for i, iface := range interfaces.Interfaces {
+		fmt.Fprintf(&b, "│ Interface %-42d │\n", i)
+		b.WriteString("├─────────────────────────────────────────────────────┤\n")
+
+		fmt.Fprintf(&b, "│ Name               : %-29s │\n", iface.Name)
+		fmt.Fprintf(&b, "│ Address Assign Type: %-29s │\n", iface.AddressAssignType)
+		fmt.Fprintf(&b, "│ Address Length     : %-29s │\n", iface.AddressLength)
+		fmt.Fprintf(&b, "│ Address            : %-29s │\n", iface.Address)
+		fmt.Fprintf(&b, "│ Broadcast          : %-29s │\n", iface.Broadcast)
+		fmt.Fprintf(&b, "│ Dev ID             : %-29s │\n", iface.DevID)
+		fmt.Fprintf(&b, "│ Dev Port           : %-29s │\n", iface.DevPort)
+
+		// Carrier information
+		b.WriteString("│                                                     │\n")
+		b.WriteString("│ Carrier                                             │\n")
+		b.WriteString("│ ─────────────────────────────────────────────────── │\n")
+
+		fmt.Fprintf(&b, "│ Status             : %-29s │\n", iface.Carrier.Status)
+		fmt.Fprintf(&b, "│ Changes            : %-29s │\n", iface.Carrier.Changes)
+		fmt.Fprintf(&b, "│ Down Count         : %-29s │\n", iface.Carrier.DownCount)
+		fmt.Fprintf(&b, "│ Up Count           : %-29s │\n", iface.Carrier.UpCount)
+
+		// Device information
+		b.WriteString("│                                                     │\n")
+		b.WriteString("│ Device                                              │\n")
+		b.WriteString("│ ─────────────────────────────────────────────────── │\n")
+
+		fmt.Fprintf(&b, "│ ID                 : %-29s │\n", iface.Device.ID)
+		fmt.Fprintf(&b, "│ Device ID          : %-29s │\n", iface.Device.DeviceID)
+		fmt.Fprintf(&b, "│ Class ID           : %-29s │\n", iface.Device.ClassID)
+		fmt.Fprintf(&b, "│ Driver Override    : %-29s │\n", iface.Device.DriverOverride)
+		fmt.Fprintf(&b, "│ Modalias           : %-29s │\n", iface.Device.Modalias)
+		fmt.Fprintf(&b, "│ NUMA Node          : %-29s │\n", iface.Device.NUMANode)
+		fmt.Fprintf(&b, "│ State              : %-29s │\n", iface.Device.State)
+		fmt.Fprintf(&b, "│ Vendor             : %-29s │\n", iface.Device.Vendor)
+
+		// Power
+		b.WriteString("│                                                     │\n")
+		b.WriteString("│ Device Power                                        │\n")
+		b.WriteString("│ ─────────────────────────────────────────────────── │\n")
+
+		fmt.Fprintf(&b, "│ Control            : %-29s │\n", iface.Device.Power.Control)
+		fmt.Fprintf(&b, "│ Active Time        : %-29s │\n", iface.Device.Power.RuntimeActiveTime)
+		fmt.Fprintf(&b, "│ Status             : %-29s │\n", iface.Device.Power.RuntimeStatus)
+		fmt.Fprintf(&b, "│ Suspended Time     : %-29s │\n", iface.Device.Power.RuntimeSuspendedTime)
+
+		// Subsystem
+		b.WriteString("│                                                     │\n")
+		b.WriteString("│ Device Subsystem                                    │\n")
+		b.WriteString("│ ─────────────────────────────────────────────────── │\n")
+
+		fmt.Fprintf(&b, "│ Drivers Autoprobe  : %-29s │\n", iface.Device.Subsystem.DriversAutoprobe)
+		fmt.Fprintf(&b, "│ Hibernation        : %-29s │\n", iface.Device.Subsystem.Hibernation)
+
+		// Uevent
+		b.WriteString("│                                                     │\n")
+		b.WriteString("│ Device Uevent                                       │\n")
+		b.WriteString("│ ─────────────────────────────────────────────────── │\n")
+
+		fmt.Fprintf(&b, "│ Driver             : %-29s │\n", iface.Device.Uevent.Driver)
+		fmt.Fprintf(&b, "│ Modalias           : %-29s │\n", iface.Device.Uevent.Modalias)
+
+		// Monitor
+		b.WriteString("│                                                     │\n")
+		b.WriteString("│ Device Monitor                                      │\n")
+		b.WriteString("│ ─────────────────────────────────────────────────── │\n")
+
+		fmt.Fprintf(&b, "│ Client Conn. ID    : %-29s │\n", iface.Device.Monitor.ClientConnectionID)
+		fmt.Fprintf(&b, "│ Client Latency     : %-29s │\n", iface.Device.Monitor.ClientLatency)
+		fmt.Fprintf(&b, "│ Client Pending     : %-29s │\n", iface.Device.Monitor.ClientPending)
+		fmt.Fprintf(&b, "│ Server Conn. ID    : %-29s │\n", iface.Device.Monitor.ServerConnectionID)
+		fmt.Fprintf(&b, "│ Server Latency     : %-29s │\n", iface.Device.Monitor.ServerLatency)
+		fmt.Fprintf(&b, "│ Server Pending     : %-29s │\n", iface.Device.Monitor.ServerPending)
+
+		// Ring buffer
+		b.WriteString("│                                                     │\n")
+		b.WriteString("│ Device Ring Buffer                                   │\n")
+		b.WriteString("│ ─────────────────────────────────────────────────── │\n")
+
+		fmt.Fprintf(&b, "│ In Interrupt Mask  : %-29s │\n", iface.Device.RingBuffer.InInterruptMask)
+		fmt.Fprintf(&b, "│ In Read Bytes Avail: %-29s │\n", iface.Device.RingBuffer.InReadBytesAvail)
+		fmt.Fprintf(&b, "│ In Read Index      : %-29s │\n", iface.Device.RingBuffer.InReadIndex)
+		fmt.Fprintf(&b, "│ In Write Bytes Avail: %-28s │\n", iface.Device.RingBuffer.InWriteBytesAvail)
+		fmt.Fprintf(&b, "│ In Write Index     : %-29s │\n", iface.Device.RingBuffer.InWriteIndex)
+		fmt.Fprintf(&b, "│ Out Interrupt Mask : %-29s │\n", iface.Device.RingBuffer.OutInterruptMask)
+		fmt.Fprintf(&b, "│ Out Read Bytes Avail: %-28s │\n", iface.Device.RingBuffer.OutReadBytesAvail)
+		fmt.Fprintf(&b, "│ Out Read Index     : %-29s │\n", iface.Device.RingBuffer.OutReadIndex)
+		fmt.Fprintf(&b, "│ Out Write Bytes Avail: %-27s │\n", iface.Device.RingBuffer.OutWriteBytesAvail)
+		fmt.Fprintf(&b, "│ Out Write Index    : %-29s │\n", iface.Device.RingBuffer.OutWriteIndex)
+
+		// Channels
+		if len(iface.Device.Channels) > 0 {
+			b.WriteString("│                                                     │\n")
+			b.WriteString("│ Interface Channels                                  │\n")
+			b.WriteString("│ ─────────────────────────────────────────────────── │\n")
+
+			for name, channel := range iface.Device.Channels {
+				fmt.Fprintf(&b, "│ Channel: %-39s │\n", name)
+
+				fmt.Fprintf(&b, "│   CPU              : %-27s │\n", channel.CPU)
+				fmt.Fprintf(&b, "│   Events           : %-27s │\n", channel.Events)
+				fmt.Fprintf(&b, "│   In Mask          : %-27s │\n", channel.InMask)
+				fmt.Fprintf(&b, "│   Interrupts       : %-27s │\n", channel.Interrupts)
+				fmt.Fprintf(&b, "│   Intr In Full     : %-27s │\n", channel.IntrInFull)
+				fmt.Fprintf(&b, "│   Intr Out Empty   : %-27s │\n", channel.IntrOutEmpty)
+				fmt.Fprintf(&b, "│   Latency          : %-27s │\n", channel.Latency)
+				fmt.Fprintf(&b, "│   Monitor ID       : %-27s │\n", channel.MonitorID)
+				fmt.Fprintf(&b, "│   Out Full First   : %-27s │\n", channel.OutFullFirst)
+				fmt.Fprintf(&b, "│   Out Full Total   : %-27s │\n", channel.OutFullTotal)
+				fmt.Fprintf(&b, "│   Out Mask         : %-27s │\n", channel.OutMask)
+				fmt.Fprintf(&b, "│   Pending          : %-27s │\n", channel.Pending)
+				fmt.Fprintf(&b, "│   Read Avail       : %-27s │\n", channel.ReadAvail)
+				fmt.Fprintf(&b, "│   Subchannel ID    : %-27s │\n", channel.SubchannelID)
+				fmt.Fprintf(&b, "│   Write Avail      : %-27s │\n", channel.WriteAvail)
+			}
+		}
+
+		b.WriteString("├─────────────────────────────────────────────────────┤\n")
+	}
+
+	b.WriteString("└─────────────────────────────────────────────────────┘\n")
+
+	fmt.Print(b.String())
 }
 
 func FormatOSRelease(info OSRelease) {
