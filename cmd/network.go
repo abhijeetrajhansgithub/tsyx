@@ -133,6 +133,9 @@ var netCmd = &cobra.Command{
 			net.FormatPType(ptypeInfo.Handlers)
 		
 		case "proc_route":
+		
+		case "sys_class_net":
+			
 
 		case "etc_os_release":
 			osInfo, err := net.LinuxCollectOSRelease(key)
