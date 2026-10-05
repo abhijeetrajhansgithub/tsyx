@@ -133,6 +133,9 @@ var netCmd = &cobra.Command{
 			net.FormatPType(ptypeInfo.Handlers)
 		
 		case "proc_route":
+
+		case "proc_xfrm_stat":
+			
 		
 		case "sys_class_net":
 			sysClassNetInfo, err := net.LinuxCollectNetworkInterface(key)
