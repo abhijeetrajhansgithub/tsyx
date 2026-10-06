@@ -133,6 +133,9 @@ var netCmd = &cobra.Command{
 			net.FormatPType(ptypeInfo.Handlers)
 		
 		case "proc_route":
+		
+
+		case "proc_tls_stat":
 
 		case "proc_xfrm_stat":
 			xfrmInfo, err := net.LinuxCollectXFRMStatistics(key)
