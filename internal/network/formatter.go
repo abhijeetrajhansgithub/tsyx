@@ -7,6 +7,71 @@ import (
 	"strconv"
 )
 
+
+func FormatXFRMStatistics(xfrm XFRMStatistics) {
+	var b strings.Builder
+
+	b.WriteString("┌─────────────────────────────────────────────────────┐\n")
+	b.WriteString("│                    XFRM Statistics                  │\n")
+	b.WriteString("├─────────────────────────────────────────────────────┤\n")
+
+	// Inbound statistics
+	b.WriteString("│ Inbound                                             │\n")
+	b.WriteString("│ ─────────────────────────────────────────────────── │\n")
+
+	fmt.Fprintf(&b, "│ Error              : %-30s │\n", xfrm.Inbound.Error)
+	fmt.Fprintf(&b, "│ Buffer Error       : %-30s │\n", xfrm.Inbound.BufferError)
+	fmt.Fprintf(&b, "│ Header Error       : %-30s │\n", xfrm.Inbound.HeaderError)
+	fmt.Fprintf(&b, "│ No States          : %-30s │\n", xfrm.Inbound.NoStates)
+	fmt.Fprintf(&b, "│ State Proto Error  : %-30s │\n", xfrm.Inbound.StateProtoError)
+	fmt.Fprintf(&b, "│ State Mode Error   : %-30s │\n", xfrm.Inbound.StateModeError)
+	fmt.Fprintf(&b, "│ State Seq Error    : %-30s │\n", xfrm.Inbound.StateSeqError)
+	fmt.Fprintf(&b, "│ State Expired      : %-30s │\n", xfrm.Inbound.StateExpired)
+	fmt.Fprintf(&b, "│ State Mismatch     : %-30s │\n", xfrm.Inbound.StateMismatch)
+	fmt.Fprintf(&b, "│ State Invalid      : %-30s │\n", xfrm.Inbound.StateInvalid)
+	fmt.Fprintf(&b, "│ State Dir Error    : %-30s │\n", xfrm.Inbound.StateDirError)
+	fmt.Fprintf(&b, "│ Template Mismatch  : %-30s │\n", xfrm.Inbound.TemplateMismatch)
+	fmt.Fprintf(&b, "│ No Policies        : %-30s │\n", xfrm.Inbound.NoPolicies)
+	fmt.Fprintf(&b, "│ Policy Block       : %-30s │\n", xfrm.Inbound.PolicyBlock)
+	fmt.Fprintf(&b, "│ Policy Error       : %-30s │\n", xfrm.Inbound.PolicyError)
+	fmt.Fprintf(&b, "│ IPTFS Error        : %-30s │\n", xfrm.Inbound.IptfsError)
+
+	b.WriteString("│                                                     │\n")
+
+	// Outbound statistics
+	b.WriteString("│ Outbound                                            │\n")
+	b.WriteString("│ ─────────────────────────────────────────────────── │\n")
+
+	fmt.Fprintf(&b, "│ Error              : %-30s │\n", xfrm.Outbound.Error)
+	fmt.Fprintf(&b, "│ Bundle Gen Error   : %-30s │\n", xfrm.Outbound.BundleGenError)
+	fmt.Fprintf(&b, "│ Bundle Check Error : %-30s │\n", xfrm.Outbound.BundleCheckError)
+	fmt.Fprintf(&b, "│ No States          : %-30s │\n", xfrm.Outbound.NoStates)
+	fmt.Fprintf(&b, "│ State Proto Error  : %-30s │\n", xfrm.Outbound.StateProtoError)
+	fmt.Fprintf(&b, "│ State Mode Error   : %-30s │\n", xfrm.Outbound.StateModeError)
+	fmt.Fprintf(&b, "│ State Seq Error    : %-30s │\n", xfrm.Outbound.StateSeqError)
+	fmt.Fprintf(&b, "│ State Expired      : %-30s │\n", xfrm.Outbound.StateExpired)
+	fmt.Fprintf(&b, "│ State Invalid      : %-30s │\n", xfrm.Outbound.StateInvalid)
+	fmt.Fprintf(&b, "│ State Dir Error    : %-30s │\n", xfrm.Outbound.StateDirError)
+	fmt.Fprintf(&b, "│ Policy Block       : %-30s │\n", xfrm.Outbound.PolicyBlock)
+	fmt.Fprintf(&b, "│ Policy Dead        : %-30s │\n", xfrm.Outbound.PolicyDead)
+	fmt.Fprintf(&b, "│ Policy Error       : %-30s │\n", xfrm.Outbound.PolicyError)
+	fmt.Fprintf(&b, "│ No Queue Space     : %-30s │\n", xfrm.Outbound.NoQueueSpace)
+
+	b.WriteString("│                                                     │\n")
+
+	// Other XFRM statistics
+	b.WriteString("│ Other                                               │\n")
+	b.WriteString("│ ─────────────────────────────────────────────────── │\n")
+
+	fmt.Fprintf(&b, "│ Forward Header Error: %-29s │\n", xfrm.ForwardHeaderError)
+	fmt.Fprintf(&b, "│ Acquire Error       : %-29s │\n", xfrm.AcquireError)
+
+	b.WriteString("└─────────────────────────────────────────────────────┘\n")
+
+	fmt.Print(b.String())
+}
+
+
 func FormatNetworkInterfaces(interfaces NetworkInterfaces) {
 	var b strings.Builder
 
