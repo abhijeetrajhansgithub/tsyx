@@ -135,7 +135,12 @@ var netCmd = &cobra.Command{
 		case "proc_route":
 
 		case "proc_xfrm_stat":
-			
+			xfrmInfo, err := net.LinuxCollectXFRMStatistics(key)
+			if err != nil {
+				return err
+			}
+
+			net.FormatXFRMStatistics(xfrmInfo)
 		
 		case "sys_class_net":
 			sysClassNetInfo, err := net.LinuxCollectNetworkInterface(key)
