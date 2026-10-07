@@ -141,7 +141,7 @@ var netCmd = &cobra.Command{
 				return err
 			}
 
-			
+			net.FormatTLSStatistics(tlsInfo)
 
 		case "proc_xfrm_stat":
 			xfrmInfo, err := net.LinuxCollectXFRMStatistics(key)
