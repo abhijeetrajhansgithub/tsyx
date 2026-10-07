@@ -8,6 +8,62 @@ import (
 )
 
 
+func FormatTLSStatistics(tls TLSStatistics) {
+	var b strings.Builder
+
+	b.WriteString("┌─────────────────────────────────────────────────────┐\n")
+	b.WriteString("│                     TLS Statistics                  │\n")
+	b.WriteString("├─────────────────────────────────────────────────────┤\n")
+
+	// Current sessions
+	b.WriteString("│ Current Sessions                                    │\n")
+	b.WriteString("│ ─────────────────────────────────────────────────── │\n")
+
+	fmt.Fprintf(&b, "│ TX Software       : %-30s │\n", tls.Current.TxSoftware)
+	fmt.Fprintf(&b, "│ RX Software       : %-30s │\n", tls.Current.RxSoftware)
+	fmt.Fprintf(&b, "│ TX Device         : %-30s │\n", tls.Current.TxDevice)
+	fmt.Fprintf(&b, "│ RX Device         : %-30s │\n", tls.Current.RxDevice)
+
+	b.WriteString("│                                                     │\n")
+
+	// Total sessions
+	b.WriteString("│ Total Sessions                                      │\n")
+	b.WriteString("│ ─────────────────────────────────────────────────── │\n")
+
+	fmt.Fprintf(&b, "│ TX Software       : %-30s │\n", tls.Total.TxSoftware)
+	fmt.Fprintf(&b, "│ RX Software       : %-30s │\n", tls.Total.RxSoftware)
+	fmt.Fprintf(&b, "│ TX Device         : %-30s │\n", tls.Total.TxDevice)
+	fmt.Fprintf(&b, "│ RX Device         : %-30s │\n", tls.Total.RxDevice)
+
+	b.WriteString("│                                                     │\n")
+
+	// Errors
+	b.WriteString("│ Errors                                              │\n")
+	b.WriteString("│ ─────────────────────────────────────────────────── │\n")
+
+	fmt.Fprintf(&b, "│ Decrypt Error     : %-30s │\n", tls.Errors.DecryptError)
+	fmt.Fprintf(&b, "│ RX Device Resync  : %-30s │\n", tls.Errors.RxDeviceResync)
+	fmt.Fprintf(&b, "│ Decrypt Retry     : %-30s │\n", tls.Errors.DecryptRetry)
+	fmt.Fprintf(&b, "│ RX No Pad Violation: %-29s │\n", tls.Errors.RxNoPadViolation)
+
+	b.WriteString("│                                                     │\n")
+
+	// Rekey
+	b.WriteString("│ Rekey                                               │\n")
+	b.WriteString("│ ─────────────────────────────────────────────────── │\n")
+
+	fmt.Fprintf(&b, "│ RX OK             : %-30s │\n", tls.Rekey.RxOK)
+	fmt.Fprintf(&b, "│ RX Error          : %-30s │\n", tls.Rekey.RxError)
+	fmt.Fprintf(&b, "│ TX OK             : %-30s │\n", tls.Rekey.TxOK)
+	fmt.Fprintf(&b, "│ TX Error          : %-30s │\n", tls.Rekey.TxError)
+	fmt.Fprintf(&b, "│ RX Received       : %-30s │\n", tls.Rekey.RxReceived)
+
+	b.WriteString("└─────────────────────────────────────────────────────┘\n")
+
+	fmt.Print(b.String())
+}
+
+
 func FormatXFRMStatistics(xfrm XFRMStatistics) {
 	var b strings.Builder
 
