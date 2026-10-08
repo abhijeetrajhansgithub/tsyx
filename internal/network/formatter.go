@@ -8,6 +8,47 @@ import (
 )
 
 
+func FormatProtocolStatisticsTable(protocols ProtocolStatisticsTable) {
+	var b strings.Builder
+
+	b.WriteString("┌─────────────────────────────────────────────────────┐\n")
+	b.WriteString("│                 Protocol Statistics                 │\n")
+	b.WriteString("├─────────────────────────────────────────────────────┤\n")
+
+	for i, protocol := range protocols.Protocols {
+		fmt.Fprintf(&b, "│ Protocol %-40d │\n", i)
+		b.WriteString("├─────────────────────────────────────────────────────┤\n")
+
+		fmt.Fprintf(&b, "│ Protocol      : %-33s │\n", protocol.Protocol)
+		fmt.Fprintf(&b, "│ Size          : %-33s │\n", protocol.Size)
+		fmt.Fprintf(&b, "│ Sockets       : %-33s │\n", protocol.Sockets)
+		fmt.Fprintf(&b, "│ Memory        : %-33s │\n", protocol.Memory)
+		fmt.Fprintf(&b, "│ Press         : %-33s │\n", protocol.Press)
+		fmt.Fprintf(&b, "│ Max Header    : %-33s │\n", protocol.MaxHeader)
+		fmt.Fprintf(&b, "│ Slab          : %-33s │\n", protocol.Slab)
+		fmt.Fprintf(&b, "│ Module        : %-33s │\n", protocol.Module)
+
+		if len(protocol.Capabilities) > 0 {
+			b.WriteString("│                                                     │\n")
+			b.WriteString("│ Capabilities                                        │\n")
+			b.WriteString("│ ─────────────────────────────────────────────────── │\n")
+
+			for capability, value := range protocol.Capabilities {
+				fmt.Fprintf(&b, "│ %-15s : %-30s │\n", capability, value)
+			}
+		}
+
+		if i < len(protocols.Protocols)-1 {
+			b.WriteString("│                                                     │\n")
+		}
+	}
+
+	b.WriteString("└─────────────────────────────────────────────────────┘\n")
+
+	fmt.Print(b.String())
+}
+
+
 func FormatTLSStatistics(tls TLSStatistics) {
 	var b strings.Builder
 
