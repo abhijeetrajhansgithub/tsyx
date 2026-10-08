@@ -134,6 +134,8 @@ var netCmd = &cobra.Command{
 		
 		case "proc_route":
 
+		case "proc_sockstat6":
+
 		case "proc_protocols":
 			protInfo, err := net.LinuxCollectProtocolStatisticsTable(key)
 
