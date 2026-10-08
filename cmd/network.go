@@ -133,6 +133,8 @@ var netCmd = &cobra.Command{
 			net.FormatPType(ptypeInfo.Handlers)
 		
 		case "proc_route":
+
+		case "proc_protocols":
 		
 
 		case "proc_tls_stat":
