@@ -140,6 +140,8 @@ var netCmd = &cobra.Command{
 				return err
 			}
 
+			net.FormatSNMP6Statistics(nsmpInfo)
+
 		case "proc_sockstat6":
 
 		case "proc_protocols":

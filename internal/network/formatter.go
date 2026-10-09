@@ -5,7 +5,32 @@ import (
 	"strings"
 	"path/filepath"
 	"strconv"
+	"sort"
 )
+
+
+func FormatSNMP6Statistics(snmp6 SNMP6Statistics) {
+	var b strings.Builder
+
+	b.WriteString("┌─────────────────────────────────────────────────────┐\n")
+	b.WriteString("│                  SNMP6 Statistics                   │\n")
+	b.WriteString("├─────────────────────────────────────────────────────┤\n")
+
+	keys := make([]string, 0, len(snmp6.Metrics))
+	for key := range snmp6.Metrics {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+
+	for _, key := range keys {
+		value := snmp6.Metrics[key]
+		fmt.Fprintf(&b, "│ %-30s : %-20s │\n", key, value)
+	}
+
+	b.WriteString("└─────────────────────────────────────────────────────┘\n")
+
+	fmt.Print(b.String())
+}
 
 
 func FormatProtocolStatisticsTable(protocols ProtocolStatisticsTable) {
