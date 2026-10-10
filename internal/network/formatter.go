@@ -9,6 +9,154 @@ import (
 )
 
 
+func FormatSNMPStatistics(snmp SNMPStatistics) {
+	var b strings.Builder
+
+	b.WriteString("┌─────────────────────────────────────────────────────┐\n")
+	b.WriteString("│                   SNMP Statistics                   │\n")
+	b.WriteString("├─────────────────────────────────────────────────────┤\n")
+
+	// IP statistics
+	b.WriteString("│ IP Statistics                                       │\n")
+	b.WriteString("│ ─────────────────────────────────────────────────── │\n")
+
+	fmt.Fprintf(&b, "│ Forwarding         : %-30s │\n", snmp.IP.Forwarding)
+	fmt.Fprintf(&b, "│ Default TTL        : %-30s │\n", snmp.IP.DefaultTTL)
+	fmt.Fprintf(&b, "│ In Receives        : %-30s │\n", snmp.IP.InReceives)
+	fmt.Fprintf(&b, "│ In Header Errors   : %-30s │\n", snmp.IP.InHdrErrors)
+	fmt.Fprintf(&b, "│ In Address Errors  : %-30s │\n", snmp.IP.InAddrErrors)
+	fmt.Fprintf(&b, "│ Forward Datagrams  : %-30s │\n", snmp.IP.ForwDatagrams)
+	fmt.Fprintf(&b, "│ In Unknown Protos  : %-30s │\n", snmp.IP.InUnknownProtos)
+	fmt.Fprintf(&b, "│ In Discards        : %-30s │\n", snmp.IP.InDiscards)
+	fmt.Fprintf(&b, "│ In Delivers        : %-30s │\n", snmp.IP.InDelivers)
+	fmt.Fprintf(&b, "│ Out Requests       : %-30s │\n", snmp.IP.OutRequests)
+	fmt.Fprintf(&b, "│ Out Discards       : %-30s │\n", snmp.IP.OutDiscards)
+	fmt.Fprintf(&b, "│ Out No Routes      : %-30s │\n", snmp.IP.OutNoRoutes)
+	fmt.Fprintf(&b, "│ Reassembly Timeout : %-30s │\n", snmp.IP.ReasmTimeout)
+	fmt.Fprintf(&b, "│ Reassembly Requests: %-30s │\n", snmp.IP.ReasmReqds)
+	fmt.Fprintf(&b, "│ Reassembly OK      : %-30s │\n", snmp.IP.ReasmOKs)
+	fmt.Fprintf(&b, "│ Reassembly Fails   : %-30s │\n", snmp.IP.ReasmFails)
+	fmt.Fprintf(&b, "│ Fragmentation OK   : %-30s │\n", snmp.IP.FragOKs)
+	fmt.Fprintf(&b, "│ Fragmentation Fails: %-30s │\n", snmp.IP.FragFails)
+	fmt.Fprintf(&b, "│ Fragments Created  : %-30s │\n", snmp.IP.FragCreates)
+	fmt.Fprintf(&b, "│ Out Transmits      : %-30s │\n", snmp.IP.OutTransmits)
+
+	b.WriteString("│                                                     │\n")
+
+	// ICMP statistics
+	b.WriteString("│ ICMP Statistics                                     │\n")
+	b.WriteString("│ ─────────────────────────────────────────────────── │\n")
+
+	fmt.Fprintf(&b, "│ In Messages        : %-30s │\n", snmp.ICMP.InMsgs)
+	fmt.Fprintf(&b, "│ In Errors          : %-30s │\n", snmp.ICMP.InErrors)
+	fmt.Fprintf(&b, "│ In Checksum Errors : %-30s │\n", snmp.ICMP.InCsumErrors)
+	fmt.Fprintf(&b, "│ In Dest Unreachables: %-29s │\n", snmp.ICMP.InDestUnreachs)
+	fmt.Fprintf(&b, "│ In Time Exceeded   : %-30s │\n", snmp.ICMP.InTimeExcds)
+	fmt.Fprintf(&b, "│ In Parameter Probs : %-30s │\n", snmp.ICMP.InParmProbs)
+	fmt.Fprintf(&b, "│ In Source Quenches : %-30s │\n", snmp.ICMP.InSrcQuenchs)
+	fmt.Fprintf(&b, "│ In Redirects       : %-30s │\n", snmp.ICMP.InRedirects)
+	fmt.Fprintf(&b, "│ In Echoes          : %-30s │\n", snmp.ICMP.InEchos)
+	fmt.Fprintf(&b, "│ In Echo Replies    : %-30s │\n", snmp.ICMP.InEchoReps)
+	fmt.Fprintf(&b, "│ In Timestamps      : %-30s │\n", snmp.ICMP.InTimestamps)
+	fmt.Fprintf(&b, "│ In Timestamp Reps  : %-30s │\n", snmp.ICMP.InTimestampReps)
+	fmt.Fprintf(&b, "│ In Address Masks   : %-30s │\n", snmp.ICMP.InAddrMasks)
+	fmt.Fprintf(&b, "│ In Address Mask Reps: %-29s │\n", snmp.ICMP.InAddrMaskReps)
+	fmt.Fprintf(&b, "│ Out Messages       : %-30s │\n", snmp.ICMP.OutMsgs)
+	fmt.Fprintf(&b, "│ Out Errors         : %-30s │\n", snmp.ICMP.OutErrors)
+	fmt.Fprintf(&b, "│ Out Global Rate Limit: %-28s │\n", snmp.ICMP.OutRateLimitGlobal)
+	fmt.Fprintf(&b, "│ Out Host Rate Limit: %-30s │\n", snmp.ICMP.OutRateLimitHost)
+	fmt.Fprintf(&b, "│ Out Dest Unreachables: %-28s │\n", snmp.ICMP.OutDestUnreachs)
+	fmt.Fprintf(&b, "│ Out Time Exceeded  : %-30s │\n", snmp.ICMP.OutTimeExcds)
+	fmt.Fprintf(&b, "│ Out Parameter Probs: %-30s │\n", snmp.ICMP.OutParmProbs)
+	fmt.Fprintf(&b, "│ Out Source Quenches: %-30s │\n", snmp.ICMP.OutSrcQuenchs)
+	fmt.Fprintf(&b, "│ Out Redirects      : %-30s │\n", snmp.ICMP.OutRedirects)
+	fmt.Fprintf(&b, "│ Out Echoes         : %-30s │\n", snmp.ICMP.OutEchos)
+	fmt.Fprintf(&b, "│ Out Echo Replies   : %-30s │\n", snmp.ICMP.OutEchoReps)
+	fmt.Fprintf(&b, "│ Out Timestamps     : %-30s │\n", snmp.ICMP.OutTimestamps)
+	fmt.Fprintf(&b, "│ Out Timestamp Reps : %-30s │\n", snmp.ICMP.OutTimestampReps)
+	fmt.Fprintf(&b, "│ Out Address Masks  : %-30s │\n", snmp.ICMP.OutAddrMasks)
+	fmt.Fprintf(&b, "│ Out Address Mask Reps: %-28s │\n", snmp.ICMP.OutAddrMaskReps)
+
+	b.WriteString("│                                                     │\n")
+
+	// ICMP message-type statistics
+	b.WriteString("│ ICMP Message Types                                  │\n")
+	b.WriteString("│ ─────────────────────────────────────────────────── │\n")
+
+	if len(snmp.ICMPMsg.Types) == 0 {
+		b.WriteString("│ No message-type metrics available                  │\n")
+	} else {
+		keys := make([]string, 0, len(snmp.ICMPMsg.Types))
+		for key := range snmp.ICMPMsg.Types {
+			keys = append(keys, key)
+		}
+		sort.Strings(keys)
+
+		for _, key := range keys {
+			fmt.Fprintf(&b, "│ %-30s : %-20s │\n", key, snmp.ICMPMsg.Types[key])
+		}
+	}
+
+	b.WriteString("│                                                     │\n")
+
+	// TCP statistics
+	b.WriteString("│ TCP Statistics                                      │\n")
+	b.WriteString("│ ─────────────────────────────────────────────────── │\n")
+
+	fmt.Fprintf(&b, "│ RTO Algorithm      : %-30s │\n", snmp.TCP.RtoAlgorithm)
+	fmt.Fprintf(&b, "│ RTO Minimum        : %-30s │\n", snmp.TCP.RtoMin)
+	fmt.Fprintf(&b, "│ RTO Maximum        : %-30s │\n", snmp.TCP.RtoMax)
+	fmt.Fprintf(&b, "│ Maximum Connections: %-30s │\n", snmp.TCP.MaxConn)
+	fmt.Fprintf(&b, "│ Active Opens       : %-30s │\n", snmp.TCP.ActiveOpens)
+	fmt.Fprintf(&b, "│ Passive Opens      : %-30s │\n", snmp.TCP.PassiveOpens)
+	fmt.Fprintf(&b, "│ Attempt Fails      : %-30s │\n", snmp.TCP.AttemptFails)
+	fmt.Fprintf(&b, "│ Established Resets : %-30s │\n", snmp.TCP.EstabResets)
+	fmt.Fprintf(&b, "│ Current Established: %-30s │\n", snmp.TCP.CurrEstab)
+	fmt.Fprintf(&b, "│ In Segments        : %-30s │\n", snmp.TCP.InSegs)
+	fmt.Fprintf(&b, "│ Out Segments       : %-30s │\n", snmp.TCP.OutSegs)
+	fmt.Fprintf(&b, "│ Retransmitted Segs : %-30s │\n", snmp.TCP.RetransSegs)
+	fmt.Fprintf(&b, "│ In Errors          : %-30s │\n", snmp.TCP.InErrs)
+	fmt.Fprintf(&b, "│ Out Resets         : %-30s │\n", snmp.TCP.OutRsts)
+	fmt.Fprintf(&b, "│ In Checksum Errors : %-30s │\n", snmp.TCP.InCsumErrors)
+
+	b.WriteString("│                                                     │\n")
+
+	// UDP statistics
+	b.WriteString("│ UDP Statistics                                      │\n")
+	b.WriteString("│ ─────────────────────────────────────────────────── │\n")
+
+	fmt.Fprintf(&b, "│ In Datagrams       : %-30s │\n", snmp.UDP.InDatagrams)
+	fmt.Fprintf(&b, "│ No Ports           : %-30s │\n", snmp.UDP.NoPorts)
+	fmt.Fprintf(&b, "│ In Errors          : %-30s │\n", snmp.UDP.InErrors)
+	fmt.Fprintf(&b, "│ Out Datagrams      : %-30s │\n", snmp.UDP.OutDatagrams)
+	fmt.Fprintf(&b, "│ Receive Buffer Errors: %-28s │\n", snmp.UDP.RcvbufErrors)
+	fmt.Fprintf(&b, "│ Send Buffer Errors : %-30s │\n", snmp.UDP.SndbufErrors)
+	fmt.Fprintf(&b, "│ In Checksum Errors : %-30s │\n", snmp.UDP.InCsumErrors)
+	fmt.Fprintf(&b, "│ Ignored Multicast  : %-30s │\n", snmp.UDP.IgnoredMulti)
+	fmt.Fprintf(&b, "│ Memory Errors      : %-30s │\n", snmp.UDP.MemErrors)
+
+	b.WriteString("│                                                     │\n")
+
+	// UDP-Lite statistics
+	b.WriteString("│ UDP-Lite Statistics                                 │\n")
+	b.WriteString("│ ─────────────────────────────────────────────────── │\n")
+
+	fmt.Fprintf(&b, "│ In Datagrams       : %-30s │\n", snmp.UDPLite.InDatagrams)
+	fmt.Fprintf(&b, "│ No Ports           : %-30s │\n", snmp.UDPLite.NoPorts)
+	fmt.Fprintf(&b, "│ In Errors          : %-30s │\n", snmp.UDPLite.InErrors)
+	fmt.Fprintf(&b, "│ Out Datagrams      : %-30s │\n", snmp.UDPLite.OutDatagrams)
+	fmt.Fprintf(&b, "│ Receive Buffer Errors: %-28s │\n", snmp.UDPLite.RcvbufErrors)
+	fmt.Fprintf(&b, "│ Send Buffer Errors : %-30s │\n", snmp.UDPLite.SndbufErrors)
+	fmt.Fprintf(&b, "│ In Checksum Errors : %-30s │\n", snmp.UDPLite.InCsumErrors)
+	fmt.Fprintf(&b, "│ Ignored Multicast  : %-30s │\n", snmp.UDPLite.IgnoredMulti)
+	fmt.Fprintf(&b, "│ Memory Errors      : %-30s │\n", snmp.UDPLite.MemErrors)
+
+	b.WriteString("└─────────────────────────────────────────────────────┘\n")
+
+	fmt.Print(b.String())
+}
+
+
 func FormatSNMP6Statistics(snmp6 SNMP6Statistics) {
 	var b strings.Builder
 
