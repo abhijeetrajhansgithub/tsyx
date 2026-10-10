@@ -135,10 +135,12 @@ var netCmd = &cobra.Command{
 		case "proc_route":
 
 		case "proc_snmp":
-			nsmpInfo, err := net.LinuxCollectSNMPStatistics(key)
+			snmpInfo, err := net.LinuxCollectSNMPStatistics(key)
 			if err != nil {
 				return err
 			}
+
+			net.FormatSNMPStatistics(snmpInfo)
 
 		case "proc_snmp6":
 			nsmpInfo, err := net.LinuxCollectSNMP6Statistics(key)
