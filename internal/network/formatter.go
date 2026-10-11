@@ -6,7 +6,53 @@ import (
 	"path/filepath"
 	"strconv"
 	"sort"
+	"reflect"
 )
+
+
+func FormatNetworkExtendedStatistics(stats NetworkExtendedStatistics) {
+	var b strings.Builder
+
+	b.WriteString("┌─────────────────────────────────────────────────────┐\n")
+	b.WriteString("│             Network Extended Statistics             │\n")
+	b.WriteString("├─────────────────────────────────────────────────────┤\n")
+
+	// TCP extended statistics
+	b.WriteString("│ TCP Extended Statistics                             │\n")
+	b.WriteString("│ ─────────────────────────────────────────────────── │\n")
+
+	tcpValue := reflect.ValueOf(stats.TCP)
+	tcpType := reflect.TypeOf(stats.TCP)
+
+	for i := 0; i < tcpValue.NumField(); i++ {
+		field := tcpType.Field(i)
+		value := tcpValue.Field(i).String()
+
+		label := splitFieldName(field.Name)
+		fmt.Fprintf(&b, "│ %-30s : %-20s │\n", label, value)
+	}
+
+	b.WriteString("│                                                     │\n")
+
+	// IP extended statistics
+	b.WriteString("│ IP Extended Statistics                              │\n")
+	b.WriteString("│ ─────────────────────────────────────────────────── │\n")
+
+	ipValue := reflect.ValueOf(stats.IP)
+	ipType := reflect.TypeOf(stats.IP)
+
+	for i := 0; i < ipValue.NumField(); i++ {
+		field := ipType.Field(i)
+		value := ipValue.Field(i).String()
+
+		label := splitFieldName(field.Name)
+		fmt.Fprintf(&b, "│ %-30s : %-20s │\n", label, value)
+	}
+
+	b.WriteString("└─────────────────────────────────────────────────────┘\n")
+
+	fmt.Print(b.String())
+}
 
 
 func FormatSNMPStatistics(snmp SNMPStatistics) {
