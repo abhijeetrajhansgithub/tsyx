@@ -136,6 +136,10 @@ var netCmd = &cobra.Command{
 		
 
 		case "proc_netstat":
+			netstatInfo, err := net.LinuxCollectNetworkExtendedStatistics(key)
+			if err != nil {
+				return err
+			}
 
 		case "proc_snmp":
 			snmpInfo, err := net.LinuxCollectSNMPStatistics(key)
