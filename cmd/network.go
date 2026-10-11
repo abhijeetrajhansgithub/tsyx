@@ -133,6 +133,9 @@ var netCmd = &cobra.Command{
 			net.FormatPType(ptypeInfo.Handlers)
 		
 		case "proc_route":
+		
+
+		case "proc_netstat":
 
 		case "proc_snmp":
 			snmpInfo, err := net.LinuxCollectSNMPStatistics(key)
