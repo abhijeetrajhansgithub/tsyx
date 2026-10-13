@@ -10,6 +10,22 @@ import (
 )
 
 
+func FormatProcessConnector(conn ProcessConnector) {
+	var b strings.Builder
+
+	b.WriteString("┌─────────────────────────────────────────────────────┐\n")
+	b.WriteString("│                  Process Connector                  │\n")
+	b.WriteString("├─────────────────────────────────────────────────────┤\n")
+
+	fmt.Fprintf(&b, "│ %-30s : %-20s │\n", "Name", conn.Name)
+	fmt.Fprintf(&b, "│ %-30s : %-20s │\n", "ID", conn.ID)
+
+	b.WriteString("└─────────────────────────────────────────────────────┘\n")
+
+	fmt.Print(b.String())
+}
+
+
 func FormatNetworkExtendedStatistics(stats NetworkExtendedStatistics) {
 	var b strings.Builder
 
