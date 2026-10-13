@@ -17,8 +17,8 @@ func FormatProcessConnector(conn ProcessConnector) {
 	b.WriteString("│                  Process Connector                  │\n")
 	b.WriteString("├─────────────────────────────────────────────────────┤\n")
 
-	fmt.Fprintf(&b, "│ %-30s : %-20s │\n", "Name", conn.Name)
-	fmt.Fprintf(&b, "│ %-30s : %-20s │\n", "ID", conn.ID)
+	fmt.Fprintf(&b, "│ %-28s : %-20s │\n", "Name", conn.Name)
+	fmt.Fprintf(&b, "│ %-28s : %-20s │\n", "ID", conn.ID)
 
 	b.WriteString("└─────────────────────────────────────────────────────┘\n")
 

@@ -140,6 +140,8 @@ var netCmd = &cobra.Command{
 			if err != nil {
 				return err
 			}
+
+			net.FormatProcessConnector(connInfo)
 		
 
 		case "proc_netstat":
