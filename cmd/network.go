@@ -135,6 +135,10 @@ var netCmd = &cobra.Command{
 		case "proc_route":
 		
 
+		case "proc_connector":
+			connInfo, err := net.LinuxCollectProcessConnector(key)
+		
+
 		case "proc_netstat":
 			netstatInfo, err := net.LinuxCollectNetworkExtendedStatistics(key)
 			if err != nil {
