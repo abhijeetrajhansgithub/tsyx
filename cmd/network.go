@@ -141,7 +141,7 @@ var netCmd = &cobra.Command{
 				return err
 			}
 
-			
+			net.FormatNetlinkTable(netlinkInfo)
 		
 
 		case "proc_connector":
