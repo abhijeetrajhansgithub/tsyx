@@ -10,6 +10,43 @@ import (
 )
 
 
+func FormatNetlinkTable(netlink NetlinkTable) {
+	var b strings.Builder
+
+	b.WriteString("┌─────────────────────────────────────────────────────┐\n")
+	b.WriteString("│                    Netlink Sockets                  │\n")
+	b.WriteString("├─────────────────────────────────────────────────────┤\n")
+
+	if len(netlink.Sockets) == 0 {
+		b.WriteString("│ No netlink sockets found                            │\n")
+	} else {
+		for i, socket := range netlink.Sockets {
+			fmt.Fprintf(&b, "│ Socket Entry %-37d │\n", i)
+			b.WriteString("├─────────────────────────────────────────────────────┤\n")
+
+			fmt.Fprintf(&b, "│ Socket    : %-40s │\n", socket.Socket)
+			fmt.Fprintf(&b, "│ Protocol  : %-40s │\n", socket.Protocol)
+			fmt.Fprintf(&b, "│ PID       : %-40s │\n", socket.PID)
+			fmt.Fprintf(&b, "│ Groups    : %-40s │\n", socket.Groups)
+			fmt.Fprintf(&b, "│ Recv Mem  : %-40s │\n", socket.RecvMem)
+			fmt.Fprintf(&b, "│ Send Mem  : %-40s │\n", socket.SendMem)
+			fmt.Fprintf(&b, "│ Dump      : %-40s │\n", socket.Dump)
+			fmt.Fprintf(&b, "│ Locks     : %-40s │\n", socket.Locks)
+			fmt.Fprintf(&b, "│ Drops     : %-40s │\n", socket.Drops)
+			fmt.Fprintf(&b, "│ Inode     : %-40s │\n", socket.Inode)
+
+			if i < len(netlink.Sockets)-1 {
+				b.WriteString("├─────────────────────────────────────────────────────┤\n")
+			}
+		}
+	}
+
+	b.WriteString("└─────────────────────────────────────────────────────┘\n")
+
+	fmt.Print(b.String())
+}
+
+
 func FormatProcessConnector(conn ProcessConnector) {
 	var b strings.Builder
 

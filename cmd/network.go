@@ -140,6 +140,8 @@ var netCmd = &cobra.Command{
 			if err != nil {
 				return err
 			}
+
+			
 		
 
 		case "proc_connector":
