@@ -133,6 +133,13 @@ var netCmd = &cobra.Command{
 			net.FormatPType(ptypeInfo.Handlers)
 		
 		case "proc_route":
+
+		
+		case "proc_netlink":
+			netlinkInfo, err := net.LinuxCollectNetlinkTable(key)
+			if err != nil {
+				return err
+			}
 		
 
 		case "proc_connector":
