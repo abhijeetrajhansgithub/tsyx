@@ -141,6 +141,8 @@ var netCmd = &cobra.Command{
 				return nil
 			}
 
+			net.FormatPacketSocketTable(packetInfo)
+
 		
 		case "proc_netlink":
 			netlinkInfo, err := net.LinuxCollectNetlinkTable(key)
