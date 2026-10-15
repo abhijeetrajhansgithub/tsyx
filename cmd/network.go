@@ -135,6 +135,9 @@ var netCmd = &cobra.Command{
 		case "proc_route":
 
 		
+		case "proc_unix":
+
+		
 		case "proc_packet":
 			packetInfo, err := net.LinuxCollectPacketSocketTable(key)
 			if err != nil {
