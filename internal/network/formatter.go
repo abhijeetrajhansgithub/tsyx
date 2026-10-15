@@ -10,6 +10,42 @@ import (
 )
 
 
+func FormatPacketSocketTable(packet PacketSocketTable) {
+	var b strings.Builder
+
+	b.WriteString("┌─────────────────────────────────────────────────────┐\n")
+	b.WriteString("│                   Packet Sockets                    │\n")
+	b.WriteString("├─────────────────────────────────────────────────────┤\n")
+
+	if len(packet.Sockets) == 0 {
+		b.WriteString("│ No packet sockets found                            │\n")
+	} else {
+		for i, socket := range packet.Sockets {
+			fmt.Fprintf(&b, "│ Socket Entry %-37d │\n", i)
+			b.WriteString("├─────────────────────────────────────────────────────┤\n")
+
+			fmt.Fprintf(&b, "│ Socket    : %-40s │\n", socket.Socket)
+			fmt.Fprintf(&b, "│ Ref Count : %-40s │\n", socket.RefCount)
+			fmt.Fprintf(&b, "│ Type      : %-40s │\n", socket.Type)
+			fmt.Fprintf(&b, "│ Protocol  : %-40s │\n", socket.Protocol)
+			fmt.Fprintf(&b, "│ Interface : %-40s │\n", socket.Interface)
+			fmt.Fprintf(&b, "│ Recv Queue: %-40s │\n", socket.RecvQueue)
+			fmt.Fprintf(&b, "│ Recv Mem  : %-40s │\n", socket.RecvMem)
+			fmt.Fprintf(&b, "│ User      : %-40s │\n", socket.User)
+			fmt.Fprintf(&b, "│ Inode     : %-40s │\n", socket.Inode)
+
+			if i < len(packet.Sockets)-1 {
+				b.WriteString("├─────────────────────────────────────────────────────┤\n")
+			}
+		}
+	}
+
+	b.WriteString("└─────────────────────────────────────────────────────┘\n")
+
+	fmt.Print(b.String())
+}
+
+
 func FormatNetlinkTable(netlink NetlinkTable) {
 	var b strings.Builder
 
