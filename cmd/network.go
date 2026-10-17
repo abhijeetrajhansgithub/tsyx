@@ -136,10 +136,12 @@ var netCmd = &cobra.Command{
 
 		
 		case "proc_unix":
-			unixInfo, err :+ net.LinuxCollectUnixSocketTable(key)
+			unixInfo, err := net.LinuxCollectUnixSocketTable(key)
 			if err != nil {
 				return err
 			}
+
+			net.FormatUnixSocketTable(unixInfo)
 
 		
 		case "proc_packet":
