@@ -10,6 +10,41 @@ import (
 )
 
 
+func FormatUnixSocketTable(unix UnixSocketTable) {
+	var b strings.Builder
+
+	b.WriteString("┌─────────────────────────────────────────────────────┐\n")
+	b.WriteString("│                    Unix Sockets                     │\n")
+	b.WriteString("├─────────────────────────────────────────────────────┤\n")
+
+	if len(unix.Sockets) == 0 {
+		b.WriteString("│ No Unix sockets found                              │\n")
+	} else {
+		for i, socket := range unix.Sockets {
+			fmt.Fprintf(&b, "│ Socket Entry %-37d │\n", i)
+			b.WriteString("├─────────────────────────────────────────────────────┤\n")
+
+			fmt.Fprintf(&b, "│ Num      : %-40s │\n", socket.Num)
+			fmt.Fprintf(&b, "│ Ref Count: %-40s │\n", socket.RefCount)
+			fmt.Fprintf(&b, "│ Protocol : %-40s │\n", socket.Protocol)
+			fmt.Fprintf(&b, "│ Flags    : %-40s │\n", socket.Flags)
+			fmt.Fprintf(&b, "│ Type     : %-40s │\n", socket.Type)
+			fmt.Fprintf(&b, "│ State    : %-40s │\n", socket.State)
+			fmt.Fprintf(&b, "│ Inode    : %-40s │\n", socket.Inode)
+			fmt.Fprintf(&b, "│ Path     : %-40s │\n", socket.Path)
+
+			if i < len(unix.Sockets)-1 {
+				b.WriteString("├─────────────────────────────────────────────────────┤\n")
+			}
+		}
+	}
+
+	b.WriteString("└─────────────────────────────────────────────────────┘\n")
+
+	fmt.Print(b.String())
+}
+
+
 func FormatPacketSocketTable(packet PacketSocketTable) {
 	var b strings.Builder
 
