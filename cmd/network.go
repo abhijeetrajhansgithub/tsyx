@@ -135,11 +135,15 @@ var netCmd = &cobra.Command{
 		case "proc_route":
 
 		
+		
+		
 		case "proc_udp6":
 			udp6Info, err := net.LinuxCollectUDP(key)
 			if err != nil {
 				return err
 			}
+
+			net.FormatUDPConnectionTable(udp6Info)
 
 		
 		case "proc_unix":
