@@ -141,6 +141,8 @@ var netCmd = &cobra.Command{
 				return err
 			}
 
+			net.FormatUDPConnectionTable(udpInfo)
+
 		
 		case "proc_udp6":
 			udp6Info, err := net.LinuxCollectUDP(key)
