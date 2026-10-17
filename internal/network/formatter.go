@@ -10,6 +10,64 @@ import (
 )
 
 
+func FormatUDPConnectionTable(udp UDPConnectionTable) {
+	var b strings.Builder
+
+	b.WriteString("┌─────────────────────────────────────────────────────┐\n")
+	b.WriteString("│                  UDP Connections                    │\n")
+	b.WriteString("├─────────────────────────────────────────────────────┤\n")
+
+	if len(udp.Connections) == 0 {
+		b.WriteString("│ No UDP connections found                           │\n")
+	} else {
+		for i, conn := range udp.Connections {
+			fmt.Fprintf(&b, "│ Connection Entry %-33d │\n", i)
+			b.WriteString("├─────────────────────────────────────────────────────┤\n")
+
+			// Connection information
+			fmt.Fprintf(&b, "│ Slot          : %-35s │\n", conn.connection.Slot)
+			fmt.Fprintf(&b, "│ Local Address : %-35s │\n", conn.connection.LocalAddress)
+			fmt.Fprintf(&b, "│ Remote Address: %-35s │\n", conn.connection.RemoteAddress)
+			fmt.Fprintf(&b, "│ State         : %-35s │\n", conn.connection.State)
+			fmt.Fprintf(&b, "│ TX Queue      : %-35s │\n", conn.connection.TxQueue)
+			fmt.Fprintf(&b, "│ RX Queue      : %-35s │\n", conn.connection.RxQueue)
+
+			// Timer information
+			b.WriteString("│                                                     │\n")
+			b.WriteString("│ Timer                                             │\n")
+			b.WriteString("│ ─────────────────────────────────────────────────── │\n")
+
+			fmt.Fprintf(&b, "│ Type          : %-35s │\n", conn.connection.Timer.Type)
+			fmt.Fprintf(&b, "│ Expires       : %-35s │\n", conn.connection.Timer.Expires)
+			fmt.Fprintf(&b, "│ Retransmits   : %-35s │\n", conn.connection.Timer.Retransmits)
+
+			// Remaining connection fields
+			b.WriteString("│                                                     │\n")
+			fmt.Fprintf(&b, "│ UID           : %-35s │\n", conn.connection.UID)
+			fmt.Fprintf(&b, "│ Timeout       : %-35s │\n", conn.connection.Timeout)
+			fmt.Fprintf(&b, "│ Inode         : %-35s │\n", conn.connection.Inode)
+
+			// UDP-specific fields
+			b.WriteString("│                                                     │\n")
+			b.WriteString("│ UDP Metadata                                        │\n")
+			b.WriteString("│ ─────────────────────────────────────────────────── │\n")
+
+			fmt.Fprintf(&b, "│ Ref Count     : %-35s │\n", conn.RefCount)
+			fmt.Fprintf(&b, "│ Memory Pointer: %-35s │\n", conn.MemoryPointer)
+			fmt.Fprintf(&b, "│ Drops         : %-35s │\n", conn.Drops)
+
+			if i < len(udp.Connections)-1 {
+				b.WriteString("├─────────────────────────────────────────────────────┤\n")
+			}
+		}
+	}
+
+	b.WriteString("└─────────────────────────────────────────────────────┘\n")
+
+	fmt.Print(b.String())
+}
+
+
 func FormatUnixSocketTable(unix UnixSocketTable) {
 	var b strings.Builder
 
