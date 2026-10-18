@@ -10,6 +10,55 @@ import (
 )
 
 
+func FormatTCPConnectionTable(tcp TCPConnectionTable) {
+	var b strings.Builder
+
+	b.WriteString("┌─────────────────────────────────────────────────────┐\n")
+	b.WriteString("│                  TCP Connections                    │\n")
+	b.WriteString("├─────────────────────────────────────────────────────┤\n")
+
+	if len(tcp.Connections) == 0 {
+		b.WriteString("│ No TCP connections found                           │\n")
+	} else {
+		for i, conn := range tcp.Connections {
+			fmt.Fprintf(&b, "│ Connection Entry %-33d │\n", i)
+			b.WriteString("├─────────────────────────────────────────────────────┤\n")
+
+			// Connection information
+			fmt.Fprintf(&b, "│ Slot           : %-34s │\n", conn.Slot)
+			fmt.Fprintf(&b, "│ Local Address  : %-34s │\n", conn.LocalAddress)
+			fmt.Fprintf(&b, "│ Remote Address : %-34s │\n", conn.RemoteAddress)
+			fmt.Fprintf(&b, "│ State          : %-34s │\n", conn.State)
+			fmt.Fprintf(&b, "│ TX Queue       : %-34s │\n", conn.TxQueue)
+			fmt.Fprintf(&b, "│ RX Queue       : %-34s │\n", conn.RxQueue)
+
+			// Timer information
+			b.WriteString("│                                                     │\n")
+			b.WriteString("│ Timer                                               │\n")
+			b.WriteString("│ ─────────────────────────────────────────────────── │\n")
+
+			fmt.Fprintf(&b, "│ Type           : %-34s │\n", conn.Timer.Type)
+			fmt.Fprintf(&b, "│ Expires        : %-34s │\n", conn.Timer.Expires)
+			fmt.Fprintf(&b, "│ Retransmits    : %-34s │\n", conn.Timer.Retransmits)
+
+			// Remaining connection fields
+			b.WriteString("│                                                     │\n")
+			fmt.Fprintf(&b, "│ UID            : %-34s │\n", conn.UID)
+			fmt.Fprintf(&b, "│ Timeout        : %-34s │\n", conn.Timeout)
+			fmt.Fprintf(&b, "│ Inode          : %-34s │\n", conn.Inode)
+
+			if i < len(tcp.Connections)-1 {
+				b.WriteString("├─────────────────────────────────────────────────────┤\n")
+			}
+		}
+	}
+
+	b.WriteString("└─────────────────────────────────────────────────────┘\n")
+
+	fmt.Print(b.String())
+}
+
+
 func FormatUDPConnectionTable(udp UDPConnectionTable) {
 	var b strings.Builder
 
