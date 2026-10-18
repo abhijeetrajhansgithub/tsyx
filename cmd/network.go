@@ -134,6 +134,15 @@ var netCmd = &cobra.Command{
 		
 		case "proc_route":
 
+
+		case "proc_tcp":
+			tcpInfo, err := net.LinuxCollectTCP(key)
+			if err != nil {
+				return err
+			}
+
+			net.FormatTCPConnectionTable(tcpInfo)
+
 		
 		case "proc_tcp6":
 			tcp6Info, err := net.LinuxCollectTCP(key)
