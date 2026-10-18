@@ -136,6 +136,10 @@ var netCmd = &cobra.Command{
 
 		
 		case "proc_tcp6":
+			tcp6Info, err := net.LinuxCollectTCP(key)
+			if err != nil {
+				return err
+			}
 
 		
 		case "proc_udp":
