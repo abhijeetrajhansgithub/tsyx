@@ -10,6 +10,66 @@ import (
 )
 
 
+func FormatFIBTrieStatistics(fib FIBTrieStatistics) {
+	var b strings.Builder
+
+	b.WriteString("┌─────────────────────────────────────────────────────┐\n")
+	b.WriteString("│                 FIB Trie Statistics                 │\n")
+	b.WriteString("├─────────────────────────────────────────────────────┤\n")
+
+	// Global trie information
+	b.WriteString("│ Global Information                                  │\n")
+	b.WriteString("│ ─────────────────────────────────────────────────── │\n")
+
+	fmt.Fprintf(&b, "│ Leaf Size (Bytes) : %-30s │\n", fib.LeafSizeBytes)
+	fmt.Fprintf(&b, "│ TNode Size (Bytes): %-30s │\n", fib.TNodeSizeBytes)
+
+	// Main trie
+	b.WriteString("│                                                     │\n")
+	b.WriteString("│ Main Trie                                           │\n")
+	b.WriteString("│ ─────────────────────────────────────────────────── │\n")
+
+	formatFIBTrieSection(&b, fib.Main)
+
+	// Local trie
+	b.WriteString("│                                                     │\n")
+	b.WriteString("│ Local Trie                                          │\n")
+	b.WriteString("│ ─────────────────────────────────────────────────── │\n")
+
+	formatFIBTrieSection(&b, fib.Local)
+
+	b.WriteString("└─────────────────────────────────────────────────────┘\n")
+
+	fmt.Print(b.String())
+}
+
+func formatFIBTrieSection(b *strings.Builder, section FIBTrieSection) {
+	fmt.Fprintf(b, "│ Average Depth     : %-30s │\n", section.AverageDepth)
+	fmt.Fprintf(b, "│ Max Depth         : %-30s │\n", section.MaxDepth)
+	fmt.Fprintf(b, "│ Leaves            : %-30s │\n", section.Leaves)
+	fmt.Fprintf(b, "│ Prefixes          : %-30s │\n", section.Prefixes)
+	fmt.Fprintf(b, "│ Internal Nodes    : %-30s │\n", section.InternalNodes)
+	fmt.Fprintf(b, "│ Depth 1           : %-30s │\n", section.Depth1)
+	fmt.Fprintf(b, "│ Depth 2           : %-30s │\n", section.Depth2)
+	fmt.Fprintf(b, "│ Depth 3           : %-30s │\n", section.Depth3)
+	fmt.Fprintf(b, "│ Pointers          : %-30s │\n", section.Pointers)
+	fmt.Fprintf(b, "│ Null Pointers     : %-30s │\n", section.NullPtrs)
+	fmt.Fprintf(b, "│ Total Size (KB)   : %-30s │\n", section.TotalSizeKB)
+
+	// Trie counters
+	b.WriteString("│                                                     │\n")
+	b.WriteString("│ Lookup Counters                                     │\n")
+	b.WriteString("│ ─────────────────────────────────────────────────── │\n")
+
+	fmt.Fprintf(b, "│ Gets              : %-30s │\n", section.Counters.Gets)
+	fmt.Fprintf(b, "│ Backtracks        : %-30s │\n", section.Counters.Backtracks)
+	fmt.Fprintf(b, "│ Semantic Match Passed: %-27s │\n", section.Counters.SemanticMatchPassed)
+	fmt.Fprintf(b, "│ Semantic Match Miss  : %-27s │\n", section.Counters.SemanticMatchMiss)
+	fmt.Fprintf(b, "│ Null Node Hit     : %-30s │\n", section.Counters.NullNodeHit)
+	fmt.Fprintf(b, "│ Skipped Node Resize: %-29s │\n", section.Counters.SkippedNodeResize)
+}
+
+
 func FormatTCPConnectionTable(tcp TCPConnectionTable) {
 	var b strings.Builder
 
