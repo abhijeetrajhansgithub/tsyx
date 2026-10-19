@@ -134,6 +134,9 @@ var netCmd = &cobra.Command{
 		
 		case "proc_route":
 
+		
+		case "pric_fib_triestat":
+
 
 		case "proc_tcp":
 			tcpInfo, err := net.LinuxCollectTCP(key)
