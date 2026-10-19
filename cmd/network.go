@@ -141,6 +141,8 @@ var netCmd = &cobra.Command{
 				return err
 			}
 
+			net.FormatFIBTrieStatistics(fib_triestat_info)
+
 
 		case "proc_tcp":
 			tcpInfo, err := net.LinuxCollectTCP(key)
