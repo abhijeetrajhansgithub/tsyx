@@ -136,6 +136,10 @@ var netCmd = &cobra.Command{
 
 		
 		case "pric_fib_triestat":
+			fib_triestat_info, err := net.LinuxCollectFIBTrieStatistics(key)
+			if err != nil {
+				return err
+			}
 
 
 		case "proc_tcp":
