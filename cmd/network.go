@@ -141,6 +141,8 @@ var netCmd = &cobra.Command{
 				return err
 			}
 
+			net.FormatRouteCacheTable(rt_cache_info)
+
 		
 		case "pric_fib_triestat":
 			fib_triestat_info, err := net.LinuxCollectFIBTrieStatistics(key)
