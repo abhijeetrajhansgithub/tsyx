@@ -10,6 +10,48 @@ import (
 )
 
 
+func FormatRouteCacheTable(routes RouteCacheTable) {
+	var b strings.Builder
+
+	b.WriteString("┌─────────────────────────────────────────────────────┐\n")
+	b.WriteString("│                    Route Cache                      │\n")
+	b.WriteString("├─────────────────────────────────────────────────────┤\n")
+
+	if len(routes.Routes) == 0 {
+		b.WriteString("│ No route cache entries found                       │\n")
+	} else {
+		for i, route := range routes.Routes {
+			fmt.Fprintf(&b, "│ Route Entry %-39d │\n", i)
+			b.WriteString("├─────────────────────────────────────────────────────┤\n")
+
+			fmt.Fprintf(&b, "│ Interface              : %-27s │\n", route.Interface)
+			fmt.Fprintf(&b, "│ Destination            : %-27s │\n", route.Destination)
+			fmt.Fprintf(&b, "│ Gateway                : %-27s │\n", route.Gateway)
+			fmt.Fprintf(&b, "│ Flags                  : %-27s │\n", route.Flags)
+			fmt.Fprintf(&b, "│ Ref Count              : %-27s │\n", route.RefCount)
+			fmt.Fprintf(&b, "│ Use                    : %-27s │\n", route.Use)
+			fmt.Fprintf(&b, "│ Metric                 : %-27s │\n", route.Metric)
+			fmt.Fprintf(&b, "│ Source                 : %-27s │\n", route.Source)
+			fmt.Fprintf(&b, "│ MTU                    : %-27s │\n", route.MTU)
+			fmt.Fprintf(&b, "│ Window                 : %-27s │\n", route.Window)
+			fmt.Fprintf(&b, "│ IRTT                   : %-27s │\n", route.IRTT)
+			fmt.Fprintf(&b, "│ TOS                    : %-27s │\n", route.TOS)
+			fmt.Fprintf(&b, "│ Hardware Header Ref    : %-27s │\n", route.HardwareHeaderRef)
+			fmt.Fprintf(&b, "│ Hardware Header Status : %-27s │\n", route.HardwareHeaderUpToDate)
+			fmt.Fprintf(&b, "│ Specific Destination   : %-27s │\n", route.SpecificDestination)
+
+			if i < len(routes.Routes)-1 {
+				b.WriteString("├─────────────────────────────────────────────────────┤\n")
+			}
+		}
+	}
+
+	b.WriteString("└─────────────────────────────────────────────────────┘\n")
+
+	fmt.Print(b.String())
+}
+
+
 func FormatFIBTrieStatistics(fib FIBTrieStatistics) {
 	var b strings.Builder
 
