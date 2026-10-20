@@ -135,6 +135,13 @@ var netCmd = &cobra.Command{
 		case "proc_route":
 
 		
+		case "proc_rt_cache":
+			rt_cache_info, err := net.LinuxCollectRouteCacheTable(key)
+			if err != nil {
+				return err
+			}
+
+		
 		case "pric_fib_triestat":
 			fib_triestat_info, err := net.LinuxCollectFIBTrieStatistics(key)
 			if err != nil {
