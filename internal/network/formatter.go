@@ -10,6 +10,44 @@ import (
 )
 
 
+func FormatRouteTable(routes RouteTable) {
+	var b strings.Builder
+
+	b.WriteString("┌─────────────────────────────────────────────────────┐\n")
+	b.WriteString("│                    IPv4 Route Table                 │\n")
+	b.WriteString("├─────────────────────────────────────────────────────┤\n")
+
+	if len(routes.Routes) == 0 {
+		b.WriteString("│ No IPv4 routes found                               │\n")
+	} else {
+		for i, route := range routes.Routes {
+			fmt.Fprintf(&b, "│ Route Entry %-39d │\n", i)
+			b.WriteString("├─────────────────────────────────────────────────────┤\n")
+
+			fmt.Fprintf(&b, "│ Interface   : %-35s │\n", route.Interface)
+			fmt.Fprintf(&b, "│ Destination : %-35s │\n", route.Destination)
+			fmt.Fprintf(&b, "│ Gateway     : %-35s │\n", route.Gateway)
+			fmt.Fprintf(&b, "│ Flags       : %-35s │\n", route.Flags)
+			fmt.Fprintf(&b, "│ Ref Count   : %-35s │\n", route.RefCount)
+			fmt.Fprintf(&b, "│ Use         : %-35s │\n", route.Use)
+			fmt.Fprintf(&b, "│ Metric      : %-35s │\n", route.Metric)
+			fmt.Fprintf(&b, "│ Mask        : %-35s │\n", route.Mask)
+			fmt.Fprintf(&b, "│ MTU         : %-35s │\n", route.MTU)
+			fmt.Fprintf(&b, "│ Window      : %-35s │\n", route.Window)
+			fmt.Fprintf(&b, "│ IRTT        : %-35s │\n", route.IRTT)
+
+			if i < len(routes.Routes)-1 {
+				b.WriteString("├─────────────────────────────────────────────────────┤\n")
+			}
+		}
+	}
+
+	b.WriteString("└─────────────────────────────────────────────────────┘\n")
+
+	fmt.Print(b.String())
+}
+
+
 func FormatRouteCacheTable(routes RouteCacheTable) {
 	var b strings.Builder
 

@@ -133,10 +133,12 @@ var netCmd = &cobra.Command{
 			net.FormatPType(ptypeInfo.Handlers)
 		
 		case "proc_route":
-			routeInfo, err := net.LinuxCollectRouteCacheTable(key)
+			routeInfo, err := net.LinuxCollectRouteTable(key)
 			if err != nil {
 				return err
 			}
+
+			
 
 		
 		case "proc_rt_cache":
