@@ -138,7 +138,7 @@ var netCmd = &cobra.Command{
 				return err
 			}
 
-			
+			net.FormatRouteTable(routeInfo)
 
 		
 		case "proc_rt_cache":
